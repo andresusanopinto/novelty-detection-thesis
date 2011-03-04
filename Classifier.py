@@ -19,15 +19,27 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 class Classifier:
-  u"""This class is a prototype for implementing classifiers to be
+  """This class is a prototype for implementing classifiers to be
   tested under the developed scripts."""
-
+  
   def Classify(self, sample):
-    u"""Returns the classification of the given sample."""
-    throw NotImplemented
-
+    """Returns the classification of the given sample."""
+    raise NotImplemented
+  
   def ClassifyThreshold(self, sample):
-    u"""Returns a pair (threshold, class) containing the threshold at which
+    """Returns a pair (threshold, class) containing the threshold at which
     classification with the given class would occur."""
-    throw NotImplemented
+    raise NotImplemented
+
+
+class MAP:
+  def __init__(self, class_distribution):
+    self.distribution = class_distribution
+  
+  def ClassifyThreshold(self, sample):
+    return sorted(self.distribution.ClassProbability(sample, normalize=True))[-1]
+  
+  def Classify(self, sample):
+    return self.ClassifyThreshold(sample)[1]
+  
 

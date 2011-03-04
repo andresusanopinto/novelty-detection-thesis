@@ -20,6 +20,7 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 from Sampler import *
+import Classifier
 from collections import Counter
 
 # TODO(andresp): Histogram class on top of collections.Counter
@@ -64,9 +65,30 @@ room_categories = {
 room_distrib = ClassDistribution(DiscreteDistribution(room_categories.keys()), room_categories)
 test_Distribution(room_distrib, 1000)
 
-cp = list(room_distrib.ClassProbability('looks_kitchen'))
-s = sum(p for (p,label) in cp)
-cp = [ (c,p/s) for (p,c) in cp]
-print(cp)
+room_classifier = Classifier.MAP(room_distrib)
+print(room_classifier.ClassifyThreshold('looks_kitchen'))
+print(list(room_distrib.ClassProbability('looks_kitchen', normalize = True)))
 
+
+def Correctness(confusion_matrix):
+  correct = 0
+  total = 0
+  for ((label,guess),count) in confusion_matrix.items():
+    if label == guess: correct += count
+    total += count
+  return correct/float(total)
+
+
+
+def TestClassifier(classifier, labelled_data):
+  """Returns confusion matrix."""
+  c = Counter()
+  for (label, sample) in labelled_data:
+    guess = classifier.Classify(sample)
+    c[label,guess] += 1
+  print(c)
+  print(Correctness(c))
+  return c
+
+TestClassifier(room_classifier, SampleN(100, room_distrib.ClassGenerator()))
 

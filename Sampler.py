@@ -101,9 +101,15 @@ class ClassDistribution:
                self.class_description[key].Probability(sample))
     return prob
   
-  def ClassProbability(self, sample):
-    for key in self.class_description:
-      yield (self.class_distribution.Probability(key)*self.class_description[key].Probability(sample), key)
+  def ClassProbability(self, sample, normalize = False):
+    if normalize:
+      cp = list(self.ClassProbability(sample, normalize = False))
+      s = sum(p for (p,label) in cp)
+      for (p,c) in cp:
+        yield (p/float(s), c)
+    else:
+      for key in self.class_description:
+        yield (self.class_distribution.Probability(key)*self.class_description[key].Probability(sample), key)
   
   def ClassGenerator(self):
     def sampler(class_generator, classes_gens):
