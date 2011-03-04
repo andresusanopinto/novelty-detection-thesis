@@ -88,7 +88,34 @@ class HistogramDistribution(Distribution):
     return sampler(self.distributions)
 
 
+class ClassDistribution:
+  """Defines a class distribution."""
+  def __init__(self, class_distribution, class_description):
+    self.class_distribution = class_distribution
+    self.class_description  = class_description
   
+  def Probability(self, sample):
+    prob = 0.0
+    for key in self.class_description:
+      prob += (self.class_distribution.Probability(key)*
+               self.class_description[key].Probability(sample))
+    return prob
+  
+  def ClassGenerator(self):
+    def sampler(class_generator, classes_gens):
+      while True:
+        key = next(class_generator)
+        yield (key, next(classes_gens[key]))
+    return sampler(self.class_distribution.Generator(),
+                  {c: d.Generator() for (c, d) in self.class_description.items()})
+  
+  def Generator(self):
+    def drop_label(gen):
+      while True:
+        (key, value) = next(gen)
+        yield value
+    return drop_label(self.ClassGenerator())
+
 def BooleanDistribution(prob):
   """Defines a boolean distribution with the given probability of returning True."""
   assert prob >= 0.0 and prob <= 1.0
