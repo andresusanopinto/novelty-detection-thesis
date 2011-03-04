@@ -61,4 +61,12 @@ room_categories = {
   'corridor': HistogramDistribution({'looks_corridor':0.98, 'looks_kitchen':0.01, 'looks_kitchen':0.01}),
   'office':  HistogramDistribution({'looks_office':0.90, 'looks_kitchen': 0.10})
 }
-test_Distribution(ClassDistribution(DiscreteDistribution(room_categories.keys()), room_categories), 1000)
+room_distrib = ClassDistribution(DiscreteDistribution(room_categories.keys()), room_categories)
+test_Distribution(room_distrib, 1000)
+
+cp = list(room_distrib.ClassProbability('looks_kitchen'))
+s = sum(p for (p,label) in cp)
+cp = [ (c,p/s) for (p,c) in cp]
+print(cp)
+
+
