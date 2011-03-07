@@ -150,7 +150,6 @@ class IndependentFeaturesDistribution:
     return sampler([f.Generator() for f in self.features])
 
 
-
 def BooleanDistribution(prob):
   """Defines a boolean distribution with the given probability of returning True."""
   assert prob >= 0.0 and prob <= 1.0
@@ -162,4 +161,30 @@ def DiscreteDistribution(distribs):
 
 
 
+def DefineProperty(name, values, uncertain = 0.001):
+  """Returns a function that creates distributions of (name, item in values)."""
+  def Distribution(prob):
+    dist = {(name,x):uncertain for x in values}
+    for key in prob:
+      dist[(name,key)] += prob[key]
+    return HistogramDistribution(dist)
+  return Distribution
+
+def DefineIndependentPropertySet(properties):
+  """Returns a function that creates distributions with the given properties."""
+  def Distribution(props):
+    features = []
+    for key in properties:
+      if key in props:
+        features.append(properties[key](props[key]))
+      else:
+        features.append(properties[key]({}))
+    return IndependentFeaturesDistribution(features)
+  return Distribution
+
+
+# TODO(andressp): create something like this in sampler module.
+def SampleN(max_samples, data):
+  for x in range(max_samples):
+    yield next(data)
 

@@ -20,60 +20,14 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 from Sampler import *
+from Test import *
 import Classifier
 from collections import Counter
-
-# TODO(andresp): Histogram class on top of collections.Counter
-# Histogram comparison measures
-def Histogram(data):
-  return Counter(data)
-
-def Normalize(histogram):
-  sum = 0
-  for key in histogram:
-    sum += histogram[key]
-  out = Counter()
-  for key in histogram:
-    out[key] = histogram[key]/float(sum);
-  return out
-
-
-# TODO(andressp): create something like this in sampler module.
-def SampleN(max_samples, data):
-  for x in range(max_samples):
-    yield next(data)
-
-# Test a distribution
-def test_Distribution(dist, samples):
-  hist = Normalize(Histogram(SampleN(samples, dist.Generator())))
-  mse = 0
-  for key in hist:
-    mse += (dist.Probability(key) - hist[key])**2
-  print("MSE = %f" % mse)
-  assert mse < 0.005
 
 test_Distribution(UniqueDistribution('value'), 100)
 test_Distribution(BooleanDistribution(0.5), 1000)
 test_Distribution(DiscreteDistribution(['kitchen', 'office', 'sample']), 1000)
 
-def DefineProperty(name, values):
-  def Distribution(prob, uncertain = 0.001):
-    dist = {(name,x):uncertain for x in values}
-    for key in prob:
-      dist[(name,key)] += prob[key]
-    return HistogramDistribution(dist)
-  return Distribution
-
-def DefineIndependentPropertySet(properties):
-  def Distribution(props):
-    features = []
-    for key in properties:
-      if key in props:
-        features.append(properties[key](props[key]))
-      else:
-        features.append(properties[key]({}))
-    return IndependentFeaturesDistribution(features)
-  return Distribution
 
 
 Room = DefineIndependentPropertySet({
@@ -118,25 +72,6 @@ test_Distribution(room_distrib, 10000)
 room_classifier = Classifier.MAP(room_distrib)
 
 
-def Correctness(confusion_matrix):
-  correct = 0
-  total = 0
-  for ((label,guess),count) in confusion_matrix.items():
-    if label == guess: correct += count
-    total += count
-  return correct/float(total)
-
-
-
-def TestClassifier(classifier, labelled_data):
-  """Returns confusion matrix."""
-  c = Counter()
-  for (label, sample) in labelled_data:
-    guess = classifier.Classify(sample)
-    c[label,guess] += 1
-  print(c)
-  print(Correctness(c))
-  return c
 
 TestClassifier(room_classifier, SampleN(5000, room_distrib.ClassGenerator()))
 
