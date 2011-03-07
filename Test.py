@@ -61,7 +61,27 @@ def TestClassifier(classifier, labelled_data):
   for (label, sample) in labelled_data:
     guess = classifier.Classify(sample)
     c[label,guess] += 1
-  print(c)
-  print(Correctness(c))
+  PlotConfusionMatrix(c)
   return c
+
+def PlotConfusionMatrix(confusion):
+  labels = set()
+  for ((label,guess), count) in confusion.items():
+    labels.add(label)
+    labels.add(guess)
+  print("%20s:" % "Confusion matrix")
+  print("%20s:" % "", end = "")
+  for label in labels:
+    print("%12s" % label, end = "")
+  print()
+  for label in labels:
+    print("%20s:" % label, end = "")
+    for guess in labels:
+      if label != guess:
+        print("%12d" % confusion[(label,guess)], end = "")
+      else:
+        print("%12d" % 0, end = "")
+    print()
+  print("%f were correct." % Correctness(confusion))
+
 
