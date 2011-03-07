@@ -126,6 +126,31 @@ class ClassDistribution:
         yield value
     return drop_label(self.ClassGenerator())
 
+
+class IndependentFeaturesDistribution:
+  def __init__(self, features):
+    """Creates a feature distribution."""
+    self.features = features
+  
+  def Probability(self, sample):
+    if len(sample) != len(self.features):
+      return 0.0
+    prob = 1.0
+    for x in range(len(sample)):
+      prob *= self.features[x].Probability(sample[x])
+    return prob
+  
+  def Generator(self):
+    def sampler(gen_list):
+      while True:
+        x = []
+        for gen in gen_list:
+          x.append(next(gen))
+        yield tuple(x)
+    return sampler([f.Generator() for f in self.features])
+
+
+
 def BooleanDistribution(prob):
   """Defines a boolean distribution with the given probability of returning True."""
   assert prob >= 0.0 and prob <= 1.0

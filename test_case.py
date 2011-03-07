@@ -26,7 +26,7 @@ from collections import Counter
 # TODO(andresp): Histogram class on top of collections.Counter
 # Histogram comparison measures
 def Histogram(data):
-  return Counter(x for x in data)
+  return Counter(data)
 
 def Normalize(histogram):
   sum = 0
@@ -58,16 +58,23 @@ test_Distribution(BooleanDistribution(0.5), 1000)
 test_Distribution(DiscreteDistribution(['kitchen', 'office', 'sample']), 1000)
 
 room_categories = {
-  'kitchen': HistogramDistribution({'looks_kitchen':0.90, 'looks_office':0.10}),
-  'corridor': HistogramDistribution({'looks_corridor':0.98, 'looks_kitchen':0.01, 'looks_kitchen':0.01}),
-  'office':  HistogramDistribution({'looks_office':0.90, 'looks_kitchen': 0.10})
+  'kitchen': IndependentFeaturesDistribution([
+                 HistogramDistribution({'looks_kitchen':0.90, 'looks_office':0.10}),
+                 HistogramDistribution({'big_room':0.3, 'small_room':0.6}),
+                 HistogramDistribution({'has_apple': 0.8, 'no_apple':0.2})]),
+  'corridor': IndependentFeaturesDistribution([
+                 HistogramDistribution({'looks_corridor':0.98, 'looks_kitchen':0.01, 'looks_kitchen':0.01}),
+                 HistogramDistribution({'big_room':0.9, 'small_room':0.1}),
+                 HistogramDistribution({'has_apple': 0.01, 'no_apple':0.99})]),
+  'office':  IndependentFeaturesDistribution([
+                 HistogramDistribution({'looks_office':0.90, 'looks_kitchen': 0.010}),
+                 HistogramDistribution({'big_room':0.9, 'small_room':0.1}),
+                 HistogramDistribution({'has_apple': 0.2, 'no_apple':0.8})])
 }
 room_distrib = ClassDistribution(DiscreteDistribution(room_categories.keys()), room_categories)
 test_Distribution(room_distrib, 1000)
 
 room_classifier = Classifier.MAP(room_distrib)
-print(room_classifier.ClassifyThreshold('looks_kitchen'))
-print(list(room_distrib.ClassProbability('looks_kitchen', normalize = True)))
 
 
 def Correctness(confusion_matrix):
@@ -90,5 +97,5 @@ def TestClassifier(classifier, labelled_data):
   print(Correctness(c))
   return c
 
-TestClassifier(room_classifier, SampleN(100, room_distrib.ClassGenerator()))
-
+TestClassifier(room_classifier, SampleN(1000, room_distrib.ClassGenerator()))
+IndependentFeaturesDistribution
