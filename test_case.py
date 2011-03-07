@@ -49,7 +49,6 @@ def test_Distribution(dist, samples):
   mse = 0
   for key in hist:
     mse += (dist.Probability(key) - hist[key])**2
-  print(hist)
   print("MSE = %f" % mse)
   assert mse < 0.005
 
@@ -57,22 +56,50 @@ test_Distribution(UniqueDistribution('value'), 100)
 test_Distribution(BooleanDistribution(0.5), 1000)
 test_Distribution(DiscreteDistribution(['kitchen', 'office', 'sample']), 1000)
 
+def DefineProperty(name, values):
+  def Distribution(prob, uncertain = 0.001):
+    dist = {(name,x):uncertain for x in values}
+    for key in prob:
+      dist[(name,key)] += prob[key]
+    return HistogramDistribution(dist)
+  return Distribution
+
+Appearance = DefineProperty('appearance', ['kitchen', 'office', 'corridor'])
+RoomShape  = DefineProperty('room_shape', ['square', 'elongated'])
+RoomSize   = DefineProperty('room_size',  ['small', 'medium', 'large'])
+HasBook    = DefineProperty('found_book', ['yes', 'no'])
+HasMilk    = DefineProperty('found_milk', ['yes', 'no'])
+HasScreen  = DefineProperty('found_screen', ['yes', 'no'])
+
+
 room_categories = {
   'kitchen': IndependentFeaturesDistribution([
-                 HistogramDistribution({'looks_kitchen':0.90, 'looks_office':0.10}),
-                 HistogramDistribution({'big_room':0.3, 'small_room':0.6}),
-                 HistogramDistribution({'has_apple': 0.8, 'no_apple':0.2})]),
+                 Appearance({'kitchen': 0.70,    'office': 0.29, 'corridor':0.01}),
+                 RoomShape( {'square':  0.60, 'elongated': 0.4}),
+                 RoomSize(  {'small': 0.30, 'medium': 0.6, 'large': 0.2}),
+                 HasBook(   {'yes': 0.4, 'no': 0.6}),
+                 HasMilk(   {'yes': 0.7, 'no': 0.3}),
+                 HasScreen( {'yes': 0.2, 'no': 0.8})
+             ]),
   'corridor': IndependentFeaturesDistribution([
-                 HistogramDistribution({'looks_corridor':0.98, 'looks_kitchen':0.01, 'looks_kitchen':0.01}),
-                 HistogramDistribution({'big_room':0.9, 'small_room':0.1}),
-                 HistogramDistribution({'has_apple': 0.01, 'no_apple':0.99})]),
+                 Appearance({'kitchen': 0.01,    'office': 0.01, 'corridor':0.9}),
+                 RoomShape( {'square':  0.05, 'elongated': 0.95}),
+                 RoomSize(  {'small': 0.50, 'medium': 0.5, 'large': 0.2}),
+                 HasBook(   {'yes': 0.1, 'no': 0.9}),
+                 HasMilk(   {'yes': 0.05, 'no': 0.95}),
+                 HasScreen( {'yes': 0.05, 'no': 0.95})
+             ]),
   'office':  IndependentFeaturesDistribution([
-                 HistogramDistribution({'looks_office':0.90, 'looks_kitchen': 0.010}),
-                 HistogramDistribution({'big_room':0.9, 'small_room':0.1}),
-                 HistogramDistribution({'has_apple': 0.2, 'no_apple':0.8})])
+                 Appearance({'kitchen': 0.30,   'office': 0.69, 'corridor':0.01}),
+                 RoomShape( {'square':  0.6, 'elongated': 0.4}),
+                 RoomSize(  {'small': 0.20, 'medium': 0.5, 'large': 0.5}),
+                 HasBook(   {'yes': 0.7, 'no': 0.3}),
+                 HasMilk(   {'yes': 0.2, 'no': 0.8}),
+                 HasScreen( {'yes': 0.89, 'no': 0.11}),
+             ]),
 }
 room_distrib = ClassDistribution(DiscreteDistribution(room_categories.keys()), room_categories)
-test_Distribution(room_distrib, 1000)
+test_Distribution(room_distrib, 10000)
 
 room_classifier = Classifier.MAP(room_distrib)
 
@@ -97,5 +124,8 @@ def TestClassifier(classifier, labelled_data):
   print(Correctness(c))
   return c
 
-TestClassifier(room_classifier, SampleN(1000, room_distrib.ClassGenerator()))
-IndependentFeaturesDistribution
+TestClassifier(room_classifier, SampleN(5000, room_distrib.ClassGenerator()))
+
+print(Histogram(x for y in SampleN(100, room_distrib.Generator()) for x in y))
+
+
