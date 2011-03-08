@@ -43,3 +43,15 @@ class MAP:
     return self.ClassifyThreshold(sample)[1]
   
 
+class SemiNoveltyThreshold:
+  def __init__(self, known_distribution, input_distribution, label='known'):
+    self.distribution = input_distribution
+    self.known_distribution = known_distribution
+    self.label = label
+  
+  def ClassifyThreshold(self, sample):
+    p_known = self.known_distribution.Probability(sample)
+    density = self.distribution.Probability(sample)
+    threshold = p_known/float(density)
+    return (threshold, self.label)
+

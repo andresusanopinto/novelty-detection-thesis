@@ -38,40 +38,49 @@ Room = DefineIndependentPropertySet({
   'HasScreen': DefineProperty('found_screen', ['yes', 'no'])
 })
 
+kitchen = Room({
+             'Appearance': {'kitchen': 0.70,    'office': 0.29, 'corridor':0.01},
+             'RoomShape' : {'square':  0.60, 'elongated': 0.4},
+             'RoomSize'  : {'small': 0.30, 'medium': 0.6, 'large': 0.2},
+             'HasBook'   : {'yes': 0.4, 'no': 0.6},
+             'HasMilk'   : {'yes': 0.7, 'no': 0.3},
+             'HasScreen' : {'yes': 0.2, 'no': 0.8}
+         })
+
+corridor = Room({
+             'Appearance':{'kitchen': 0.01,    'office': 0.01, 'corridor':0.9},
+             'RoomShape' :{'square':  0.05, 'elongated': 0.95},
+             'RoomSize'  :{'small': 0.50, 'medium': 0.5, 'large': 0.2},
+             'HasBook'   :{'yes': 0.1, 'no': 0.9},
+             'HasMilk'   :{'yes': 0.05, 'no': 0.95},
+             'HasScreen' :{'yes': 0.05, 'no': 0.95}
+         })
+office = Room({
+             'Appearance':{'kitchen': 0.30,   'office': 0.69, 'corridor':0.01},
+             'RoomShape' :{'square':  0.6, 'elongated': 0.4},
+             'RoomSize'  :{'small': 0.20, 'medium': 0.5, 'large': 0.5},
+             'HasBook'   :{'yes': 0.7, 'no': 0.3},
+             'HasMilk'   :{'yes': 0.2, 'no': 0.8},
+             'HasScreen' :{'yes': 0.89, 'no': 0.11},
+         })
 
 room_categories = {
-  'kitchen': Room({
-                 'Appearance': {'kitchen': 0.70,    'office': 0.29, 'corridor':0.01},
-                 'RoomShape' : {'square':  0.60, 'elongated': 0.4},
-                 'RoomSize'  : {'small': 0.30, 'medium': 0.6, 'large': 0.2},
-                 'HasBook'   : {'yes': 0.4, 'no': 0.6},
-                 'HasMilk'   : {'yes': 0.7, 'no': 0.3},
-                 'HasScreen' : {'yes': 0.2, 'no': 0.8}
-             }),
-  'corridor': Room({
-                 'Appearance':{'kitchen': 0.01,    'office': 0.01, 'corridor':0.9},
-                 'RoomShape' :{'square':  0.05, 'elongated': 0.95},
-                 'RoomSize'  :{'small': 0.50, 'medium': 0.5, 'large': 0.2},
-                 'HasBook'   :{'yes': 0.1, 'no': 0.9},
-                 'HasMilk'   :{'yes': 0.05, 'no': 0.95},
-                 'HasScreen' :{'yes': 0.05, 'no': 0.95}
-             }),
-  'office':  Room({
-                 'Appearance':{'kitchen': 0.30,   'office': 0.69, 'corridor':0.01},
-                 'RoomShape' :{'square':  0.6, 'elongated': 0.4},
-                 'RoomSize'  :{'small': 0.20, 'medium': 0.5, 'large': 0.5},
-                 'HasBook'   :{'yes': 0.7, 'no': 0.3},
-                 'HasMilk'   :{'yes': 0.2, 'no': 0.8},
-                 'HasScreen' :{'yes': 0.89, 'no': 0.11},
-             }),
+'kitchen': kitchen,
+'corridor': corridor,
+'office': office
 }
-room_distrib = ClassDistribution(DiscreteDistribution(room_categories.keys()), room_categories)
-test_Distribution(room_distrib, 10000)
 
-room_classifier = Classifier.MAP(room_distrib)
+def testPerfectClassification():
+  world_distrib = ClassDistribution(DiscreteDistribution(room_categories.keys()), room_categories)
+  room_classifier = Classifier.MAP(world_distrib)
+  TestClassifier(room_classifier, SampleN(5000, world_distrib.ClassGenerator()))
 
-TestClassifier(room_classifier, SampleN(5000, room_distrib.ClassGenerator()))
+def testSemiNoveltyDetection():
+  world_distrib = ClassDistribution(DiscreteDistribution(room_categories.keys()), room_categories)
+  known_distrib = kitchen
+  novel_classifier = Classifier.SemiNoveltyThreshold(known_distrib, world_distrib, label="kitchen")
+  TestClassifierThreshold(novel_classifier, SampleN(5000, world_distrib.ClassGenerator()))
 
-print(Histogram(x for y in SampleN(100, room_distrib.Generator()) for x in y))
-
+#testPerfectClassification()
+testSemiNoveltyDetection()
 

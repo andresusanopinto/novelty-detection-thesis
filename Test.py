@@ -61,6 +61,17 @@ def TestClassifier(classifier, labelled_data):
   PlotConfusionMatrix(c)
   return c
 
+def TestClassifierThreshold(classifier, labelled_data):
+  """Returns a sorted list by the threshold (threshold, (label, guess))."""
+  roc = []
+  for (label, sample) in labelled_data:
+    (threshold, guess) = classifier.ClassifyThreshold(sample)
+    roc.append((threshold, (label, guess)))
+  roc = sorted(roc, reverse=True)
+  tf_roc = [label == guess for (t,(label,guess)) in roc]
+  graph.roc(tf_roc)
+  return roc
+
 def PlotConfusionMatrix(confusion):
   labels = set()
   for ((label,guess), count) in confusion.items():
