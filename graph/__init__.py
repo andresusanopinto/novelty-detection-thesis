@@ -1,0 +1,2 @@
+from .HintonDiagrams import hinton
+

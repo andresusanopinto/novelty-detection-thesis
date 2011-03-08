@@ -20,7 +20,8 @@
 #
 from Utils import Histogram
 from Sampler import SampleN
-
+import numpy as np
+import graph
 
 def Normalize(histogram):
   sum = 0
@@ -68,5 +69,6 @@ def PlotConfusionMatrix(confusion):
   labels = dict(enumerate(labels))
   def correct(a, b):
     return 1 if a == b else -1
-  print([[confusion[labels[i],labels[j]]*correct(i, j) for j in range(len(labels))] for i in range(len(labels))])
+  mat = [[confusion[labels[i],labels[j]]*correct(i, j) for j in range(len(labels))] for i in range(len(labels))]
+  graph.hinton(np.array(mat))
 
