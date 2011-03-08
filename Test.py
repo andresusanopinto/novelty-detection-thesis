@@ -18,19 +18,15 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
-from collections import Counter
+from Utils import Histogram
 from Sampler import SampleN
 
-# TODO(andresp): Histogram class on top of collections.Counter
-# Histogram comparison measures
-def Histogram(data):
-  return Counter(data)
 
 def Normalize(histogram):
   sum = 0
   for key in histogram:
     sum += histogram[key]
-  out = Counter()
+  out = Histogram()
   for key in histogram:
     out[key] = histogram[key]/float(sum);
   return out
@@ -57,7 +53,7 @@ def Correctness(confusion_matrix):
 
 def TestClassifier(classifier, labelled_data):
   """Returns confusion matrix."""
-  c = Counter()
+  c = Histogram()
   for (label, sample) in labelled_data:
     guess = classifier.Classify(sample)
     c[label,guess] += 1
@@ -69,19 +65,8 @@ def PlotConfusionMatrix(confusion):
   for ((label,guess), count) in confusion.items():
     labels.add(label)
     labels.add(guess)
-  print("%20s:" % "Confusion matrix")
-  print("%20s:" % "", end = "")
-  for label in labels:
-    print("%12s" % label, end = "")
-  print()
-  for label in labels:
-    print("%20s:" % label, end = "")
-    for guess in labels:
-      if label != guess:
-        print("%12d" % confusion[(label,guess)], end = "")
-      else:
-        print("%12d" % 0, end = "")
-    print()
-  print("%f were correct." % Correctness(confusion))
-
+  labels = dict(enumerate(labels))
+  def correct(a, b):
+    return 1 if a == b else -1
+  print([[confusion[labels[i],labels[j]]*correct(i, j) for j in range(len(labels))] for i in range(len(labels))])
 

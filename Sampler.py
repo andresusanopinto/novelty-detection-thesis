@@ -19,7 +19,7 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 import random
-import collections
+from Utils import Histogram
 
 class Distribution:
   def Probability(self, sample):
@@ -117,7 +117,7 @@ class ClassDistribution:
         key = next(class_generator)
         yield (key, next(classes_gens[key]))
     return sampler(self.class_distribution.Generator(),
-                  {c: d.Generator() for (c, d) in self.class_description.items()})
+                  dict((c, d.Generator()) for (c, d) in self.class_description.items()))
   
   def Generator(self):
     def drop_label(gen):
@@ -157,14 +157,12 @@ def BooleanDistribution(prob):
 
 def DiscreteDistribution(distribs):
   """Defines a uniform distribution over the list of distributions."""
-  return HistogramDistribution(collections.Counter(distribs))
-
-
+  return HistogramDistribution(Histogram(distribs))
 
 def DefineProperty(name, values, uncertain = 0.001):
   """Returns a function that creates distributions of (name, item in values)."""
   def Distribution(prob):
-    dist = {(name,x):uncertain for x in values}
+    dist = dict(((name,x),uncertain) for x in values)
     for key in prob:
       dist[(name,key)] += prob[key]
     return HistogramDistribution(dist)

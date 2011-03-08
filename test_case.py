@@ -22,7 +22,6 @@
 from Sampler import *
 from Test import *
 import Classifier
-from collections import Counter
 
 test_Distribution(UniqueDistribution('value'), 100)
 test_Distribution(BooleanDistribution(0.5), 1000)
@@ -70,8 +69,6 @@ room_distrib = ClassDistribution(DiscreteDistribution(room_categories.keys()), r
 test_Distribution(room_distrib, 10000)
 
 room_classifier = Classifier.MAP(room_distrib)
-
-
 
 TestClassifier(room_classifier, SampleN(5000, room_distrib.ClassGenerator()))
 
