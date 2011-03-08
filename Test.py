@@ -66,9 +66,9 @@ def PlotConfusionMatrix(confusion):
   for ((label,guess), count) in confusion.items():
     labels.add(label)
     labels.add(guess)
-  labels = dict(enumerate(labels))
+  labels = [x for x in labels]
   def correct(a, b):
     return 1 if a == b else -1
   mat = [[confusion[labels[i],labels[j]]*correct(i, j) for j in range(len(labels))] for i in range(len(labels))]
-  graph.hinton(np.array(mat))
+  graph.hinton(np.array(mat), title="Confusion matrix", vlabels=labels, hlabels=labels)
 

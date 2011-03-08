@@ -14,7 +14,7 @@ def _blob(x,y,area,colour):
     ycorners = N.array([y - hs, y - hs, y + hs, y + hs])
     P.fill(xcorners, ycorners, colour, edgecolor=colour)
 
-def hinton(W, maxWeight=None):
+def hinton(W, maxWeight=None, title=None, vlabels=None, hlabels=None):
     """
     Draws a Hinton diagram for visualizing a weight matrix. 
     Temporarily disables matplotlib interactive mode if it is on, 
@@ -27,9 +27,9 @@ def hinton(W, maxWeight=None):
     height, width = W.shape
     if not maxWeight:
         maxWeight = 2**N.ceil(N.log(N.max(N.abs(W)))/N.log(2))
-
+    
     P.fill(N.array([0,width,width,0]),N.array([0,0,height,height]),'gray')
-    P.axis('off')
+    if not vlabels and not hlabels: P.axis('off')
     P.axis('equal')
     for x in xrange(width):
         for y in xrange(height):
@@ -40,6 +40,13 @@ def hinton(W, maxWeight=None):
                 _blob(_x - 0.5, height - _y + 0.5, min(1,w/maxWeight),'white')
             elif w < 0:
                 _blob(_x - 0.5, height - _y + 0.5, min(1,-w/maxWeight),'black')
+    
+    if vlabels: P.yticks(N.array(range(height))+0.5, list(reversed(hlabels)))
+    if hlabels: P.xticks(N.array(range(width)) +0.5, hlabels)
+    if title: P.title(title)
+    
+    P.gca().get_xaxis().tick_bottom()
+    P.gca().get_yaxis().tick_left()
     if reenable:
         P.ion()
     P.show()
