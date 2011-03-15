@@ -47,7 +47,7 @@ def beta(a, b):
 
 dp_log_fac = {}
 dp_log_fac[0] = math.log(1)
-for i in range(1, 10000):
+for i in range(1, 100000):
   dp_log_fac[i] = dp_log_fac[i-1] + math.log(i)
 
 def log_fac(n):
@@ -151,7 +151,7 @@ def test1_1(rmodel=0.75, numsamples=1, samplesize=10, quality=100.0):
   pl.legend()
 
 
-def test2(rmodel=0.95, traindata=None, trainsamples=500, testsamplesize=50, quality=50.0, precision=100,
+def test2(rmodel=0.95, traindata=None, trainsamples=500, testsamplesize=50, quality=50.0, precision=200,
           percentils = [0.05, 0.25, 0.5, 0.75, 0.95]):
   """Plots probability that a sample from a given model is considered to come from the
   same model as a given training data."""
@@ -178,7 +178,7 @@ def test2(rmodel=0.95, traindata=None, trainsamples=500, testsamplesize=50, qual
   plot_perc = []
   for perc in percentils:
     plot_perc.append(list(x[int(perc*precision)] for x in boxdata)) 
-    pl.plot(x, plot_perc[-1], label="Percentil %f"%perc)
+    pl.plot(x, plot_perc[-1], 'b', alpha=0.25, label="Percentil %f"%perc)
   for i in range(0, len(plot_perc)-1):
     pl.fill_between(x, plot_perc[i], plot_perc[i+1], alpha=0.25)
   
@@ -197,6 +197,6 @@ if False:
 
 if True:
   pl.figure()
-  test2(rmodel=0.25,trainsamples=500, testsamplesize=500,percentils=[0.05, 0.95])
+  test2(rmodel=0.25,trainsamples=500, testsamplesize=25,percentils=[0.05, 0.5, 0.95])
 
 pl.show()
