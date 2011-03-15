@@ -85,6 +85,8 @@ def testSemiNoveltyDetection():
   TestClassifierThreshold(novel_classifier, SampleN(5000, world_distrib.ClassGenerator()))
 
 testPerfectClassification()
+pl.savefig('map_classifier_confusion.png')
 testSemiNoveltyDetection()
+pl.savefig('semi_novelty_roc.png')
 pl.show()
 
