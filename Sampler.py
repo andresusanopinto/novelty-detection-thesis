@@ -172,6 +172,9 @@ def DefineIndependentPropertySet(properties):
   """Returns a function that creates distributions with the given properties."""
   def Distribution(props):
     features = []
+    for key in props:
+      if key not in properties:
+        print('Ignoring property %s as its not defined in the model' % key)
     for key in properties:
       if key in props:
         features.append(properties[key](props[key]))

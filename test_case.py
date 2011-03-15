@@ -22,6 +22,9 @@
 from Sampler import *
 from Test import *
 import Classifier
+import pylab as pl
+import random
+random.seed(0)
 
 test_Distribution(UniqueDistribution('value'), 100)
 test_Distribution(BooleanDistribution(0.5), 1000)
@@ -30,7 +33,7 @@ test_Distribution(DiscreteDistribution(['kitchen', 'office', 'sample']), 1000)
 
 
 Room = DefineIndependentPropertySet({
-  'Apperance': DefineProperty('appearance', ['kitchen', 'office', 'corridor']),
+  'Appearance': DefineProperty('appearance', ['kitchen', 'office', 'corridor']),
   'RoomShape': DefineProperty('room_shape', ['square', 'elongated']),
   'RoomSize' : DefineProperty('room_size',  ['small', 'medium', 'large']),
   'HasBook'  : DefineProperty('found_book', ['yes', 'no']),
@@ -81,6 +84,7 @@ def testSemiNoveltyDetection():
   novel_classifier = Classifier.SemiNoveltyThreshold(known_distrib, world_distrib, label="kitchen")
   TestClassifierThreshold(novel_classifier, SampleN(5000, world_distrib.ClassGenerator()))
 
-#testPerfectClassification()
+testPerfectClassification()
 testSemiNoveltyDetection()
+pl.show()
 
