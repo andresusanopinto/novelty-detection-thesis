@@ -1,0 +1,97 @@
+\chapter{Introduction}
+\label{chap:introduction}
+
+%\section*{}
+%This chapter gives a generic overview of the problem, its motivation and goals. It also describes how the rest of the document is organized.
+
+\section{Motivation}
+There has been several efforts in the area of Artificial Intelligence and Robotics in creating robots that are able to interact with humans and their environments.
+One of the existing problems is a reliable high-level localization method that can be deployed into new and unknown environments.
+
+That task is specially difficult due to the constant change in those environments, either introduced by human interaction or by other external factors such as light-conditions.
+Also the generalization requisite on such task requires highly generic and stable features to be extracted.
+
+This thesis will focus on man-made indoor environments such as houses, offices, labs.
+Where it would be desirable to map robot position to an high-level description such as kitchen, corridor, printer-area, office.
+Such a classification can then be used to:
+\footnote{Besides the motivation scenario, visual place classification has uses on other areas like augmented reality, content-base image retrieval and context awareness~\citep{dey2000towards}.}
+\begin{itemize*}
+\item Improve human interaction by mapping the robot localization to human concepts.
+\item Improve robot localization methods with a high-level and robust localization information.
+\item Extend knowledge about room categories and their properties.
+\item Provide the robot with the ability to perform context-aware decisions.
+\end{itemize*}
+
+The robots should be able to operate in unknown environments as often they cannot be trained on the same environment they will operate on.
+And under those circumstances the ability to distinguish between the known and unknown becomes a key point for reliability since it allows a robot to not trust the results it gets on new types of rooms.
+
+It is therefore important to develop and access the quality of methods to identify novel cases.
+Being the detection of novelty a key point for several tasks such as:
+\begin{itemize*}
+\item Operation in unknown environments.
+\item Modelling what is know.
+\item Ability to self-extend knowledge.
+\end{itemize*}
+
+\subsection{Visual features}
+\label{sec:visual_motivation}
+% Why Visual Place Classification!!
+A robot often has several sensors that capture characteristics of its surrounding environment.
+From those, vision is the most interesting and rich one and nowadays it is very easy to incorporate.
+Making it a primary source of information for place classification.
+
+Although its also the richness of the vision sensors that make it noisy and harder do interpret as the appearance of places varies over time due to illumination, human activity and view change.
+It becomes then important to extract stable features from the visual input.
+Visual features will be the main features explored during the thesis although other methods will also be used.
+
+\section{Related Work}
+\label{sec:related-work}
+\cite{quattoni2009recognizing} showed that most scene recognition models work poorly in indoor scenes when compared to outdoor scenes results.
+Since the properties that characterize rooms changes conforming its category. Namely corridors are well described by global properties and bookstores are well described by the presence of specific objects (books).
+It became obvious then to use information provided by several sources. Their work uses both global and local features for scene recognition and does not address any specific information available in the context of mobile robotics.
+
+This relation between room category and object has also been studied in the object search field.
+Object search mainly focus on geometric properties but \cite{galindo2005multi} defines a bidirectional relation between object and room category, where object defines a room category and a room category provides information on where objects may be found.
+
+Probabilistic representations are used in several localised functions in robots operating in the real-world~\citep{gross2009toomas,maierprobabilistic}. And some employ, up to some extent, a probabilistic representation across some subsystems~\citep{kraft2008exploration}.
+\citet{vasudevan2008bayesian} performed room categorization through Bayesian reasoning about the presence of objects but did not included observations models (perception is considered deterministic).
+And \cite{boutell2006factor} have studied outdoor scene classification using \emph{factor graphs} and modelling spatial relations between objects in the scene to extract better knowledge from semantic (high-level) features.
+
+Its expected that using a unified probabilistic model from the whole system, such as \cite{pronobis2011exploiting}, more information can be reused to correctly predict a given random variable.
+
+While there has been active research on visual properties and place classification, novelty detection applied to this problem has not seen much work on it~\citep{caputo2009overview}.
+As \cite{markou2003novelty} reviews, novelty detection is an incredibly complex problem and requires specific techniques and methods to each problem.
+
+\cite{bishop1994novelty} has showed that unconditional probability density can be use to provide a novelty measure. Though that probability is in most cases impractical to measure and even in those cases its necessary to find a correct threshold for \emph{novelty detection}. In higher-dimensions this method loses precision due to a spread out of the probability density function as most probability will be spread out on the tails of the function~\citep{markou2003novelty-part2}.
+
+For that reason several other approaches have been developed for novelty detection.
+One of those is the work of \cite{Hoffmann2007863} which applied non-linear statistical analysis to detect novel cases.
+It has shown good results when applied to several problems such as digit recognition and cancer detection.
+
+This type of approach although suffers from high computational and memory needs and often techniques need to be adapted to allow a online behaviour~\citep{sofman2010anytime}.
+
+
+\section{Contribution/Goals}
+\label{sec:goals}
+During the thesis a thorough evaluation of a recently proposed property-based semantic mapping system for mobile robots~\citep{pronobis2011exploiting} on a real world visual database will be performed.
+
+That system will be extended by usage of state-of-art novelty detection machine learning algorithms to the problem of visual place categorization.
+As a final evaluation step, the developed method will be submitted to the Robot Vision Task on \gls{ImageCLEF}.
+
+\section{Outline}
+The rest of this technical report is organized as follows:
+
+\begin{description}
+\item[Chapter \ref{chap:background}] introduces the background for handling the presented problem.
+It introduces the generic classification problem and techniques used to address it. Later developing on the specific visual features normally used as input for the place classification.
+
+It also presents the novelty detection problem as well the techniques used to address it in the current context.
+
+\item[Chapter \ref{chap:approach}] presents our approach to the problem. It introduces the platform over which the visual place classification is performed and points in the direction of extending such a platform for novelty detection.
+
+\item[Chapter \ref{chap:testing}] introduces the testing and evaluation methodologies.
+It also presents the databases used and the \gls{ImageCLEF} competition to which the developed work will be submitted.
+
+\item[Chapter \ref{chap:workplan}] lists and elaborates on the planned tasks to be completed during the master thesis work and gives an estimated schedule for the working time. 
+\end{description}
+

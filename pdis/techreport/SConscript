@@ -1,0 +1,2 @@
+PDF(target = 'techreport.pdf',
+    source = 'techreport.tex')

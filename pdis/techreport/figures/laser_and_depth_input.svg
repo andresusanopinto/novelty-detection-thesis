@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="1452.2812"
+   height="1046.9941"
+   id="svg3883"
+   inkscape:version="0.47 r22583"
+   sodipodi:docname="laser_and_depth_input.svg">
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1024"
+     inkscape:window-height="578"
+     id="namedview5"
+     showgrid="false"
+     inkscape:zoom="0.16865277"
+     inkscape:cx="78.38925"
+     inkscape:cy="400.19617"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3883" />
+  <defs
+     id="defs3885">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective9" />
+    <inkscape:perspective
+       id="perspective2901"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective2975"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3823"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(675.82848,0.80732203)" />
+  <image
+     y="572.9942"
+     x="815.73407"
+     id="image2903"
+     height="474"
+     width="630"
+     xlink:href="kinect-sample-depth.jpg" />
+  <g
+     id="g2889">
+    <image
+       xlink:href="kinect-sample-camera.jpg"
+       y="300.47009"
+       x="7.2398973"
+       id="image2977"
+       height="474"
+       width="637" />
+    <path
+       id="path2981"
+       d="m 5,591.97493 69.17918,-25.15607 155.12909,-4.19268 8.38536,-4.19268 8.38535,-8.38535 85.9499,-4.19268 8.38536,12.57803 25.15607,-2.09634 64.98651,-2.09634 25.15606,12.57804 50.31214,-4.19268 18.86705,6.28902 37.7341,-2.09634 12.57804,4.19268 8.38535,-4.19268 69.17919,20.96339 0,0"
+       style="fill:none;stroke:#0000e4;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  </g>
+  <g
+     id="g3783"
+     transform="translate(675.82848,0.80732203)">
+    <rect
+       y="4.192678"
+       x="150.9364"
+       height="494.73599"
+       width="620.51636"
+       id="rect3771"
+       style="fill:none;stroke:#000000;stroke-width:10;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       id="path3773"
+       d="m 189.73895,328.98245 0,-139.33954 112.6575,-2.96467 5.92934,17.78802 14.82336,-2.96467 5.92934,-160.092242 139.33954,0 2.96467,130.445532 8.89401,23.71737 32.61139,-5.92934 2.96467,-11.85869 26.68204,-20.75269 77.08144,14.82335 2.96468,41.5054 17.78802,0 32.61138,-38.54073 26.68204,5.92934 17.78803,32.61139 2.96467,20.75269 L 708.55639,358.62916 468.41803,465.35732 189.73895,328.98245 z"
+       style="fill:none;stroke:#0000ec;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       id="path3775"
+       d="M 314.25513,213.36027 465.45336,447.56929 637.40428,219.28962"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       id="path3777"
+       d="M 477.31204,204.46626 465.45336,444.60462 340.93717,47.338694"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       id="path3779"
+       d="M 198.63296,201.50159 471.3827,450.53396 201.59763,326.01777"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       id="path3781"
+       d="M 575.14619,177.78422 474.34737,456.4633 705.59171,311.19442"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:100px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Arab;-inkscape-font-specification:Arab"
+     x="88.046242"
+     y="174.91724"
+     id="text3791"><tspan
+       sodipodi:role="line"
+       id="tspan3793"
+       x="88.046242"
+       y="174.91724">Laser Scan</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:100px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Arab;-inkscape-font-specification:Arab"
+     x="146.74373"
+     y="958.948"
+     id="text3795"><tspan
+       sodipodi:role="line"
+       x="146.74373"
+       y="958.948"
+       id="tspan3799">3D Scan</tspan></text>
+  <path
+     style="fill:none;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     d="m 612.13099,929.59928 180.28515,0"
+     id="path3805" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     d="m 649.86509,141.37581 142.55105,0"
+     id="path3807" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     d="m 360.57031,200.0733 0,83.85356"
+     id="path3809" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     d="m 343.7996,866.70911 0,-88.04624"
+     id="path3811" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     d="m 749.44119,96.304521 46.11946,46.119459 -45.07129,45.07129"
+     id="path3813" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     d="m 753.63387,882.95573 46.11946,46.11946 -45.07129,45.07129"
+     id="path3813-6" />
+</svg>

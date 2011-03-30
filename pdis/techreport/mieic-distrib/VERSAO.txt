@@ -1,0 +1,13 @@
+Distribution: MIEIC
+Current version: v2010g
+feupteses.sty: 0.9g
+
+Changes for v2010g:
+1. Uses watermark for provisional version
+
+Changes for v2009f:
+1. option print: hide hyperlinks
+
+Changes for v2009e:
+1. plainnat-pt.bst: finished conversion to Portuguese.
+2. unsrt-pt.bst: added to the distribution

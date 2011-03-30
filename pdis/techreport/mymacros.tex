@@ -1,0 +1,20 @@
+% To Do tools:
+% todonotes provides nice visual tools for adding annotations.
+% the following commands are defined:
+% Fell free to improve it for transparent TeX usage like I did
+% \todo, \rewrite, \missingfigure, \cite
+\usepackage[colorinlistoftodos]{todonotes}
+\setlength{\marginparwidth}{2cm} % Fix margins..
+
+\newcommand{\addref}{\todo[color=red!40,size=\tiny]{Add reference.}}
+\newcommand{\rewrite}[2][]{\todo[inline,color=green!40,#1]{#2}}
+
+\usepackage{xifthen}
+\let\oldcite\cite
+\renewcommand{\cite}[1]{\oldcite{#1}\ifthenelse{\isempty{#1}}{\addref}{}}
+
+\usepackage{mdwlist}
+
+% http://en.wikibooks.org/wiki/LaTeX/Glossary
+\usepackage[acronym]{glossaries}
+\makeglossaries

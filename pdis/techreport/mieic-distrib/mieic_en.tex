@@ -1,0 +1,160 @@
+% FEUP THESIS STYLE for LaTeX2e
+% how to use feupteses (changed from the original for MIEEC)
+%
+% FEUP, JCL & JCF, Tue May 20 18:53:15 2008
+%
+% PLEASE send improvements to jlopes at fe.up.pt, jcf at fe.up.pt
+%
+
+%%========================================
+%% Commands: pdflatex mieic
+%%           bibtex mieic
+%%           makeindex mieic (only if crating an index) 
+%%           pdflatex mieic
+%%========================================
+
+%% For one side layout comment next line and uncomment the second line
+\documentclass[11pt,a4paper,twoside,openright]{report}
+%\documentclass[11pt,a4paper]{report}
+
+%% For iso-8859-1 (latin1), comment next line and uncomment the second line
+\usepackage[utf8]{inputenc}
+%\usepackage[latin1]{inputenc}
+
+%% Use option portuges if needed
+\usepackage[english]{babel}
+
+%% For the final version, comment next line and uncomment the second line
+\usepackage[provisional,alpharefs]{feupteses}      
+%\usepackage[alpharefs]{feupteses} 
+
+%% Options: 
+%% - portuges: titles, etc in portuguese
+%% - provisional: the thesis has not been approved yet
+%% - usewatermark: use watermark instaed of provisonal text
+%% - print: links are not shown (for paper versions)
+%% - alpharefs: bibliography references are alphabetic
+%% - numericrefs: bibliography references are numbered (in order of citation)
+%% ( by default: author-date format of the ``natbib'' package is used 
+%%   the portuguese version requires the file ``plainnat-pt.bst'' to be 
+%%   present in the same directory )
+
+%% Include MIEIC definitions different from standard style
+\usepackage{mieicpatch}
+
+%% Provide a version number in order to keep track of
+%% thesis versions (it will printed in the footer of most pages)
+
+\version{0.99}
+
+%% Uncomment in the final version in order to make version footer disappear
+\noversiontrue                 
+
+%% Uncomment to create an index (at the end of the document)
+%\makeindex                      
+
+%% Path to the figures directory
+%% TIP: use folder ``figures'' to keep all your figures
+\graphicspath{{figures/}}       
+
+%%----------------------------------------
+%% TIP: if you want to define more macros, use an external file to
+%% keep them
+\include{mymacros}
+%%----------------------------------------
+
+%%========================================
+%% Start of document
+%%========================================
+\begin{document}
+
+%%----------------------------------------
+%% Information about the work
+%%----------------------------------------
+\title{Title of the Dissertation}
+\author{Name of the Author}
+\degree{Master in Informatics and Computing Engineering}
+%% Date of submission
+\thesisdate{28$^{th}$ June, 2010}
+
+%% Insert copyright text if used
+%\copyrightnotice{Name of the Author, 2008}
+
+\supervisor{Supervisor}{Name of the Supervisor}{(Title)}
+%% Uncomment next line if necessary
+%\supervisor{Second Supervisor}{Name of the Supervisor}{(Title)}
+
+%% Uncomment committee stuff in the final version
+\committeetext{Approved in oral examination by the committee:}
+\committeemember{Chair}{Name of the President}{(Title)}
+\committeemember{External Examiner}{Name of the Examiner}{(Title)}
+\committeemember{Supervisor}{Name of the Supervisor}{(Title)}
+\signature
+\committeedate{31$^{st}$ July, 2010}
+
+%% Specify cover logo (in folder ``figures'')
+\logo{feup-logo.pdf}
+
+%%----------------------------------------
+%% Cover page(s)
+%%----------------------------------------
+\maketitle
+
+%% Uncomment next line in the final version
+\committeepage
+%MIEEC uses an external PDF page with the signatures (juri.pdf)
+%\includepdf[pagecommand={},noautoscale=false,fitpaper=true,pages=-]{juri.pdf}
+
+%% Preliminary materials
+\StartPrelim
+\begin{singlespace}
+  \include{abstract_en} % the abstract
+  \include{acknows_en}  % the acknowledgments
+  %\include{quote}    % initial quotation if desired
+  \cleardoublepage
+  \pdfbookmark[0]{Table of Contents}{contents}
+  \tableofcontents
+  \cleardoublepage
+  \pdfbookmark[0]{List of Figures}{figures}
+  \listoffigures
+  \cleardoublepage
+  \pdfbookmark[0]{List of Tables}{tables}
+  \listoftables
+  \cleardoublepage
+  \pdfbookmark[0]{Abbreviations}{abbrevs}
+  \include{abbrevs_en}  % the list of abbreviations used
+\end{singlespace}
+
+%%----------------------------------------
+%% Body
+%%----------------------------------------
+\StartBody
+
+%% TIP: use a separate file for each chapter
+\include{chapter1} 
+\include{chapter2}
+\include{chapter3}
+\include{chapter4}
+\include{chapter5} 
+
+%%----------------------------------------
+%% Final materials
+%%----------------------------------------
+
+\begin{singlespace}
+  %% Bibliography
+  %% Comment the next command if BibTeX file not used, 
+  %% bibliography is in ``myrefs.bib''
+  \PrintBib{myrefs}
+
+  %% Index
+  %% Uncomment next command if index is required,
+  %% don't forget to run ``makeindex mieic'' command
+  %\PrintIndex
+
+  %% Comment next 2 commands if numbered appendixes not used
+  \appendix
+  \include{appendix1}
+\end{singlespace}
+
+\end{document}
