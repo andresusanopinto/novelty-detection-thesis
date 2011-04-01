@@ -46,7 +46,7 @@ office = Room({
          })
 
 
-def UnlabelledData(samples = 100):
+def UnlabelledData(samples = 1000):
   room_categories = {
     'kitchen': kitchen,
     'corridor': corridor,
@@ -55,10 +55,11 @@ def UnlabelledData(samples = 100):
   world = dataset.ClassDistribution(dataset.DiscreteDistribution(room_categories.keys()), room_categories)
   return list(dataset.SampleN(100, world.Generator()))
 
-def LabelledData(samples = 100):
+def LabelledData(samples = 1000):
   room_categories = {
-    'kitchen': kitchen,
-    'corridor': corridor
+    'office': office,
+#    'kitchen': kitchen,
+#    'corridor': corridor
   }
   world = dataset.ClassDistribution(dataset.DiscreteDistribution(room_categories.keys()), room_categories)
   return list(dataset.SampleN(100, world.ClassGenerator()))
@@ -107,5 +108,19 @@ conditional_prob   = ml.DiscreteProbabilityEstimator([sample for label,sample in
 def threshold(sample):
   return conditional_prob(sample) / unconditional_prob(sample)
 
-thresholds = sorted(map(threshold, test_data))
-print thresholds
+ct_p = {}
+ct_n = {}
+for key in ['kitchen', 'corridor', 'office']:
+  ct_p[key] = 0
+  ct_n[key] = 0
+
+for label, sample in dataset.ExtractLabel(test_data):
+  t = threshold(sample)
+  print t
+  if t > 1.0:
+    ct_p[label] += 1
+  else:
+    ct_n[label] += 1
+
+print ct_p
+print ct_n
