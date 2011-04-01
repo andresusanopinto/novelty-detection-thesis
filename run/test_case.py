@@ -19,9 +19,9 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
-from Sampler import *
-from Test import *
-import Classifier
+import dataset.Sampler as Sampler
+import ml.Test
+import ml.Classifier
 import pylab as pl
 import random
 random.seed(0)

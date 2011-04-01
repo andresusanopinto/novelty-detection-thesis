@@ -19,7 +19,7 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 import random
-from Utils import Histogram
+from util import Histogram
 
 class Distribution:
   def Probability(self, sample):
