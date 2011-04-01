@@ -2,4 +2,6 @@ from Classifier import *
 
 
 def DiscreteProbabilityEstimator(samples):
-  return None
+  def Density(sample):
+    return 1.0
+  return Density

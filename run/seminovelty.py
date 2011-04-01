@@ -23,9 +23,12 @@ import ml
 import dataset
 
 
+show_data_samples = 10
+
+
 Room = dataset.DefineIndependentPropertySet({
-  'Appearance': dataset.DefineProperty('appearance', ['kitchen', 'office', 'corridor']),
-  'RoomShape': dataset.DefineProperty('room_shape', ['square', 'elongated']),
+  'Appearance': dataset.DefineProperty('place_appearance_property', ['kitchen', 'office', 'corridor']),
+  'RoomShape': dataset.DefineProperty('place_shape_property', ['square', 'elongated']),
 })
 
 kitchen = Room({
@@ -42,31 +45,67 @@ office = Room({
              'RoomShape' :{'square':  0.6, 'elongated': 0.4},
          })
 
-room_categories = {
-  'kitchen': kitchen,
-  'corridor': corridor,
-  'office': office
-}
+
+def UnlabelledData(samples = 100):
+  room_categories = {
+    'kitchen': kitchen,
+    'corridor': corridor,
+    'office': office
+  }
+  world = dataset.ClassDistribution(dataset.DiscreteDistribution(room_categories.keys()), room_categories)
+  return list(dataset.SampleN(100, world.Generator()))
+
+def LabelledData(samples = 100):
+  room_categories = {
+    'kitchen': kitchen,
+    'corridor': corridor
+  }
+  world = dataset.ClassDistribution(dataset.DiscreteDistribution(room_categories.keys()), room_categories)
+  return list(dataset.SampleN(100, world.ClassGenerator()))
+
+def TestData():
+  """This data represents the 12 places present on rocs/data/sample/ConceptualGraph/sample2 logs"""
+  data = [
+   [('roomId', 0), ('placeId', 0), ('place_appearance_property', 'office'), ('place_shape_property', 'elongated')],
+   [('roomId', 0), ('placeId', 1), ('place_appearance_property', 'corridor'), ('place_shape_property', 'square')],
+   [('roomId', 0), ('placeId', 2), ('place_appearance_property', 'office'), ('place_shape_property', 'elongated')],
+   [('roomId', 1), ('placeId', 4), ('place_appearance_property', 'corridor'), ('place_shape_property', 'elongated')],
+   [('roomId', 2), ('placeId', 6), ('place_appearance_property', 'kitchen'), ('place_shape_property', 'square')],
+   [('roomId', 2), ('placeId', 7), ('place_appearance_property', 'kitchen'), ('place_shape_property', 'square')],
+   [('roomId', 2), ('placeId', 8), ('place_appearance_property', 'office'), ('place_shape_property', 'square')],
+   [('roomId', 2), ('placeId', 9), ('place_appearance_property', 'office'), ('place_shape_property', 'square')],
+   [('roomId', 2), ('placeId', 10), ('place_appearance_property', 'kitchen'), ('place_shape_property', 'square')],
+   [('roomId', 2), ('placeId', 11), ('place_appearance_property', 'office'), ('place_shape_property', 'square')],
+   [('roomId', 2), ('placeId', 12), ('place_appearance_property', 'office'), ('place_shape_property', 'square')]]
+  
+  roomCat = { 0: 'office' , 1: 'corridor', 2: 'office' }
+  test = []
+  for sample in data:
+    roomId, appearance, shape = sample[0][1], sample[2], sample[3]
+    test.append( (roomCat[roomId], (appearance, shape)))
+  return test
 
 
-world_distrib = dataset.ClassDistribution( dataset.DiscreteDistribution(room_categories.keys()), room_categories)
+
+unlabelled_data = UnlabelledData()
+labelled_data   = LabelledData()
+test_data       = TestData()
+
+if show_data_samples:
+  print('# Unlabelled Data is like:')
+  for x in dataset.SampleN(show_data_samples, unlabelled_data): print(x)
+  print('# Labelled Data is like:')
+  for x in dataset.SampleN(show_data_samples, labelled_data): print(x)
+  print('# Test Data is like:')
+  for x in dataset.SampleN(show_data_samples, test_data): print(x)
 
 
-
-known_labels = {}
-
-unlabelled_data = []
-labelled_data = []
-test_data = []
 
 unconditional_prob = ml.DiscreteProbabilityEstimator(unlabelled_data)
-conditional_prob = ml.DiscreteProbabilityEstimator(
-  [sample for label, sample in dataset.ExtractLabel(labelled_data)])
-
+conditional_prob   = ml.DiscreteProbabilityEstimator([sample for label,sample in dataset.ExtractLabel(labelled_data)])
 
 def threshold(sample):
   return conditional_prob(sample) / unconditional_prob(sample)
 
-
-threshold_for_acceptance = sorted(map(threshold, labelled_data))
-
+thresholds = sorted(map(threshold, test_data))
+print thresholds

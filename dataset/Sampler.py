@@ -186,6 +186,7 @@ def DefineIndependentPropertySet(properties):
 
 # TODO(andressp): create something like this in sampler module.
 def SampleN(max_samples, data):
+  data = iter(data)
   for x in range(max_samples):
     yield next(data)
 
