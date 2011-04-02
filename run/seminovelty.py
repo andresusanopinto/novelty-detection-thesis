@@ -21,14 +21,14 @@
 #
 import ml
 import dataset
-
+import dataset.Sampler as sampler
 
 show_data_samples = 10
 
 
-Room = dataset.DefineIndependentPropertySet({
-  'Appearance': dataset.DefineProperty('place_appearance_property', ['kitchen', 'office', 'corridor']),
-  'RoomShape': dataset.DefineProperty('place_shape_property', ['square', 'elongated']),
+Room = sampler.DefineIndependentPropertySet({
+  'Appearance': sampler.DefineProperty('place_appearance_property', ['kitchen', 'office', 'corridor']),
+  'RoomShape': sampler.DefineProperty('place_shape_property', ['square', 'elongated']),
 })
 
 kitchen = Room({
@@ -52,7 +52,7 @@ def UnlabelledData(samples = 1000):
     'corridor': corridor,
     'office': office
   }
-  world = dataset.ClassDistribution(dataset.DiscreteDistribution(room_categories.keys()), room_categories)
+  world = sampler.ClassDistribution(sampler.DiscreteDistribution(room_categories.keys()), room_categories)
   return list(dataset.SampleN(100, world.Generator()))
 
 def LabelledData(samples = 1000):
@@ -61,7 +61,7 @@ def LabelledData(samples = 1000):
 #    'kitchen': kitchen,
 #    'corridor': corridor
   }
-  world = dataset.ClassDistribution(dataset.DiscreteDistribution(room_categories.keys()), room_categories)
+  world = sampler.ClassDistribution(sampler.DiscreteDistribution(room_categories.keys()), room_categories)
   return list(dataset.SampleN(100, world.ClassGenerator()))
 
 def TestData():
