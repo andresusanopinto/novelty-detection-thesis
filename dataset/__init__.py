@@ -21,7 +21,10 @@
 from Sampler import SampleN
 from distribution import DiscreteDistribution, GenerateSample, Generator
 
-def ExtractLabel(samples):
-  for sample in samples:
-    yield sample[0], sample[1]
+def ExtractLabel(sample):
+  assert sample[0][0] == 'label'
+  return sample[0][1], tuple(list(sample)[1:])
 
+def FilterLabel(sample):
+  label, sample = ExtractLabel(sample)
+  return sample

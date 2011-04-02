@@ -21,48 +21,54 @@
 #
 import ml
 import dataset
-import dataset.Sampler as sampler
 
 show_data_samples = 10
 
-
-Room = sampler.DefineIndependentPropertySet({
-  'Appearance': sampler.DefineProperty('place_appearance_property', ['kitchen', 'office', 'corridor']),
-  'RoomShape': sampler.DefineProperty('place_shape_property', ['square', 'elongated']),
-})
-
-kitchen = Room({
-             'Appearance': {'kitchen': 0.70,    'office': 0.29, 'corridor':0.01},
-             'RoomShape' : {'square':  0.60, 'elongated': 0.4},
-         })
-
-corridor = Room({
-             'Appearance':{'kitchen': 0.01,    'office': 0.01, 'corridor':0.9},
-             'RoomShape' :{'square':  0.05, 'elongated': 0.95},
-         })
-office = Room({
-             'Appearance':{'kitchen': 0.30,   'office': 0.69, 'corridor':0.01},
-             'RoomShape' :{'square':  0.6, 'elongated': 0.4},
-         })
+def Label(label):  return ('label', label)
+def Appearance(d): return ('place_appearance_property', dataset.DiscreteDistribution(d))
+def Shape(d):      return ('place_shape_property',      dataset.DiscreteDistribution(d))
 
 
-def UnlabelledData(samples = 1000):
-  room_categories = {
-    'kitchen': kitchen,
-    'corridor': corridor,
-    'office': office
-  }
-  world = sampler.ClassDistribution(sampler.DiscreteDistribution(room_categories.keys()), room_categories)
-  return list(dataset.SampleN(100, world.Generator()))
+kitchen = ( Label('kitchen'),
+            Appearance([(0.70, 'kitchen'),
+                        (0.29, 'office' ),
+                        (0.01, 'corridor')]),
+            Shape([(0.60, 'square'),
+                   (0.40, 'elongated')])
+          )
 
-def LabelledData(samples = 1000):
-  room_categories = {
-    'office': office,
-#    'kitchen': kitchen,
-#    'corridor': corridor
-  }
-  world = sampler.ClassDistribution(sampler.DiscreteDistribution(room_categories.keys()), room_categories)
-  return list(dataset.SampleN(100, world.ClassGenerator()))
+corridor = ( Label('corridor'),
+             Appearance([(0.05, 'kitchen'),
+                         (0.05, 'office'),
+                         (0.90, 'corridor')]),
+             Shape([(0.05, 'square'),
+                    (0.95, 'elongated')])
+           )
+
+office   = ( Label('office'),
+             Appearance([(0.30, 'kitchen'),
+                         (0.69, 'office'),
+                         (0.01, 'corridor')]),
+             Shape([(0.6, 'square'),
+                    (0.4, 'elongated')])
+           )
+
+print list(dataset.SampleN(2, dataset.Generator(kitchen)))
+
+all_classes = [corridor, kitchen, office]
+known_classes = [ corridor, kitchen ]
+
+
+
+def UnlabelledData(samples = 10000, classes = all_classes):
+  distribution = dataset.DiscreteDistribution([(1, c) for c in classes])
+  gen = dataset.Generator(distribution)
+  return list(map(dataset.FilterLabel, dataset.SampleN(100, gen)))
+
+def LabelledData(samples = 10000, classes = known_classes):
+  distribution = dataset.DiscreteDistribution([(1, c) for c in classes])
+  gen = dataset.Generator(distribution)
+  return list(dataset.SampleN(100, gen))
 
 def TestData():
   """This data represents the 12 places present on rocs/data/sample/ConceptualGraph/sample2 logs"""
@@ -83,7 +89,7 @@ def TestData():
   test = []
   for sample in data:
     roomId, appearance, shape = sample[0][1], sample[2], sample[3]
-    test.append( (roomCat[roomId], (appearance, shape)))
+    test.append( (('label', roomCat[roomId]), appearance, shape) )
   return test
 
 
@@ -102,8 +108,8 @@ if show_data_samples:
 
 
 
-unconditional_prob = ml.DiscreteProbabilityEstimator(unlabelled_data)
-conditional_prob   = ml.DiscreteProbabilityEstimator([sample for label,sample in dataset.ExtractLabel(labelled_data)])
+unconditional_prob = ml.DiscreteProbabilityEstimator(unlabelled_data, state_size = 6)
+conditional_prob   = ml.DiscreteProbabilityEstimator(map(dataset.FilterLabel, labelled_data), state_size = 6)
 
 def threshold(sample):
   return conditional_prob(sample) / unconditional_prob(sample)
@@ -114,7 +120,7 @@ for key in ['kitchen', 'corridor', 'office']:
   ct_p[key] = 0
   ct_n[key] = 0
 
-for label, sample in dataset.ExtractLabel(test_data):
+for label, sample in map(dataset.ExtractLabel, test_data):
   t = threshold(sample)
   print t
   if t > 1.0:
