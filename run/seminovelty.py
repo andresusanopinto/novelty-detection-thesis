@@ -89,7 +89,8 @@ def TestData():
 
 unlabelled_data = dataset.UnlabelledSample(all_classes, samples = 10000)
 labelled_data   = dataset.LabelledSample(known_classes, samples = 1000)
-test_data       = TestData()
+test_data       = dataset.LabelledSample(all_classes, samples = 1000)
+#test_data       = TestData()
 
 if show_data_samples:
   print('# Unlabelled Data is like:')
@@ -123,7 +124,6 @@ def plot_roc(threshold, samples, known_labels = known_labels, title=''):
   graph.roc(roc_curve, label = title)
   pass
 
-test_data = dataset.LabelledSample(all_classes, samples = 1000)
 plot_roc(threshold = density_threshold,
          samples   = test_data,
          title= 'ROC for P(x|c) threshold')
@@ -132,4 +132,18 @@ plot_roc(threshold = semi_threshold,
          samples   = test_data,
          title= 'ROC for P(x|c)/P(x) threshold')
 
+graph.savefig('example1.pdf')
 graph.show()
+
+"""Input space is small, so we can analyze it."""
+def analyse(threshold, samples):
+  for a in sorted(zip(map(threshold, samples), samples), reverse=True):
+    print(a)
+
+inputs = list(set(unlabelled_data))
+print('P(x|c) Threshold')
+analyse(density_threshold, inputs)
+
+print('P(x|c)/P(x) Threshold')
+analyse(semi_threshold, inputs)
+
