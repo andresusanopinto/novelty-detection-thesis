@@ -36,3 +36,19 @@ def UnlabelledSample(distribution, samples = 1000):
 def LabelledSample(distribution, samples = 1000):
   gen = Generator(distribution)
   return list(SampleN(samples, gen))
+
+def FeatureFilter(accept=set(), block=set()):
+  def filter(sample):
+    out = []
+    print sample
+    for feature in sample:
+      fname, fvalue = feature
+      if accept and fname in accept:
+        out.append(feature)
+        continue
+      elif block and fname in block:
+        continue
+      else:
+        out.append(feature)
+    return tuple(out)
+  return filter
