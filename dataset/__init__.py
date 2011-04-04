@@ -28,3 +28,11 @@ def ExtractLabel(sample):
 def FilterLabel(sample):
   label, sample = ExtractLabel(sample)
   return sample
+
+def UnlabelledSample(distribution, samples = 1000):
+  gen = Generator(distribution)
+  return list(map(FilterLabel, SampleN(samples, gen)))
+
+def LabelledSample(distribution, samples = 1000):
+  gen = Generator(distribution)
+  return list(SampleN(samples, gen))
