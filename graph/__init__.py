@@ -5,3 +5,6 @@ from .ROC import ROC as roc
 
 def show():
   pl.show()
+
+def savefig(path):
+  pl.savefig(path)
