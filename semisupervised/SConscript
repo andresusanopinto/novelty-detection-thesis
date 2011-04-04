@@ -1,0 +1,2 @@
+PDF(target = 'notes.pdf',
+    source = 'notes.tex')

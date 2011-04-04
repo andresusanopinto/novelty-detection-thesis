@@ -1,0 +1,110 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[round]{natbib}
+\include{macros}
+
+\title{Notes on Semi-Supervised `Novelty Detection'}
+\author{André Susano Pinto}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+The case presented here assumes that a machine learning system besides having access to samples of the known class also has access to unlabelled data representative of the whole world.
+This may happen in some machine learning problems where a set of samples from a given class has been grouped and identified and although its possible to gather new samples its infeasible to classify them (eg.: the human classifier got bored)\footnote{Other examples of situations are given on \autoref{sec:detection}.}.
+
+Under that assumption its possible to model the functions $P(x|know)$ and $P(x)$ representing both a conditional and an unconditional density function for a given input.
+Using those its possible to define a threshold function for novelty detection as seen on \autoref{sec:threshold}.
+
+In \autoref{sec:threshold-analysis} the described threshold is analyzed in more detail, and in \autoref{sec:experiment} experiments to test the described methods are presented.
+
+\subsection{(Novelty?) Detection}
+\note{I believe calling \emph{novelty detection} to the threshold described here is incorrect.
+I am not sure which would be the correct term.}
+
+This new assumption of access to unlabelled data makes it dubious whether it can still be classified as a \emph{novelty detection} problem:
+\begin{quotation}
+`Novelty detection is the identification of new or unknown data or signal that a machine learning system is not aware of during training.' - \cite{markou2003novelty}.
+\end{quotation}
+
+But it is also different from a binary classification problem since instead of negative samples there is access to unlabelled data\footnote{Though several detection systems use binary classification techniques where negative samples are obtained by randomly sampling.}.
+
+
+\section{Concept Detection}
+\label{sec:detection}
+
+\note{
+This lacks literature background, and writing it on an airplane does not helps.
+Gotta find some papers on the subject
+}
+
+In several machine learning problems the target is to detect whether a concept is present.
+(eg.: face detection, intrusion detection).
+
+In cases where negative samples are \emph{abundant} (face detection, music/speech detection), systems often use a random sample of input space to represent negative samples and then perform detection using a normal 2-class classification.
+
+On systems where negative samples are very rare (intrusion-detection, cancer-detection), system need to use other approaches based on novelty detection\dots
+
+Some cases lie somewhere in between: negative samples are easy to obtain, but they are not that common that we can assume a random sample does not contains positive samples in it. Hence we cannot treat a random sample as a negative.
+
+In those cases we point to the usage of the ratio between conditional and unconditional probabilities as a detection function.
+Examples of cases where this type of detection is may or may not appear are given below:
+
+\subsubsection*{Unconstrainted labelled data}
+On a system where a user is asked to tag samples with words representing concepts it is fairly easy to filter positive samples for a given concept.
+Although getting negative samples is an impossible task, as the non-presence of a given tag on a sample does not necessarily makes that a negative sample for the concept.
+
+Eg.: associating concepts with images, tagging objects on images, ...
+
+\subsubsection*{Tag-prediction systems}
+Music, image, text, news, auto-tagging\dots
+
+\subsubsection*{Good approximation of density functions}
+A good approximation of probability functions for a given input is necessary for the performance of the presented method.
+So its expected to have uses where the input space is small or it can be modelled with some precision (eg.: independent features).
+
+\section{Threshold}
+\label{sec:threshold}
+
+The threshold is based on the probability that a given concept is present on a sample
+knowing both that the concept samples and the unlabelled samples come from the same distribution $P$.
+
+In that case our optimal threshold would be:
+$P(concept | x) > 1/2$, which means we assume the concept is present if we have more than chance probability of getting it right.
+
+Using bayes rules we obtain:
+
+\begin{equation}\frac{P(x|concept) P(concept)}{P(x)} > \frac{1}{2}\end{equation}
+\begin{equation}\frac{P(x|concept)}{P(x)} > \frac{1}{2 P(concept)}\end{equation}
+\begin{equation}\frac{P(x|concept)}{P(x)} > K_{threshold}\end{equation}
+
+\note{Novelty detection techniques often assume a constant $P(x)$ and then threshold is performed only on the conditional probability density function.}
+
+\section{Threshold Analysis}
+\label{sec:threshold-analysis}
+
+\begin{equation}P(x) = \sum_{c}^{} P(x|c) P(c)\end{equation}
+
+\begin{equation}0 \le P(x|c) P(c) \le P(x)\end{equation}
+\begin{equation}0 \le P(c) \le \frac{P(x)}{P(x|c)}\end{equation}
+
+
+
+\section{Experiment}
+\label{sec:experiment}
+
+\begin{itemize}
+\item Define a set of features (all extractable from visual or user-tags).
+\item Define a dataset of inputs (eg.: indoor environs at LabelMe)
+\item Filter those for \emph{kitchen}.
+\item Use ML methods to model $P(features | kitchen)$ and $P(features)$.
+\item Test results.
+\end{itemize}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\end{document}
+
