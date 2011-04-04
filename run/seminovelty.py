@@ -27,6 +27,7 @@ show_data_samples = 10
 def Label(label):  return ('label', label)
 def Appearance(d): return ('place_appearance_property', dataset.DiscreteDistribution(d))
 def Shape(d):      return ('place_shape_property',      dataset.DiscreteDistribution(d))
+state_size = 6
 
 
 kitchen = ( Label('kitchen'),
@@ -108,8 +109,8 @@ if show_data_samples:
 
 
 
-unconditional_prob = ml.DiscreteProbabilityEstimator(unlabelled_data, state_size = 6)
-conditional_prob   = ml.DiscreteProbabilityEstimator(map(dataset.FilterLabel, labelled_data), state_size = 6)
+unconditional_prob = ml.DiscreteProbabilityEstimator(unlabelled_data, state_size = state_size)
+conditional_prob   = ml.DiscreteProbabilityEstimator(map(dataset.FilterLabel, labelled_data), state_size = state_size)
 
 def threshold(sample):
   return conditional_prob(sample) / unconditional_prob(sample)
