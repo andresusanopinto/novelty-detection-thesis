@@ -20,9 +20,10 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 import ml
+import graph
 import dataset
 
-show_data_samples = 10
+show_data_samples = 0
 
 def Label(label):  return ('label', label)
 def Appearance(d): return ('place_appearance_property', dataset.DiscreteDistribution(d))
@@ -54,22 +55,13 @@ office   = ( Label('office'),
                     (0.4, 'elongated')])
            )
 
-print list(dataset.SampleN(2, dataset.Generator(kitchen)))
+all_classes = [(0.2, corridor), (0.4, kitchen), (0.4, office)]
+known_labels = ['kitchen', 'corridor']
+known_classes = [all_classes[1], all_classes[0]]
 
-all_classes = [corridor, kitchen, office]
-known_classes = [ corridor, kitchen ]
+all_classes   = dataset.DiscreteDistribution(all_classes)
+known_classes = dataset.DiscreteDistribution(known_classes)
 
-
-
-def UnlabelledData(samples = 10000, classes = all_classes):
-  distribution = dataset.DiscreteDistribution([(1, c) for c in classes])
-  gen = dataset.Generator(distribution)
-  return list(map(dataset.FilterLabel, dataset.SampleN(100, gen)))
-
-def LabelledData(samples = 10000, classes = known_classes):
-  distribution = dataset.DiscreteDistribution([(1, c) for c in classes])
-  gen = dataset.Generator(distribution)
-  return list(dataset.SampleN(100, gen))
 
 def TestData():
   """This data represents the 12 places present on rocs/data/sample/ConceptualGraph/sample2 logs"""
@@ -95,8 +87,8 @@ def TestData():
 
 
 
-unlabelled_data = UnlabelledData()
-labelled_data   = LabelledData()
+unlabelled_data = dataset.UnlabelledSample(all_classes, samples = 10000)
+labelled_data   = dataset.LabelledSample(known_classes, samples = 1000)
 test_data       = TestData()
 
 if show_data_samples:
@@ -112,22 +104,32 @@ if show_data_samples:
 unconditional_prob = ml.DiscreteProbabilityEstimator(unlabelled_data, state_size = state_size)
 conditional_prob   = ml.DiscreteProbabilityEstimator(map(dataset.FilterLabel, labelled_data), state_size = state_size)
 
-def threshold(sample):
+def density_threshold(sample):
+  return conditional_prob(sample)
+
+def semi_threshold(sample):
   return conditional_prob(sample) / unconditional_prob(sample)
 
-ct_p = {}
-ct_n = {}
-for key in ['kitchen', 'corridor', 'office']:
-  ct_p[key] = 0
-  ct_n[key] = 0
 
-for label, sample in map(dataset.ExtractLabel, test_data):
-  t = threshold(sample)
-  print t
-  if t > 1.0:
-    ct_p[label] += 1
-  else:
-    ct_n[label] += 1
+def plot_roc(threshold, samples, known_labels = known_labels, title=''):
+  def ThresholdAndLabel(sample):
+    label, sample = dataset.ExtractLabel(sample)
+    return threshold(sample), label
 
-print ct_p
-print ct_n
+  roc_curve = []
+  #for threshold, label in sorted(map(ThresholdAndLabel, samples), key = lambda x: x[0], reverse=True):
+  for threshold, label in sorted(map(ThresholdAndLabel, samples), key = lambda x: x, reverse=True):
+    roc_curve.append( label in known_labels )
+  graph.roc(roc_curve, label = title)
+  pass
+
+test_data = dataset.LabelledSample(all_classes, samples = 1000)
+plot_roc(threshold = density_threshold,
+         samples   = test_data,
+         title= 'ROC for P(x|c) threshold')
+
+plot_roc(threshold = semi_threshold,
+         samples   = test_data,
+         title= 'ROC for P(x|c)/P(x) threshold')
+
+graph.show()
