@@ -17,7 +17,7 @@ INROOM stapler computerlab 0.1
 INROOM toiletpaper computerlab 0.1
 INROOM cerealbox computerlab 0.1
 INROOM computer computerlab 0.28988653
-INROOM robot in computerlab 0.1
+INROOM robot computerlab 0.1
 
 INROOM book conferencehall 0.1
 INROOM cerealbox conferencehall 0.1
