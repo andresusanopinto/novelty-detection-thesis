@@ -67,3 +67,8 @@ class DiscreteDistribution:
       prev = dist
     return GenerateSample(prev)
 
+  def IterDistributions(self):
+    probs = map(lambda x:x[0], self.acc_dists[1:]) + [self.total_prob]
+    dists = map(lambda x:x[1], self.acc_dists)
+    return zip(probs, dists)
+
