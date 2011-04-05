@@ -58,14 +58,14 @@ def Load():
       """Unzip the poisson distribution for up to 5+ samples"""
       features.add(feature)
       t_sum = 0.0
-      for k in range(0, 5):
+      for k in range(0, 4):
         descriptor = str(k)
         prob = gamma**k * math.exp(-gamma) / math.factorial(k)
         potential[roomcat, feature, descriptor] = prob
         t_sum += prob
         feature_space[feature].add(descriptor)
-      potential[roomcat, feature, '5+'] = 1.0-t_sum
-      feature_space[feature].add('5+')
+      potential[roomcat, feature, '4+'] = 1.0-t_sum
+      feature_space[feature].add('4+')
     elif line.strip() == '':
       pass
     else:
@@ -90,8 +90,9 @@ def MakeDistributions():
         try:
           pot = potential[roomcat, feature, descriptor]
         except KeyError:
+          pot = 0.0
           print('Missing potential for: %s, using 0.0' % ((roomcat, feature, descriptor),))
-        f_dist.append( (0.0, descriptor) )
+        f_dist.append( (pot, descriptor) )
       
       f_dist = dataset.DiscreteDistribution(f_dist)
       out.append((feature, f_dist))
