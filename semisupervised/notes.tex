@@ -90,8 +90,43 @@ Using bayes rules we obtain:
 \begin{equation}0 \le P(x|c) P(c) \le P(x)\end{equation}
 \begin{equation}0 \le P(c) \le \frac{P(x)}{P(x|c)}\end{equation}
 
+\section{Experiment - Simple}
 
+\note{This first experience is very small and was only used to better explain the effects of the threshold functions.}
 
+For a better understanding of how the knowledge of the unconditional probability $P(x)$ can help to improve the detection threshold
+a very small toy experiment was run:
+
+The detection system is given access to labelled data ($known = \{kitchen, corridor\}$)
+filtered from the distribution described in \autoref{tab:simple-distribution} as well to unlabelled samples from it.
+From that input it learns both $P(x)$ and $P(x|class \in known)$.
+Later the whole input space is sorted by the diferent thresholds for analysis.
+
+Since the input space is very small (6 possible inputs), simple accumulation tables where used to learn both distributions.
+
+\begin{table}[h]
+\begin{center}
+\input{simple-data/explain}
+\end{center}
+\caption{\label{tab:simple-distribution}Distribution used on the simple experiment.}
+\end{table}
+
+\begin{table}[h]
+\begin{center}
+
+\begin{tabular}{ |c| |c|}
+\hline
+$P(x|class \in know)$ & $\frac{P(x|class \in know)}{P(x)}$ \\ \hline
+(kitchen, square) = 7.12 & (corridor, elongated) = 2 \\ \hline
+(kitchen, square) = 7.12 & (corridor, elongated) = 2 \\ \hline
+(kitchen, square) = 7.12 & (corridor, elongated) = 2 \\ \hline
+(kitchen, square) = 7.12 & (corridor, elongated) = 2 \\ \hline
+(kitchen, square) = 7.12 & (corridor, elongated) = 2 \\ \hline
+\end{tabular}
+
+\end{center}
+\caption{\label{tab:simple-threshold}Input space sorted by threshold.}
+\end{table}
 \section{Experiment}
 \label{sec:experiment}
 
