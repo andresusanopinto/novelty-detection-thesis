@@ -53,7 +53,7 @@ class DiscreteDistribution:
     '''Creates a discrete distribution over a list of distribution.'''
     self.acc_dists  = []
     self.total_prob = 0.0
-    for prob, dist in iter(dist_list):
+    for prob, dist in sorted(iter(dist_list), reverse=True):
       assert prob >= 0.0
       self.acc_dists.append((self.total_prob, dist))
       self.total_prob += prob
