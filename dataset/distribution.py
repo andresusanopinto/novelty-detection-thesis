@@ -69,10 +69,26 @@ class DiscreteDistribution:
 
   def IterDistributions(self):
     probs = map(lambda x:x[0], self.acc_dists[1:]) + [self.total_prob]
-    print probs
     for i in range(len(probs)-1, 0, -1):
       probs[i] -= probs[i-1]
-    print probs
     dists = map(lambda x:x[1], self.acc_dists)
     return zip(probs, dists)
 
+def SampleProbability(distribution, sample):
+  if hasattr(distribution, 'IterDistributions'):
+    p = 0.0
+    tl = 0.0
+    for likelihood, d in distribution.IterDistributions():
+      p += likelihood * SampleProbability(d, sample)
+      tl += likelihood
+    return p/tl
+  elif type(distribution) == type(()):
+    if type(distribution[0]) == type(()) and distribution[0][0] == 'label':
+      distribution = list(distribution[1:])
+    p = 1.0
+    assert len(distribution) == len(sample)
+    for a, b in zip(distribution, sample):
+      p *= SampleProbability(a, b)
+    return p
+  else:
+    return distribution == sample
