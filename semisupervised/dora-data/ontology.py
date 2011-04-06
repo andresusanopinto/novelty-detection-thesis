@@ -29,6 +29,7 @@ potential = dict()
 roomcats  = set()
 features  = set()
 feature_space = defaultdict(set)
+poisson_expansion = 3
 
 def Load():
   print("Loading default knowledge...")
@@ -55,17 +56,17 @@ def Load():
       obj, roomcat, gamma = match.groups()
       feature = 'object_%s' % obj
       gamma = float(gamma)
-      """Unzip the poisson distribution for up to 5+ samples"""
+      """Unzip the poisson distribution for up to the given number of samples"""
       features.add(feature)
       t_sum = 0.0
-      for k in range(0, 4):
+      for k in range(0, poisson_expansion):
         descriptor = str(k)
         prob = gamma**k * math.exp(-gamma) / math.factorial(k)
         potential[roomcat, feature, descriptor] = prob
         t_sum += prob
         feature_space[feature].add(descriptor)
-      potential[roomcat, feature, '4+'] = 1.0-t_sum
-      feature_space[feature].add('4+')
+      potential[roomcat, feature, '%d+' % poisson_expansion] = 1.0-t_sum
+      feature_space[feature].add('%d+' % poisson_expansion)
     elif line.strip() == '':
       pass
     else:
