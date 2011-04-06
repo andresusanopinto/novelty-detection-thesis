@@ -82,6 +82,14 @@ Using bayes rules we obtain:
 
 \note{Novelty detection techniques often assume a constant $P(x)$ and then threshold is performed only on the conditional probability density function.}
 
+Proposed detection method:
+\begin{itemize}
+\item From the environment draw labelled and unlabelled samples.
+\item From those learn both $P(x|class \in known)$ and $P(x)$.
+\item Define a detection threshold based on $P(x|class \in known)/P(x)$.
+\end{itemize}
+
+
 \section{Threshold Analysis}
 \label{sec:threshold-analysis}
 
@@ -90,19 +98,24 @@ Using bayes rules we obtain:
 \begin{equation}0 \le P(x|c) P(c) \le P(x)\end{equation}
 \begin{equation}0 \le P(c) \le \frac{P(x)}{P(x|c)}\end{equation}
 
-\section{Experiment - Simple}
 
+
+\section{Experiments}
+\label{sec:experiment}
+\begin{itemize}
+\item Define a set of features (all extractable from visual or user-tags).
+\item Define a dataset of inputs (eg.: indoor environs at LabelMe)
+\item Filter those for \emph{kitchen}.
+\item Use ML methods to model $P(features | kitchen)$ and $P(features)$.
+\item Test results.
+\end{itemize}
+
+
+\subsection{Simple}
 \note{This first experience is very small and was only used to better explain the effects of the threshold functions.}
 
 For a better understanding of how the knowledge of the unconditional probability $P(x)$ can help to improve the detection threshold
 a very small toy experiment was run:
-
-The detection system is given access to labelled data ($known = \{kitchen, corridor\}$)
-filtered from the distribution described in \autoref{tab:simple-distribution} as well to unlabelled samples from it.
-From that input it learns both $P(x)$ and $P(x|class \in known)$.
-Later the whole input space is sorted by the diferent thresholds for analysis.
-
-Since the input space is very small (6 possible inputs), simple accumulation tables where used to learn both distributions.
 
 \begin{table}[h]
 \begin{center}
@@ -111,6 +124,13 @@ Since the input space is very small (6 possible inputs), simple accumulation tab
 \caption{\label{tab:simple-distribution}Distribution used on the simple experiment. Each column cell shows $P(feature|class)$}
 \end{table}
 
+Using a simple distribution, described in \autoref{tab:simple-distribution},
+labelled ($known = \{kitchen, corridor\}$)
+and unlabelled samples where drawn.
+$P(x|class \in known)$ and $P(x)$ where then approximated using simple accumulation tables
+(only 6 diferent inputs).
+The input space was then sorted according to the presented thresholds obtaining
+the results as seen on \autoref{tab:simple-data-sorted}.
 
 \begin{table}
 \centering
@@ -120,32 +140,20 @@ Since the input space is very small (6 possible inputs), simple accumulation tab
 \caption{\label{tab:simple-data-sorted}Input space sorted by threshold functions.}
 \end{table}
 
-\begin{comment}
-\begin{table}
-\centering
-\begin{minipage}[b]{0.4\textwidth}\centering
-  \input{simple-data/density_threshold}
-\end{minipage}
-\begin{minipage}[b]{0.4\textwidth}\centering
-  \input{simple-data/semi_threshold}
-\end{minipage}
+The results obtained demonstrate that using the conditional probability function
+as a novelty threshold leads to poor performance: it classified (corridor,square) as
+the most novel case.
+This happens because the likelihood of such a sample is very low.
+Nonetheless when using the factor $P(x)$ the system is able to take in consideration
+that the low probability of that sample on the labelled data arrives from the low
+probability of finding such a sample and not necessarily from a novel case.
 
-\caption{Input space sorted by threshold functions.}
-\end{table}
-\end{comment}
+This simple toy experience demonstrates the importance of using $P(x)$ to estimate a novelty
+threshold and it importance when dealing with features that have a tedency to be highly bias
+such as the semantic data used on our sample.
 
-As possible to see in \autoref{tab:simple-data-sorted} the access to unlabelled data allowed the system to better
+\subsection{Dora with world model}
 
-\section{Experiment}
-\label{sec:experiment}
-
-\begin{itemize}
-\item Define a set of features (all extractable from visual or user-tags).
-\item Define a dataset of inputs (eg.: indoor environs at LabelMe)
-\item Filter those for \emph{kitchen}.
-\item Use ML methods to model $P(features | kitchen)$ and $P(features)$.
-\item Test results.
-\end{itemize}
 
 \bibliographystyle{plainnat}
 \bibliography{refs}

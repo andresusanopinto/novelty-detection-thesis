@@ -17,11 +17,14 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
+import random
 import ml
 import graph
 import dataset
 import util
 import explain 
+
+random.seed(0)
 
 def Label(label):  return ('label', label)
 def Appearance(d): return ('Appearance', dataset.DiscreteDistribution(d))
@@ -66,7 +69,7 @@ office   = ( Label('office'),
                     (0.4, 'elongated')])
            )
 
-all_classes = [(0.4, corridor), (0.4, kitchen), (0.4, office)]
+all_classes = [(1, corridor), (1, kitchen), (1, office)]
 known_labels = ['corridor', 'kitchen']
 known_classes = [all_classes[0], all_classes[1]]
 
@@ -85,7 +88,6 @@ def density_threshold(sample):
   return conditional_prob(sample)
 
 def semi_threshold(sample):
-  print 'Sample = ', sample
   return conditional_prob(sample) / unconditional_prob(sample)
 
 
