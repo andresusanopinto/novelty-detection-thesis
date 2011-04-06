@@ -125,17 +125,11 @@ Proposed detection method:
 
 
 \subsection{Simple}
+\label{sec:simple-experiment}
 \note{This first experience is very small and was only used to better explain the effects of the threshold functions.}
 
 For a better understanding of how the knowledge of the unconditional probability $P(x)$ can help to improve the detection threshold
 a very small toy experiment was run:
-
-\begin{table}[h]
-\begin{center}
-\input{simple-data/explain}
-\end{center}
-\caption{\label{tab:simple-distribution}Distribution used on the simple experiment. Each column cell shows $P(feature|class)$}
-\end{table}
 
 Using a simple distribution, described in \autoref{tab:simple-distribution},
 labelled ($known = \{kitchen, corridor\}$)
@@ -144,6 +138,13 @@ $P(x|class \in known)$ and $P(x)$ where then approximated using simple accumulat
 (only 6 diferent inputs).
 The input space was then sorted according to the presented thresholds obtaining
 the results as seen on \autoref{tab:simple-data-sorted}.
+
+\begin{table}
+\begin{center}
+\input{simple-data/explain}
+\end{center}
+\caption{\label{tab:simple-distribution}Distribution used on the simple experiment. Each column cell shows $P(feature|class)$}
+\end{table}
 
 \begin{table}
 \centering
@@ -165,14 +166,42 @@ This simple toy experience demonstrates the importance of using $P(x)$ to estima
 threshold and it importance when dealing with features that have a tedency to be highly bias
 such as the semantic data used on our sample.
 
+
+
 \subsection{Dora with world model}
+
+This experience is similar to the simple experiment run in \autoref{sec:simple-experiment}.
+But this time using a more realistic distribution (\autoref{tab:dora-world-distribution}) with
+11 diferent room categories and with a feature space containing semantic data for:
+room size, room shape, visual appearance and 6 diferent objects.
+Also, the features are statistically independent from each other given the room category.
+
+The system objective was to detect novel data from a given known set of 6 categories.
+In order to use drawn results two tests where run:
+\begin{enumerate}
+\item Using perfect knowledge of the probability functions both thresholds where compared for performance (\autoref{tab:dora-data-perfect}).
+\item A simple model was used to learn the probability functions and the thresholds were compared (\autoref{tab:dora-data-simple}).
+\end{enumerate}
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{dora-data/roc-perfect.pdf}
+\caption{\label{tab:dora-data-perfect}ROC curve for thresholds based on perfect information running on the dora distribution}
+\end{figure}
+
+\begin{figure}
+\centering
+\include{dora-data/roc-simple.tex}
+\caption{\label{tab:dora-data-simple}ROC curve for thresholds learned on samples from samples in the dora distribution}
+\end{figure}
+
 \begin{sidewaystable}[h]
 \begin{center}
 \scalebox{0.35}{
 \input{dora-data/explain}
 }
 \end{center}
-\caption{\label{tab:simple-distribution}World model used in Dora. Each column cell shows $P(feature|class)$}
+\caption{\label{tab:dora-world-distribution}World model used in Dora. Each column cell shows $P(feature|class)$}
 \end{sidewaystable}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
