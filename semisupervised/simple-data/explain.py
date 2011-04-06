@@ -26,31 +26,29 @@ def ExplainDistributions(features, distributions):
   out[-1] += '\\\\ \\hline'
   
   def explain_distribution(name, definition):
-
+    feature_distrib = dict([(f, d) for (f,d) in definition if f != 'label'])
     out.append(feature_descriptor_label(name))
     for feature, feature_space in features:
+      assert feature in feature_distrib
+      potential = dict([(k,p) for (p, k) in feature_distrib[feature].IterDistributions()])
       for descriptor in feature_space:
-        out[-1] += ' & $%.2f\\%%$' % 0.23
+        out[-1] += ' & $%.1f\\%%$' % (potential[descriptor]*100.0)
     out[-1] += '\\\\ \\hline'
   map(lambda x: explain_distribution(x[0], x[1]), distributions)
   
 
   out.append('\\end{tabular}')
-  return  '\n'.join(out)
-
-'''
-\begin{tabular}{|c|ccc|cc|}
-\hline
-Label & \multicolumn{3}{c}{Size} & \multicolumn{2}{c}{Shape} \\
-      & \begin{sideways}small\end{sideways} & \begin{sideways}medium\end{sideways} & \begin{sideways}large\end{sideways} & square & round \\
-\hline \\
-kitchen & 0.4 & 0.3 & 0.4 & 0.2 & 0.8 \\
-\hline
-\end{tabular}
+  return '\n'.join(out)
 
 
-\begin{description}
-\item[Label] Kitchen
-\item[Room Size] 
-\end{description}
-'''
+
+def SortThresholds(title, inputs, func, columns = 1):
+  out = []
+  col = ''.join(['l' for c in range(columns)])
+  out.append('\\begin{tabular}{%sr}' % col)
+  #out.append('\\hline \\multicolumn{2}{c}{'+title+'}\\\\ \\hline')
+  out.append('\\multicolumn{%d}{c}{sample} & threshold \\\\ \\hline' % columns)
+  for threshold, sample in sorted(map(lambda x: (func(x[1]), x[0]), inputs), reverse=True):
+    out.append('%s & %.3f \\\\' % (sample, threshold))
+  out.append('\\end{tabular}')
+  return '\n'.join(out)

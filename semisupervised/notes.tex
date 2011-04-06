@@ -108,25 +108,34 @@ Since the input space is very small (6 possible inputs), simple accumulation tab
 \begin{center}
 \input{simple-data/explain}
 \end{center}
-\caption{\label{tab:simple-distribution}Distribution used on the simple experiment.}
+\caption{\label{tab:simple-distribution}Distribution used on the simple experiment. Each column cell shows $P(feature|class)$}
 \end{table}
 
-\begin{table}[h]
-\begin{center}
 
-\begin{tabular}{ |c| |c|}
-\hline
-$P(x|class \in know)$ & $\frac{P(x|class \in know)}{P(x)}$ \\ \hline
-(kitchen, square) = 7.12 & (corridor, elongated) = 2 \\ \hline
-(kitchen, square) = 7.12 & (corridor, elongated) = 2 \\ \hline
-(kitchen, square) = 7.12 & (corridor, elongated) = 2 \\ \hline
-(kitchen, square) = 7.12 & (corridor, elongated) = 2 \\ \hline
-(kitchen, square) = 7.12 & (corridor, elongated) = 2 \\ \hline
-\end{tabular}
-
-\end{center}
-\caption{\label{tab:simple-threshold}Input space sorted by threshold.}
+\begin{table}
+\centering
+\subfloat[Input space sorted by threshold $P(x|class \in known)$]{\input{simple-data/density_threshold}}
+\qquad
+\subfloat[Input space sorted by threshold $P(x|class \in known)/P(x)$]{\input{simple-data/semi_threshold}}
+\caption{\label{tab:simple-data-sorted}Input space sorted by threshold functions.}
 \end{table}
+
+\begin{comment}
+\begin{table}
+\centering
+\begin{minipage}[b]{0.4\textwidth}\centering
+  \input{simple-data/density_threshold}
+\end{minipage}
+\begin{minipage}[b]{0.4\textwidth}\centering
+  \input{simple-data/semi_threshold}
+\end{minipage}
+
+\caption{Input space sorted by threshold functions.}
+\end{table}
+\end{comment}
+
+As possible to see in \autoref{tab:simple-data-sorted} the access to unlabelled data allowed the system to better
+
 \section{Experiment}
 \label{sec:experiment}
 
