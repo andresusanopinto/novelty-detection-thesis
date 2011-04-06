@@ -29,4 +29,8 @@ def Histogram(data = None):
       h[sample] += 1
   return h
 
-
+def WriteFile(filename, output):
+  print 'Writting:', filename
+  file = open(filename, 'w')
+  file.write(output)
+  file.close()
