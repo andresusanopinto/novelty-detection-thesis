@@ -32,7 +32,6 @@ def plot_roc(threshold, samples, known_labels, title=''):
     return threshold(sample), label
 
   roc_curve = []
-  #for threshold, label in sorted(map(ThresholdAndLabel, samples), key = lambda x: x[0], reverse=True):
   for threshold, label in sorted(map(ThresholdAndLabel, samples), key = lambda x: x, reverse=True):
     roc_curve.append( label in known_labels )
   graph.roc(roc_curve, label = title)
@@ -41,11 +40,13 @@ def plot_roc(threshold, samples, known_labels, title=''):
 
 
 ontology.Load()
-rooms = ontology.MakeDistributions()
+del ontology.feature_space['room_category2']
+
 features = ontology.feature_space
 for f in features:
   features[f] = sorted(features[f])
-del features['room_category2']
+
+rooms = ontology.MakeDistributions()
 
 util.WriteFile('explain.tex',
     explain.ExplainDistributions(sorted(features.items()),
@@ -76,6 +77,6 @@ plot_roc(threshold = perfect_semi_threshold,
          known_labels = known_labels,
          title= 'ROC for P(x|c)/P(x) threshold')
 
-graph.savefig('perfect-roc.tex')
+graph.savefig('perfect-roc.pdf')
 graph.show()
 

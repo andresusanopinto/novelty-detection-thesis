@@ -85,7 +85,7 @@ def MakeDistributions():
   def MakeDistribution(roomcat):
     out = []
     out.append(('label', roomcat))
-    for feature in features:
+    for feature in feature_space:
       f_dist = []
       for descriptor in feature_space[feature]:
         try:
