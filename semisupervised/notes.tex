@@ -100,34 +100,71 @@ Proposed detection method:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 \section{Threshold Analysis}
 \label{sec:threshold-analysis}
 
-\begin{equation}P(x) = \sum_{c}^{} P(x|c) P(c)\end{equation}
+\subsection{Bounding $P(c)$}
+\note{This was just a random though... if we can bound $P(c)$ in some way then we get
+      some information on how sure we are about a decision. Though its only possible
+      to bound it from above, and even that not sure if its computational feasible.}
 
+\begin{equation}P(x) = \sum_{c}^{} P(x|c) P(c)\end{equation}
 \begin{equation}0 \le P(x|c) P(c) \le P(x)\end{equation}
 \begin{equation}0 \le P(c) \le \frac{P(x)}{P(x|c)}\end{equation}
 
 
+\subsection{What does a ROC curve looks like for an optimal detector}
+\note{The ROC curve shape shows if a detector is perfect given an input space.
+      (Or at least I think so (though I haven't write any proof)).
+      I guess somewhere there should be literature reference to such a simple concept}
+
+Proof would be something like:
+
+An element of the input space is responsible for a vector change of $(TP, FP)$ in the ROC
+curve.
+A threshold functions orders the input space.
+And the best is to take the greedy approach of sorting the input by $TP/FP$.
+That is equivalent to a convex ROC curve.
+
+This leads to the important property:
+
+whatever threshold function you use,
+if you get a convex ROC curve, there is no way to perform better using that input space.
+
+At the same time we can proof an ordering on $TP/FP$ to be the same as $TP/(FP+TP)$.
+Which is coherent with the threshold of: $P(x|concept)/P(x)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Experiments}
+\clearpage
+\section{Evaluation and Experiments}
 \label{sec:experiment}
+
+This section describes the two experiences that were run to evaluate the methods.
+\begin{description}
+\item[\autoref{sec:simple-experiment}] presents a toy experience that aims at
+  showing the importance of using $P(x)$ to estimate a novelty threshold and
+  it importance when dealing with features that have a tendency to be highly
+  biased such as the semantic data used on our sample.
+
+\item[\autoref{sec:dora-experiment}] runs comparisons of the presented threshold
+  on a real-world scenario, where a robot has to identify room categories based
+  on obtained semantic data, such as object presence and room size.
+  The experiment is run both with a fictitious distribution and with a real world
+  dataset.
+\end{description}
+
+Other possible experiences are:
 \begin{itemize}
-\item Define a set of features (all extractable from visual or user-tags).
-\item Define a dataset of inputs (eg.: indoor environs at LabelMe)
-\item Filter those for \emph{kitchen}.
-\item Use ML methods to model $P(features | kitchen)$ and $P(features)$.
-\item Test results.
+\item run this type of classification on datasets such as \emph{LabelMe} databases,
+  either by using user-supplied tags as semantic data or by extracting them with some
+  image analysis.
 \end{itemize}
 
 
-\subsection{Simple}
-\label{sec:simple-experiment}
-\note{This first experience is very small and was only used to better explain the effects of the threshold functions.}
-
+\subsection{Simple}\label{sec:simple-experiment}
 For a better understanding of how the knowledge of the unconditional probability $P(x)$ can help to improve the detection threshold
 a very small toy experiment was run:
 
@@ -135,11 +172,11 @@ Using a simple distribution, described in \autoref{tab:simple-distribution},
 labelled ($known = \{kitchen, corridor\}$)
 and unlabelled samples where drawn.
 $P(x|class \in known)$ and $P(x)$ where then approximated using simple accumulation tables
-(only 6 diferent inputs).
+(only 6 different inputs).
 The input space was then sorted according to the presented thresholds obtaining
 the results as seen on \autoref{tab:simple-data-sorted}.
 
-\begin{table}
+\begin{table}[hb]
 \begin{center}
 \input{simple-data/explain}
 \end{center}
@@ -162,22 +199,19 @@ Nonetheless when using the factor $P(x)$ the system is able to take in considera
 that the low probability of that sample on the labelled data arrives from the low
 probability of finding such a sample and not necessarily from a novel case.
 
-This simple toy experience demonstrates the importance of using $P(x)$ to estimate a novelty
-threshold and it importance when dealing with features that have a tedency to be highly bias
-such as the semantic data used on our sample.
-
 
 
 \subsection{Dora with world model}
+\label{sec:dora-experiment}
 
 This experience is similar to the simple experiment run in \autoref{sec:simple-experiment}.
 But this time using a more realistic distribution (\autoref{tab:dora-world-distribution}) with
-11 diferent room categories and with a feature space containing semantic data for:
-room size, room shape, visual appearance and 6 diferent objects.
+11 different room categories and with a feature space containing semantic data for:
+room size, room shape, visual appearance and 6 different objects.
 Also, the features are statistically independent from each other given the room category.
 
 The system objective was to detect novel data from a given known set of 6 categories.
-In order to use drawn results two tests where run:
+Two tests where run:
 \begin{enumerate}
 \item Using perfect knowledge of the probability functions both thresholds where compared for performance (\autoref{tab:dora-data-perfect}).
 \item A simple model was used to learn the probability functions and the thresholds were compared (\autoref{tab:dora-data-simple}).
@@ -188,6 +222,7 @@ In order to use drawn results two tests where run:
 \includegraphics[width=\textwidth]{dora-data/roc-perfect.pdf}
 \caption{\label{tab:dora-data-perfect}ROC curve for thresholds based on perfect information running on the dora distribution}
 \end{figure}
+
 
 \begin{figure}
 \centering
