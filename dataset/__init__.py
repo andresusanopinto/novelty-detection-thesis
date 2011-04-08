@@ -18,8 +18,13 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
-from Sampler import SampleN
 from distribution import DiscreteDistribution, GenerateSample, Generator, SampleProbability
+
+def SampleN(max_samples, data):
+  data = iter(data)
+  for x in range(max_samples):
+    yield next(data)
+
 
 def ExtractLabel(sample):
   assert sample[0][0] == 'label'
