@@ -8,3 +8,6 @@ def show():
 
 def savefig(path):
   pl.savefig(path)
+
+def newfig():
+  pl.figure()
