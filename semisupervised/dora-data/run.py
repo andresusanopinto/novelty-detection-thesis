@@ -23,71 +23,9 @@ import explain
 import random
 import dataset
 import graph
+import ml
 
 random.seed(0)
-
-import collections
-import itertools
-
-def NormalizedHistogram(data):
-  count_total = 0
-  count_value = collections.defaultdict(int)
-  for sample in data:
-    count_value[sample] += 1
-    count_total += 1
-  
-  def prob(sample):
-    return count_value[sample] / float(count_total)
-  
-  return prob
-
-def ClassDependentEstimator(data, class_estimator, classifier = lambda x: (x[0], x[1])):
-  class_data = collections.defaultdict(list)
-  class_labels = []
-  for sample in data:
-    cname, cdata = classifier(sample)
-    class_data[cname].append(cdata)
-    class_labels.append(cname)
-  class_prob = NormalizedHistogram(class_labels)
-  class_estimator = dict([(cname, class_estimator(cdata)) for cname, cdata in class_data.items()])
-  
-  def prob(sample):
-    p = 0
-    for cname, cestimator in class_estimator.items():
-      p += class_prob(cname)*cestimator(sample)
-    return p
-  return prob
-
-
-def IndependentFeatureEstimator(data, feature_estimator, feature_iter = iter):
-  feature_data = collections.defaultdict(list)
-  for sample in data:
-    for feature_id, feature_descriptor in feature_iter(sample):
-      feature_data[feature_id].append(feature_descriptor)
-  feature_prob = dict([(fid, feature_estimator(fdata)) for fid,fdata in feature_data.items()])
-  
-  def prob(sample):
-    p = 1.0
-    for fid, fsample in feature_iter(sample):
-      p *= feature_prob[fid](fsample)
-    return p
-  
-  return prob
-
-
-'''
-a = IndependentFeatureEstimator([
-  ( ('label', 'kitchen'),  ('size', 'small') ),
-  ( ('label', 'corridor'), ('size', 'long') ),
-  ( ('label', 'kitchen'),  ('size', 'long') )], NormalizedHistogram)
-
-print a( (('label', 'corridor'), ))
-print a( (('size', 'small'), ))
-print a( (('label', 'corridor'), ('size', 'small'), ))
-
-import sys
-sys.exit(0)
-'''
 
 #############################################################################
 def plot_roc(threshold, samples, known_labels, title=''):
@@ -121,7 +59,14 @@ world = dataset.DiscreteDistribution([(1, dist) for cat,dist in rooms.items()])
 known = dataset.DiscreteDistribution([(1, dist) for cat,dist in rooms.items() if cat in known_labels])
 
 ################################################
-## With perfect information
+## Generate training data
+################################################
+known_samples = map(dataset.ExtractLabel, dataset.LabelledSample(known, 1000))
+known_samples_without_label = list([x[1] for x in known_samples])
+world_samples = dataset.UnlabelledSample(world, 1000)
+
+################################################
+## Create probability functions
 ################################################
 def perfect_conditional_prob(sample):
   return dataset.SampleProbability(known, sample)
@@ -129,10 +74,15 @@ def perfect_conditional_prob(sample):
 def perfect_unconditional_prob(sample):
   return dataset.SampleProbability(world, sample)
 
-def perfect_density_threshold(sample): return perfect_conditional_prob(sample)
-def perfect_semi_threshold(sample):    return perfect_conditional_prob(sample)/perfect_unconditional_prob(sample)
+estimated_conditional_prob = ml.IndependentFeatureEstimator(known_samples_without_label, ml.NormalizedHistogram)
+estimated_unconditional_prob = ml.IndependentFeatureEstimator(world_samples, ml.NormalizedHistogram)
+estimated_class_conditional_prob = ml.ClassDependentEstimator(known_samples,
+  lambda x: ml.IndependentFeatureEstimator(x, ml.NormalizedHistogram))
 
 
+################################################
+## Plotting
+################################################
 test_data = dataset.LabelledSample(world, 10000)
 
 p_roc = lambda title, func: plot_roc(threshold = func,
@@ -140,37 +90,28 @@ p_roc = lambda title, func: plot_roc(threshold = func,
                                      known_labels = known_labels,
                                      title = title)
 
-p_roc('ROC for P(x|c) threshold', perfect_density_threshold)
-p_roc('ROC for P(x|c)/P(x) threshold', perfect_semi_threshold)
+graph.newfig()
+p_roc('ROC for P(x|c) threshold',
+      lambda sample: perfect_conditional_prob(sample))
 
-graph.savefig('perfect-roc.pdf')
-
-################################################
-## With perfect information
-################################################
-known_samples = map(dataset.ExtractLabel, dataset.LabelledSample(known, 1000))
-known_samples_without_label = list([x[1] for x in known_samples])
-world_samples = dataset.UnlabelledSample(world, 1000)
-
-estimated_conditional_prob = IndependentFeatureEstimator(known_samples_without_label, NormalizedHistogram)
-estimated_unconditional_prob = IndependentFeatureEstimator(world_samples, NormalizedHistogram)
-estimated_class_conditional_prob = ClassDependentEstimator(known_samples,
-  lambda x: IndependentFeatureEstimator(x, NormalizedHistogram))
+p_roc('ROC for P(x|c)/P(x) threshold',
+      lambda sample: perfect_conditional_prob(sample)/perfect_unconditional_prob(sample))
+graph.savefig('roc-perfect.pdf')
 
 
-p_roc('ROC for estimated CD(x|c)/P(x) threshold',
+graph.newfig()
+p_roc('ROC for optimal threshold',
+      lambda sample: perfect_conditional_prob(sample)/perfect_unconditional_prob(sample))
+
+p_roc('ROC for CD(x|c)/P(x) threshold',
       lambda sample: (0.0001+estimated_class_conditional_prob(sample)) / perfect_unconditional_prob(sample))
 
-p_roc('ROC for estimated CI(x|c)/P(x) threshold',
-      lambda sample: (0.0001+estimated_conditional_prob(sample)) / perfect_unconditional_prob(sample))
+p_roc('ROC for CD(x|c) threshold',
+      lambda sample: 0.0001+estimated_conditional_prob(sample))
 
 p_roc('ROC for estimated CD(x|c)/EP(x) threshold',
       lambda sample: (0.0001+estimated_class_conditional_prob(sample)) / (0.0001+estimated_unconditional_prob(sample)))
 
 p_roc('ROC for estimated CI(x|c)/EP(x) threshold',
       lambda sample: (0.0001+estimated_conditional_prob(sample)) / (0.0001+estimated_unconditional_prob(sample)))
-
 graph.savefig('roc-simple.pdf')
-
-
-graph.show()

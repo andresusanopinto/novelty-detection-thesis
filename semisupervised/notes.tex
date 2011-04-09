@@ -214,15 +214,20 @@ The system objective was to detect novel data from a given known set of 6 catego
 Two tests where run:
 \begin{enumerate}
 \item Using perfect knowledge of the probability functions both thresholds where compared for performance (\autoref{tab:dora-data-perfect}).
-\item A simple model was used to learn the probability functions and the thresholds were compared (\autoref{tab:dora-data-simple}).
+\item The models described in \autoref{sec:dora-models} were used to learn the probability functions and the thresholds were compared (\autoref{tab:dora-data-simple}).
 \end{enumerate}
+
+\note{The graphics are a bit "cheated", since theres an added epsilon on the returned value
+      to the probabilities functions to not return 0. This is because at the moment if on the known
+      samples we never see a given value we don't know it belongs to the possible feature space.
+      Has to be corrected.}
+
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{dora-data/roc-perfect.pdf}
 \caption{\label{tab:dora-data-perfect}ROC curve for thresholds based on perfect information running on the dora distribution}
 \end{figure}
-
 
 \begin{figure}
 \centering
@@ -232,12 +237,37 @@ Two tests where run:
 
 \begin{sidewaystable}[h]
 \begin{center}
-\scalebox{0.35}{
-\input{dora-data/explain}
-}
+\scalebox{0.35}{\input{dora-data/explain}}
 \end{center}
 \caption{\label{tab:dora-world-distribution}World model used in Dora. Each column cell shows $P(feature|class)$}
 \end{sidewaystable}
+
+\subsection{How Dora models the world?}
+\label{sec:dora-models}
+
+Currently dora uses a \emph{probabilistic graphical model} to model the world.
+All variables that the system see are added and connected in between with the
+\emph{probabilistic factors} that the system is aware of.
+Those factors are learned from the labelled data that the system is given when
+training.
+
+The proposal here is to also use such an approach to model the unconditional
+probability.
+Under that a novelty detection threshold can be easily implemented
+reusing the \emph{probabilistic graphical model} $G$ that dora uses as
+representation of the world:
+\begin{description}
+\item[$P(x|know)$] is obtained evaluating $P(G)$.
+\item[$P(x)$] can be obtained by creating $G'$ as an instance of $G$ but with the
+variable node we want to perform novelty detection removed and the factors associated
+with it replaced with factors learned from the unlabelled data.
+\end{description}
+
+We point to an additional simplification that if the original graphical model factors
+depending on the variable to perform novelty detection were previously split on a
+conditional and unconditional factors. Then $G'$ could be obtained by simply removing
+all the factors associated with the variable to perform novelty detection on.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
