@@ -81,8 +81,9 @@ unlabelled_data = dataset.UnlabelledSample(all_classes, samples = 10000)
 labelled_data   = dataset.LabelledSample(known_classes, samples = 1000)
 test_data       = dataset.LabelledSample(all_classes, samples = 1000)
 
-unconditional_prob = ml.DiscreteProbabilityEstimator(unlabelled_data, state_size = input_space_size)
-conditional_prob   = ml.DiscreteProbabilityEstimator(map(dataset.FilterLabel, labelled_data), state_size = input_space_size)
+# TODO: change this to use the perfect probability estimators.
+unconditional_prob = ml.NormalizedHistogram(unlabelled_data)
+conditional_prob   = ml.NormalizedHistogram(map(dataset.FilterLabel, labelled_data))
 
 def density_threshold(sample):
   return conditional_prob(sample)

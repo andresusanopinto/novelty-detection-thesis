@@ -103,15 +103,15 @@ graph.newfig()
 p_roc('ROC for optimal threshold',
       lambda sample: perfect_conditional_prob(sample)/perfect_unconditional_prob(sample))
 
-p_roc('ROC for CD(x|c)/P(x) threshold',
-      lambda sample: (0.0001+estimated_class_conditional_prob(sample)) / perfect_unconditional_prob(sample))
+#p_roc('ROC for CD(x|c)/P(x) threshold',
+#      lambda sample: (0.0001+estimated_class_conditional_prob(sample)) / perfect_unconditional_prob(sample))
 
-p_roc('ROC for CD(x|c) threshold',
+p_roc('ROC for P(G) threshold',
       lambda sample: 0.0001+estimated_conditional_prob(sample))
 
-p_roc('ROC for estimated CD(x|c)/EP(x) threshold',
+p_roc('ROC for estimated P(G)/P(G\') threshold',
       lambda sample: (0.0001+estimated_class_conditional_prob(sample)) / (0.0001+estimated_unconditional_prob(sample)))
 
-p_roc('ROC for estimated CI(x|c)/EP(x) threshold',
-      lambda sample: (0.0001+estimated_conditional_prob(sample)) / (0.0001+estimated_unconditional_prob(sample)))
+#p_roc('ROC for estimated CI(x|c)/EP(x) threshold',
+#      lambda sample: (0.0001+estimated_conditional_prob(sample)) / (0.0001+estimated_unconditional_prob(sample)))
 graph.savefig('roc-simple.pdf')

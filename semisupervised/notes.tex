@@ -116,7 +116,6 @@ Proposed detection method:
 
 \subsection{What does a ROC curve looks like for an optimal detector}
 \note{The ROC curve shape shows if a detector is perfect given an input space.
-      (Or at least I think so (though I haven't write any proof)).
       I guess somewhere there should be literature reference to such a simple concept}
 
 Proof would be something like:
@@ -128,9 +127,8 @@ And the best is to take the greedy approach of sorting the input by $TP/FP$.
 That is equivalent to a convex ROC curve.
 
 This leads to the important property:
-
-whatever threshold function you use,
-if you get a convex ROC curve, there is no way to perform better using that input space.
+\emph{whatever threshold function you use,
+if you get a convex ROC curve, there is no way to perform better using that input space.}
 
 At the same time we can proof an ordering on $TP/FP$ to be the same as $TP/(FP+TP)$.
 Which is coherent with the threshold of: $P(x|concept)/P(x)$.
@@ -213,8 +211,8 @@ Also, the features are statistically independent from each other given the room 
 The system objective was to detect novel data from a given known set of 6 categories.
 Two tests where run:
 \begin{enumerate}
-\item Using perfect knowledge of the probability functions both thresholds where compared for performance (\autoref{tab:dora-data-perfect}).
-\item The models described in \autoref{sec:dora-models} were used to learn the probability functions and the thresholds were compared (\autoref{tab:dora-data-simple}).
+\item Using perfect knowledge of the probability functions both thresholds where compared for performance (\autoref{fig:dora-data-perfect}).
+\item The models described in \autoref{sec:dora-models} were used to learn the probability functions and the thresholds were compared (\autoref{fig:dora-data-simple}).
 \end{enumerate}
 
 \note{The graphics are a bit "cheated", since theres an added epsilon on the returned value
@@ -223,16 +221,27 @@ Two tests where run:
       Has to be corrected.}
 
 
+As possible to see in \autoref{fig:dora-data-perfect} if we are able to use the unlabelled data to build a correct $P(x)$ then we obtain an optimal detector.
+
+\autoref{fig:dora-data-simple} shows how close our solution approaches the optimal by using creating models to for the conditional and unconditional probability from samples.
+
+Important to notice that our model of unconditional probability is very simple, it assumes semantic data to be independent from each other.
+
+\note{Describe better which approach we used to model $P(G)/P(G')$}
+\note{Perform experience with real data}
+
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{dora-data/roc-perfect.pdf}
-\caption{\label{tab:dora-data-perfect}ROC curve for thresholds based on perfect information running on the dora distribution}
+\caption{ROC curve for thresholds based on perfect information running on the dora distribution}
+\label{fig:dora-data-perfect}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{dora-data/roc-simple.pdf}
-\caption{\label{tab:dora-data-simple}ROC curve for thresholds learned on samples from samples in the dora distribution}
+\caption{ROC curve for thresholds learned on samples from samples in the dora distribution}
+\label{fig:dora-data-simple}
 \end{figure}
 
 \begin{sidewaystable}[h]
