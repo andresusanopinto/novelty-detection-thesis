@@ -1,0 +1,10 @@
+
+c = Command(['roc-perfect.pdf',
+         'roc-simple.pdf',
+         'explain.tex'],
+         'run.py',
+         'PYTHONPATH=$PYTHONPATH DISPLAY=:0.0 python $SOURCE.abspath',
+         PYTHONPATH=Dir('#scripts').abspath,
+         chdir=1)
+
+Depends(c, ['explain.py', 'ontology.py', 'default_knowledge-semmap.xml', 'defaultprobs-semmap.txt'])

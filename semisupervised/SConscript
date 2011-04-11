@@ -1,2 +1,5 @@
+SConscript(['simple-data/SConscript',
+            'dora-data/SConscript'])
+
 PDF(target = 'notes.pdf',
     source = 'notes.tex')

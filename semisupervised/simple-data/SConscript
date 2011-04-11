@@ -1,0 +1,10 @@
+
+c = Command(['density_threshold.tex',
+         'semi_threshold.tex',
+         'explain.tex'],
+         'run.py',
+         'PYTHONPATH=$PYTHONPATH python $SOURCE.abspath',
+         PYTHONPATH=Dir('#scripts').abspath,
+         chdir=1)
+
+Depends(c, 'explain.py')
