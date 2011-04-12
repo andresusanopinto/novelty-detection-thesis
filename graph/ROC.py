@@ -5,7 +5,7 @@
 import numpy as N
 import pylab as P
 
-def ROC(data, label = None):
+def ROC(data, style = 'ro-', label = None):
   """Plots a ROC curve."""
   
   def acc(data, value):
@@ -20,11 +20,10 @@ def ROC(data, label = None):
   if fpr[-1] != 0: fpr /= fpr[-1]
   if tpr[-1] != 0: tpr /= tpr[-1]
   
-  P.plot(fpr, tpr, label = label)
+  P.plot(fpr, tpr, style, markevery=len(fpr)/10, label = label)
   P.xlim([-0.05,1.05])
   P.ylim([-0.05,1.05])
   P.xlabel('False Positive Rate')
   P.ylabel('True Positive Rate')
-  P.title('Receiver operating characteristic')
   P.legend(loc = 'best')
 
