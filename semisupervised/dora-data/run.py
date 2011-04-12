@@ -28,7 +28,7 @@ import ml
 random.seed(0)
 
 #############################################################################
-def plot_roc(threshold, samples, known_labels, title=''):
+def plot_roc(threshold, samples, known_labels, style, title=''):
   def ThresholdAndLabel(sample):
     label, sample = dataset.ExtractLabel(sample)
     return threshold(sample), label
@@ -36,7 +36,7 @@ def plot_roc(threshold, samples, known_labels, title=''):
   roc_curve = []
   for threshold, label in sorted(map(ThresholdAndLabel, samples), key = lambda x: x, reverse=True):
     roc_curve.append( label in known_labels )
-  graph.roc(roc_curve, label = title)
+  graph.roc(roc_curve, style, label = title)
   pass
 
 
@@ -54,7 +54,8 @@ util.WriteFile('explain.tex',
     explain.ExplainDistributions(sorted(features.items()),
                                  sorted(rooms.items())))
 
-known_labels = set(['kitchen', 'robotlab', 'singleoffice'])
+all_labels = rooms.keys()
+known_labels = all_labels[1:]
 world = dataset.DiscreteDistribution([(1, dist) for cat,dist in rooms.items()])
 known = dataset.DiscreteDistribution([(1, dist) for cat,dist in rooms.items() if cat in known_labels])
 
@@ -84,9 +85,10 @@ estimated_class_conditional_prob = ml.ClassDependentEstimator(known_samples,
 ## Plotting
 ################################################
 test_data = dataset.LabelledSample(world, 10000)
-
+styles = [ 'ro-', 'g^-', 'b*-', 'kh-', 'kh-', 'y4-']
 p_roc = lambda title, func: plot_roc(threshold = func,
                                      samples = test_data,
+                                     style = styles.pop(), 
                                      known_labels = known_labels,
                                      title = title)
 
@@ -106,11 +108,12 @@ p_roc('ROC for optimal threshold',
 #p_roc('ROC for CD(x|c)/P(x) threshold',
 #      lambda sample: (0.0001+estimated_class_conditional_prob(sample)) / perfect_unconditional_prob(sample))
 
+p_roc('ROC for P(G)/P(G\') threshold',
+      lambda sample: (0.0001+estimated_class_conditional_prob(sample)) / (0.0001+estimated_unconditional_prob(sample)))
+
 p_roc('ROC for P(G) threshold',
       lambda sample: 0.0001+estimated_conditional_prob(sample))
 
-p_roc('ROC for estimated P(G)/P(G\') threshold',
-      lambda sample: (0.0001+estimated_class_conditional_prob(sample)) / (0.0001+estimated_unconditional_prob(sample)))
 
 #p_roc('ROC for estimated CI(x|c)/EP(x) threshold',
 #      lambda sample: (0.0001+estimated_conditional_prob(sample)) / (0.0001+estimated_unconditional_prob(sample)))
