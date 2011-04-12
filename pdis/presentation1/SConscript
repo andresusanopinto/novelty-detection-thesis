@@ -1,2 +1,6 @@
-PDF(target = 'presentation.pdf',
-    source = 'presentation.tex')
+SConscript('pics/SConscript')
+
+p = PDF(target = 'presentation.pdf',
+        source = 'presentation.tex')
+
+Depends(p, ['pics/imageclef-logo.png', 'pics/cold.png', 'pics/screenshot-0003.png'])
