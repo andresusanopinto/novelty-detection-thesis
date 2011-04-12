@@ -1,4 +1,7 @@
 
+SCRIPTS = ['#scripts/graph/__init__.py',
+           '#scripts/graph/ROC.py']
+
 c = Command(['roc-perfect.pdf',
          'roc-simple.pdf',
          'explain.tex'],
@@ -7,4 +10,8 @@ c = Command(['roc-perfect.pdf',
          PYTHONPATH=Dir('#scripts').abspath,
          chdir=1)
 
-Depends(c, ['explain.py', 'ontology.py', 'default_knowledge-semmap.xml', 'defaultprobs-semmap.txt'])
+Depends(c, SCRIPTS)
+Depends(c, ['explain.py',
+            'ontology.py',
+            'default_knowledge-semmap.xml',
+            'defaultprobs-semmap.txt'])
