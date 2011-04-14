@@ -202,51 +202,82 @@ probability of finding such a sample and not necessarily from a novel case.
 \subsection{Dora with world model}
 \label{sec:dora-experiment}
 
+
+
 This experience is similar to the simple experiment run in \autoref{sec:simple-experiment}.
 But this time using a more realistic distribution (\autoref{tab:dora-world-distribution}) with
 11 different room categories and with a feature space containing semantic data for:
 room size, room shape, visual appearance and 6 different objects.
-Also, the features are statistically independent from each other given the room category.
 
-The system objective was to detect novel data from a given known set of 6 categories.
-Two tests where run:
-\begin{enumerate}
-\item Using perfect knowledge of the probability functions both thresholds where compared for performance (\autoref{fig:dora-data-perfect}).
-\item The models described in \autoref{sec:dora-models} were used to learn the probability functions and the thresholds were compared (\autoref{fig:dora-data-simple}).
-\end{enumerate}
+As expected, having perfect information of the distributions $P(x|c \in known)$ and $P(x)$
+allows us to build an optimal detector as seen on \autoref{fig:dora-data-perfect}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\textwidth]{dora-data/roc-perfect.pdf}
+\caption{ROC curve for thresholds based on perfect information running on the dora distribution.
+         The convex curve for $P(x|k)/P(x)$ shows its optimal.}
+\label{fig:dora-data-perfect}
+\end{figure}
+
+Nonetheless to build that optimal detector we need information on $P(x)$ which often is not available.
+We focus then on the study of the bias introduced by using $P(x|k)$ as a threshold.
+For that we compared all roc curves based on perfect information for each missing
+classes (\autoref{fig:roc-curves-missing-1}).
+
+\begin{figure}[h]
+ \centering
+ \subfloat[Anteroom]{\includegraphics[width=0.33\textwidth]{dora-data/roc-missing-anteroom.pdf}}
+ \subfloat[Bathroom]{\includegraphics[width=0.33\textwidth]{dora-data/roc-missing-bathroom.pdf}}
+ \subfloat[Computer Lab]{\includegraphics[width=0.33\textwidth]{dora-data/roc-missing-computerlab.pdf}} \\
+ \subfloat[Conference Hall]{\includegraphics[width=0.33\textwidth]{dora-data/roc-missing-conferencehall.pdf}}
+ \subfloat[Double Office]{\includegraphics[width=0.33\textwidth]{dora-data/roc-missing-doubleoffice.pdf}}
+ \subfloat[Hallway]{\includegraphics[width=0.33\textwidth]{dora-data/roc-missing-hallway.pdf}} \\
+ \subfloat[Kitchen]{\includegraphics[width=0.33\textwidth]{dora-data/roc-missing-kitchen.pdf}}
+ \subfloat[Meeting Room]{\includegraphics[width=0.33\textwidth]{dora-data/roc-missing-meetingroom.pdf}}
+ \subfloat[Professors Office]{\includegraphics[width=0.33\textwidth]{dora-data/roc-missing-professorsoffice.pdf}} \\
+ \subfloat[Robot Lab]{\includegraphics[width=0.33\textwidth]{dora-data/roc-missing-robotlab.pdf}}
+ \subfloat[Single Office]{\includegraphics[width=0.33\textwidth]{dora-data/roc-missing-singleoffice.pdf}}
+
+\caption{\label{fig:roc-curves-missing-1}ROC curves for all one single missing category in the known data.}
+\end{figure}
+
+\note{TODO: Look into the distribution and explain why the harder new room categories to detect were
+      Computer Lab, Conference Hall, Meeting Room and Robot Lab.}
 
 \note{The graphics are a bit "cheated", since theres an added epsilon on the returned value
-      to the probabilities functions to not return 0. This is because at the moment if on the known
+      so the probabilities functions do not return 0. This is because at the moment if on the known
       samples we never see a given value we don't know it belongs to the possible feature space.
       Has to be corrected.}
 
 
-As possible to see in \autoref{fig:dora-data-perfect} if we are able to use the unlabelled data to build a correct $P(x)$ then we obtain an optimal detector.
+\subsubsection{Approximation Models}
 
-\autoref{fig:dora-data-simple} shows how close our solution approaches the optimal by using creating models to for the conditional and unconditional probability from samples.
+In this section, I should describe how we use graphical models to model both $P(x|k)$ and $P(x)$.
+And made them as $P(G)$ and $P(G')$.
 
-Important to notice that our model of unconditional probability is very simple, it assumes semantic data to be independent from each other.
+Comparison of the estimated models with respect to the perfect information functions as been done on
+\autoref{fig:dora-data-simple}.
+Important to notice that our model of unconditional probability is very simple, still is able to improve
+our novelty detection.
 
 \note{Describe better which approach we used to model $P(G)/P(G')$}
 \note{Perform experience with real data}
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{dora-data/roc-perfect.pdf}
-\caption{ROC curve for thresholds based on perfect information running on the dora distribution}
-\label{fig:dora-data-perfect}
-\end{figure}
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{dora-data/roc-simple.pdf}
 \caption{ROC curve for thresholds learned on samples from samples in the dora distribution}
 \label{fig:dora-data-simple}
 \end{figure}
 
+
+
+
 \begin{sidewaystable}[h]
 \begin{center}
-\scalebox{0.35}{\input{dora-data/explain}}
+\scalebox{0.50}{\input{dora-data/explain}}
 \end{center}
 \caption{\label{tab:dora-world-distribution}World model used in Dora. Each column cell shows $P(feature|class)$}
 \end{sidewaystable}
