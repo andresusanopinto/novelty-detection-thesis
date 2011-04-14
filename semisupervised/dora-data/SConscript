@@ -1,17 +1,41 @@
 
-SCRIPTS = ['#scripts/graph/__init__.py',
-           '#scripts/graph/ROC.py']
+def PythonCommand(target, source, options = []):
+  e = env.Clone()
+  for key, value in options:
+    e['ENV'][key] = value
+  c = e.Command(target, source, 'python $SOURCE.abspath', chdir=1)
+  e.Depends(c, e.Value('%s'%e['ENV']))
 
-c = Command(['roc-perfect.pdf',
-         'roc-simple.pdf',
-         'explain.tex'],
-         'run.py',
-         'PYTHONPATH=$PYTHONPATH DISPLAY=:0.0 python $SOURCE.abspath',
-         PYTHONPATH=Dir('#scripts').abspath,
-         chdir=1)
 
-Depends(c, SCRIPTS)
-Depends(c, ['explain.py',
-            'ontology.py',
-            'default_knowledge-semmap.xml',
-            'defaultprobs-semmap.txt'])
+
+############################################################
+############################################################
+env = Environment()
+env.PrependENVPath('PYTHONPATH', '#scripts/')
+env['ENV']['DISPLAY'] = ':0.0'
+
+
+SCRIPTS_DEPS = ['#scripts/graph/__init__.py', '#scripts/graph/ROC.py']
+ONTOLOGY_DEPS = ['ontology.py']
+
+EXPLAIN_DEPS = ['explain.py'] + ONTOLOGY_DEPS + SCRIPTS_DEPS
+
+PythonCommand(['explain.tex'],
+              ['explain_ontology.py'] + EXPLAIN_DEPS,
+              [('OUTPUT', 'explain.tex')])
+
+env['ENV']['LABELLED_SAMPLES']   = '1000'
+env['ENV']['UNLABELLED_SAMPLES'] = '1000'
+env['ENV']['TEST_SAMPLES']       = '10000'
+
+PythonCommand(['roc-perfect.pdf'],
+              ['run.py'] + ONTOLOGY_DEPS + SCRIPTS_DEPS,
+              [('KNOWN_LABELS', 'singleoffice kitchen robotlab'),
+               ('PLOT', 'P(x|k)/P(x) P(x|k)'),
+               ('OUTPUT', 'roc-perfect.pdf')])
+
+PythonCommand(['roc-simple.pdf'],
+              ['run.py'] + ONTOLOGY_DEPS + SCRIPTS_DEPS,
+              [('KNOWN_LABELS', 'singleoffice kitchen robotlab'),
+               ('PLOT', 'P(x|k)/P(x) P(G)/P(G\') P(G)'),
+               ('OUTPUT', 'roc-simple.pdf')])

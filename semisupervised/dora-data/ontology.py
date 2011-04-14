@@ -20,20 +20,25 @@
 # This module loads the ontology and creates distributions defined by:
 # default_knowledge-semmap.xml and defaultprobs-semmap.txt
 #
+import script
 import re
 import math
 import dataset
 from collections import defaultdict
 
+POISSON_EXPANSION = 3
+DEFAULT_KNOWLEDGE = 'default_knowledge-semmap.xml'
+DEFAULT_OBJ_PROBS = 'defaultprobs-semmap.txt'
+
+
 potential = dict()
 roomcats  = set()
 features  = set()
 feature_space = defaultdict(set)
-poisson_expansion = 3
 
 def Load():
   print("Loading default knowledge...")
-  for line in open("default_knowledge-semmap.xml"):
+  for line in open(DEFAULT_KNOWLEDGE):
     match = re.match('^\s+<item\s+room_category1="(?P<roomcat>\w+)"\s+' + 
                      '(?P<proptype>\w+)="(?P<propval>\w+)"\s+' + 
                      '(?:potential|probability)="(?P<potential>\S+)"\s*\/>\s*$', line)
@@ -47,26 +52,26 @@ def Load():
       pass
     else:
       print "Ignored line: ", line,
-  
+
   
   print('Loading object probabilities...')
-  for line in open("defaultprobs-semmap.txt"):
+  for line in open(DEFAULT_OBJ_PROBS):
     match = re.match('^INROOM (?P<object>\w+) (?P<roomcat>\w+) (?P<gamma>\S+)\n$', line)
     if match:
-      obj, roomcat, gamma = match.groups()
+      obj, roomcat, p_at_least_one = match.groups()
       feature = 'object_%s' % obj
-      gamma = float(gamma)
+      gamma = - math.log(1.0 - float(p_at_least_one))
       """Unzip the poisson distribution for up to the given number of samples"""
       features.add(feature)
       t_sum = 0.0
-      for k in range(0, poisson_expansion):
+      for k in range(0, POISSON_EXPANSION):
         descriptor = str(k)
         prob = gamma**k * math.exp(-gamma) / math.factorial(k)
         potential[roomcat, feature, descriptor] = prob
         t_sum += prob
         feature_space[feature].add(descriptor)
-      potential[roomcat, feature, '%d+' % poisson_expansion] = 1.0-t_sum
-      feature_space[feature].add('%d+' % poisson_expansion)
+      potential[roomcat, feature, '%d+' % POISSON_EXPANSION] = 1.0-t_sum
+      feature_space[feature].add('%d+' % POISSON_EXPANSION)
     elif line.strip() == '':
       pass
     else:
@@ -104,8 +109,12 @@ def MakeDistributions():
   room = room_d
   return room_d
   
+'''Generate ontology distributions.'''
+Load()
+del feature_space['room_category2']
+features = feature_space
+for f in features:
+  features[f] = sorted(features[f])
 
-if __name__ == '__main__':
-  Load()
-  DebugValues()
-  MakeDistributions()
+rooms = MakeDistributions()
+

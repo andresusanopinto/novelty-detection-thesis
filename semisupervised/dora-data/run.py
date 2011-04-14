@@ -17,54 +17,40 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
+import script
 import ontology
-import util
 import explain
 import random
 import dataset
 import graph
 import ml
 
-random.seed(0)
+KNOWN_LABELS       = script.option('KNOWN_LABELS').split()
+LABELLED_SAMPLES   = int(script.option('LABELLED_SAMPLES'))
+UNLABELLED_SAMPLES = int(script.option('UNLABELLED_SAMPLES'))
+TEST_SAMPLES       = int(script.option('TEST_SAMPLES'))
+PLOT         = script.option('PLOT').split()
+OUTPUT       = script.option('OUTPUT')
+
+
+features = ontology.features
+rooms = ontology.rooms
 
 #############################################################################
-def plot_roc(threshold, samples, known_labels, style, title=''):
-  def ThresholdAndLabel(sample):
-    label, sample = dataset.ExtractLabel(sample)
-    return threshold(sample), label
-
-  roc_curve = []
-  for threshold, label in sorted(map(ThresholdAndLabel, samples), key = lambda x: x, reverse=True):
-    roc_curve.append( label in known_labels )
-  graph.roc(roc_curve, style, label = title)
-  pass
 
 
-
-ontology.Load()
-del ontology.feature_space['room_category2']
-
-features = ontology.feature_space
-for f in features:
-  features[f] = sorted(features[f])
-
-rooms = ontology.MakeDistributions()
-
-util.WriteFile('explain.tex',
-    explain.ExplainDistributions(sorted(features.items()),
-                                 sorted(rooms.items())))
 
 all_labels = rooms.keys()
-known_labels = all_labels[1:]
 world = dataset.DiscreteDistribution([(1, dist) for cat,dist in rooms.items()])
-known = dataset.DiscreteDistribution([(1, dist) for cat,dist in rooms.items() if cat in known_labels])
+known = dataset.DiscreteDistribution([(1, dist) for cat,dist in rooms.items() if cat in KNOWN_LABELS])
 
 ################################################
 ## Generate training data
 ################################################
-known_samples = map(dataset.ExtractLabel, dataset.LabelledSample(known, 1000))
+known_samples = map(dataset.ExtractLabel, dataset.LabelledSample(known, LABELLED_SAMPLES))
 known_samples_without_label = list([x[1] for x in known_samples])
-world_samples = dataset.UnlabelledSample(world, 1000)
+world_samples = dataset.UnlabelledSample(world, UNLABELLED_SAMPLES)
+test_samples = dataset.LabelledSample(world, TEST_SAMPLES)
 
 ################################################
 ## Create probability functions
@@ -75,7 +61,6 @@ def perfect_conditional_prob(sample):
 def perfect_unconditional_prob(sample):
   return dataset.SampleProbability(world, sample)
 
-estimated_conditional_prob = ml.IndependentFeatureEstimator(known_samples_without_label, ml.NormalizedHistogram)
 estimated_unconditional_prob = ml.IndependentFeatureEstimator(world_samples, ml.NormalizedHistogram)
 estimated_class_conditional_prob = ml.ClassDependentEstimator(known_samples,
   lambda x: ml.IndependentFeatureEstimator(x, ml.NormalizedHistogram))
@@ -84,37 +69,37 @@ estimated_class_conditional_prob = ml.ClassDependentEstimator(known_samples,
 ################################################
 ## Plotting
 ################################################
-test_data = dataset.LabelledSample(world, 10000)
-styles = [ 'ro-', 'g^-', 'b*-', 'kh-', 'kh-', 'y4-']
-p_roc = lambda title, func: plot_roc(threshold = func,
-                                     samples = test_data,
-                                     style = styles.pop(), 
-                                     known_labels = known_labels,
-                                     title = title)
+def p_roc(threshold, title, style, samples = test_samples, known_labels = KNOWN_LABELS):
+  def ThresholdAndLabel(sample):
+    label, sample = dataset.ExtractLabel(sample)
+    return threshold(sample), label
+
+  roc_curve = []
+  for threshold, label in sorted(map(ThresholdAndLabel, samples), key = lambda x: x, reverse=True):
+    roc_curve.append( label in KNOWN_LABELS)
+  graph.roc(roc_curve, style, label = title)
+
+
+plots = {
+  'P(G)':
+      lambda: p_roc(lambda sample: 0.0001+estimated_class_conditional_prob(sample),
+                    'P(G)',
+                    'g^-'),
+  'P(G)/P(G\')':
+      lambda: p_roc(lambda sample: (0.0001+estimated_class_conditional_prob(sample)) / (0.0001+estimated_unconditional_prob(sample)),
+                    'P(G)/P(G\')',
+                    'b*-'),
+  'P(x|k)/P(x)':
+      lambda: p_roc(lambda sample: perfect_conditional_prob(sample)/perfect_unconditional_prob(sample),
+                    'P(x|c)/P(x)',
+                    'kh-'),
+  'P(x|k)':
+      lambda: p_roc(lambda sample: perfect_conditional_prob(sample),
+                    'P(x|c)',
+                    'y+-')
+}
 
 graph.newfig()
-p_roc('ROC for P(x|c) threshold',
-      lambda sample: perfect_conditional_prob(sample))
-
-p_roc('ROC for P(x|c)/P(x) threshold',
-      lambda sample: perfect_conditional_prob(sample)/perfect_unconditional_prob(sample))
-graph.savefig('roc-perfect.pdf')
-
-
-graph.newfig()
-p_roc('ROC for optimal threshold',
-      lambda sample: perfect_conditional_prob(sample)/perfect_unconditional_prob(sample))
-
-#p_roc('ROC for CD(x|c)/P(x) threshold',
-#      lambda sample: (0.0001+estimated_class_conditional_prob(sample)) / perfect_unconditional_prob(sample))
-
-p_roc('ROC for P(G)/P(G\') threshold',
-      lambda sample: (0.0001+estimated_class_conditional_prob(sample)) / (0.0001+estimated_unconditional_prob(sample)))
-
-p_roc('ROC for P(G) threshold',
-      lambda sample: 0.0001+estimated_conditional_prob(sample))
-
-
-#p_roc('ROC for estimated CI(x|c)/EP(x) threshold',
-#      lambda sample: (0.0001+estimated_conditional_prob(sample)) / (0.0001+estimated_unconditional_prob(sample)))
-graph.savefig('roc-simple.pdf')
+for plot in PLOT:
+  plots[plot]()
+graph.savefig(OUTPUT)
