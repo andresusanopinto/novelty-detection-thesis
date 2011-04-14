@@ -26,7 +26,7 @@ PythonCommand(['explain.tex'],
 
 env['ENV']['LABELLED_SAMPLES']   = '1000'
 env['ENV']['UNLABELLED_SAMPLES'] = '1000'
-env['ENV']['TEST_SAMPLES']       = '10000'
+env['ENV']['TEST_SAMPLES']       = '1000'
 
 PythonCommand(['roc-perfect.pdf'],
               ['run.py'] + ONTOLOGY_DEPS + SCRIPTS_DEPS,
@@ -39,3 +39,15 @@ PythonCommand(['roc-simple.pdf'],
               [('KNOWN_LABELS', 'singleoffice kitchen robotlab'),
                ('PLOT', 'P(x|k)/P(x) P(G)/P(G\') P(G)'),
                ('OUTPUT', 'roc-simple.pdf')])
+
+ROOM_CATS = '''anteroom bathroom computerlab conferencehall
+               doubleoffice hallway kitchen meetingroom
+               professorsoffice robotlab singleoffice'''.split()
+
+for room in ROOM_CATS:
+  output = 'roc-missing-%s.pdf' % room
+  PythonCommand([output],
+                ['run.py'] + ONTOLOGY_DEPS + SCRIPTS_DEPS,
+                [('KNOWN_LABELS', ' '.join([r for r in ROOM_CATS if r != room])),
+                 ('PLOT', 'P(x|k)/P(x) P(x|k)'),
+                 ('OUTPUT', output)])

@@ -61,9 +61,13 @@ def perfect_conditional_prob(sample):
 def perfect_unconditional_prob(sample):
   return dataset.SampleProbability(world, sample)
 
-estimated_unconditional_prob = ml.IndependentFeatureEstimator(world_samples, ml.NormalizedHistogram)
-estimated_class_conditional_prob = ml.ClassDependentEstimator(known_samples,
-  lambda x: ml.IndependentFeatureEstimator(x, ml.NormalizedHistogram))
+estimated_unconditional_prob = None
+estimated_class_conditional_prob = None
+
+if 'P(G)' in PLOT or 'P(G)/P(G\')' in PLOT:
+  estimated_unconditional_prob = ml.IndependentFeatureEstimator(world_samples, ml.NormalizedHistogram)
+  estimated_class_conditional_prob = ml.ClassDependentEstimator(known_samples,
+    lambda x: ml.IndependentFeatureEstimator(x, ml.NormalizedHistogram))
 
 
 ################################################
@@ -91,12 +95,12 @@ plots = {
                     'b*-'),
   'P(x|k)/P(x)':
       lambda: p_roc(lambda sample: perfect_conditional_prob(sample)/perfect_unconditional_prob(sample),
-                    'P(x|c)/P(x)',
-                    'kh-'),
+                    'P(x|k)/P(x)',
+                    'ko-'),
   'P(x|k)':
       lambda: p_roc(lambda sample: perfect_conditional_prob(sample),
-                    'P(x|c)',
-                    'y+-')
+                    'P(x|k)',
+                    'rv-')
 }
 
 graph.newfig()
