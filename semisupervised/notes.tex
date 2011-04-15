@@ -242,13 +242,33 @@ classes (\autoref{fig:roc-curves-missing-1}).
 \caption{\label{fig:roc-curves-missing-1}ROC curves for all one single missing category in the known data.}
 \end{figure}
 
-\note{TODO: Look into the distribution and explain why the harder new room categories to detect were
-      Computer Lab, Conference Hall, Meeting Room and Robot Lab.}
-
 \note{The graphics are a bit "cheated", since theres an added epsilon on the returned value
       so the probabilities functions do not return 0. This is because at the moment if on the known
       samples we never see a given value we don't know it belongs to the possible feature space.
       Has to be corrected.}
+
+\begin{figure}
+\missingfigure[figwidth=\textwidth]{}
+
+\caption{\label{fig:confusion-matrix-dora}Confusion matrix for the 11 classes that make up the dora distribution.}
+\end{figure}
+
+The room categories where $P(x|k)$ threshold gave worst results were:
+Computer Lab, Conference Hall, Meeting Room and Robot Lab.
+
+That was lead by the fact conditional density threshold gives very poor results on detecting classes
+that are easily confused with other classes using the given feature space (see confusion matrix in
+\autoref{fig:confusion-matrix-dora}).
+As the lack of knowledge of $P(x)$ limits the ability of the detector to correctly sort the feature
+space to in a way that a bigger value is given to the inputs where the probability of being correct is more accurate.
+
+Depending on the feature space used, this might be a very important property.
+As it will greatly impact a novelty detector. For the case of semantic data used in dora:
+very small feature spaces and lack of specific features to detect some room categories.
+
+For that we implemented a very simple approach to unconditional density probability and compared the results
+\dots
+
 
 
 \subsubsection{Approximation Models}
