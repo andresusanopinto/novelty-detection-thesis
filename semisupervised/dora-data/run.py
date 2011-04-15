@@ -23,6 +23,7 @@ import explain
 import random
 import dataset
 import graph
+import collections
 import ml
 
 KNOWN_LABELS       = script.option('KNOWN_LABELS').split()
@@ -77,10 +78,14 @@ def p_roc(threshold, title, style, samples = test_samples, known_labels = KNOWN_
   def ThresholdAndLabel(sample):
     label, sample = dataset.ExtractLabel(sample)
     return threshold(sample), label
-
+  
+  ct = collections.defaultdict(lambda: [0, 0])
+  for threshold, label in map(ThresholdAndLabel, samples):
+    ct[threshold][label in KNOWN_LABELS] += 1
+  
   roc_curve = []
-  for threshold, label in sorted(map(ThresholdAndLabel, samples), key = lambda x: x, reverse=True):
-    roc_curve.append( label in KNOWN_LABELS)
+  for threshold, score in sorted(ct.items(), key = lambda x: x[0], reverse=True):
+    roc_curve.append(tuple(score))
   graph.roc(roc_curve, style, label = title)
 
 

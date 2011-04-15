@@ -20,13 +20,19 @@ ONTOLOGY_DEPS = ['ontology.py']
 
 EXPLAIN_DEPS = ['explain.py'] + ONTOLOGY_DEPS + SCRIPTS_DEPS
 
+env['ENV']['ONTOLOGY_DEFAULT_KNOWLEDGE'] = 'default_knowledge-semmap.xml'
+env['ENV']['ONTOLOGY_DEFAULT_OBJ_PROBS'] = 'defaultprobs-semmap.txt'
+env['ENV']['ONTOLOGY_DROP_FEATURES'] = '''room_category2 object_book 
+                                          object_computer object_robot object_stapler
+                                          '''
+
 PythonCommand(['explain.tex'],
               ['explain_ontology.py'] + EXPLAIN_DEPS,
               [('OUTPUT', 'explain.tex')])
 
 env['ENV']['LABELLED_SAMPLES']   = '1000'
 env['ENV']['UNLABELLED_SAMPLES'] = '1000'
-env['ENV']['TEST_SAMPLES']       = '1000'
+env['ENV']['TEST_SAMPLES']       = '10000'
 
 PythonCommand(['roc-perfect.pdf'],
               ['run.py'] + ONTOLOGY_DEPS + SCRIPTS_DEPS,
@@ -44,6 +50,8 @@ ROOM_CATS = '''anteroom bathroom computerlab conferencehall
                doubleoffice hallway kitchen meetingroom
                professorsoffice robotlab singleoffice'''.split()
 
+
+env['ENV']['TEST_SAMPLES']       = '1000'
 for room in ROOM_CATS:
   output = 'roc-missing-%s.pdf' % room
   PythonCommand([output],

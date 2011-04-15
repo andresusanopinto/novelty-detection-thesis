@@ -27,8 +27,9 @@ import dataset
 from collections import defaultdict
 
 POISSON_EXPANSION = 3
-DEFAULT_KNOWLEDGE = 'default_knowledge-semmap.xml'
-DEFAULT_OBJ_PROBS = 'defaultprobs-semmap.txt'
+DEFAULT_KNOWLEDGE = script.option('ONTOLOGY_DEFAULT_KNOWLEDGE')
+DEFAULT_OBJ_PROBS = script.option('ONTOLOGY_DEFAULT_OBJ_PROBS')
+DROP_FEATURES     = script.option('ONTOLOGY_DROP_FEATURES').split()
 
 
 potential = dict()
@@ -109,9 +110,12 @@ def MakeDistributions():
   room = room_d
   return room_d
   
+
 '''Generate ontology distributions.'''
 Load()
-del feature_space['room_category2']
+for feature in DROP_FEATURES:
+  del feature_space[feature]
+
 features = feature_space
 for f in features:
   features[f] = sorted(features[f])
