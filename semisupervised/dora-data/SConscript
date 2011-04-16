@@ -16,7 +16,7 @@ env['ENV']['DISPLAY'] = ':0.0'
 
 
 SCRIPTS_DEPS = ['#scripts/graph/__init__.py', '#scripts/graph/ROC.py']
-ONTOLOGY_DEPS = ['ontology.py']
+ONTOLOGY_DEPS = ['ontology.py', 'defaultprobs-semmap.txt', 'default_knowledge-semmap.xml' ]
 
 EXPLAIN_DEPS = ['explain.py'] + ONTOLOGY_DEPS + SCRIPTS_DEPS
 
