@@ -12,8 +12,6 @@ def PythonCommand(target, source, options = []):
 ############################################################
 env = Environment()
 env.PrependENVPath('PYTHONPATH', '#scripts/')
-env['ENV']['DISPLAY'] = ':0.0'
-
 
 SCRIPTS_DEPS = ['#scripts/graph/__init__.py', '#scripts/graph/ROC.py']
 ONTOLOGY_DEPS = ['ontology.py', 'defaultprobs-semmap.txt', 'default_knowledge-semmap.xml' ]
