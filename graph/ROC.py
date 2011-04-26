@@ -14,8 +14,8 @@ def ROC(data, style = 'ro-', label = None):
       sum += v
       yield sum
   
-  fpr = N.array(list(acc(map(lambda x:x[0], data))))
-  tpr = N.array(list(acc(map(lambda x:x[1], data))))
+  fpr = N.array([0.0] + list(acc(map(lambda x:x[0], data))))
+  tpr = N.array([0.0] + list(acc(map(lambda x:x[1], data))))
   if fpr[-1] != 0: fpr /= fpr[-1]
   if tpr[-1] != 0: tpr /= tpr[-1]
   
