@@ -198,7 +198,7 @@ that the low probability of that sample on the labelled data arrives from the lo
 probability of finding such a sample and not necessarily from a novel case.
 
 
-
+\clearpage
 \subsection{Dora with world model}
 \label{sec:dora-experiment}
 
@@ -221,7 +221,8 @@ allows us to build an optimal detector as seen on \autoref{fig:dora-data-perfect
 \end{figure}
 
 Nonetheless to build that optimal detector we need information on $P(x)$ which often is not available.
-We focus then on the study of the bias introduced by using $P(x|k)$ as a threshold.
+We focus then on the study of the bias introduced by only using $P(x|k)$ as a threshold.
+
 For that we compared all roc curves based on perfect information for each missing
 classes (\autoref{fig:roc-curves-missing-1}).
 
@@ -242,19 +243,14 @@ classes (\autoref{fig:roc-curves-missing-1}).
 \caption{\label{fig:roc-curves-missing-1}ROC curves for all one single missing category in the known data.}
 \end{figure}
 
-\note{The graphics are a bit "cheated", since theres an added epsilon on the returned value
-      so the probabilities functions do not return 0. This is because at the moment if on the known
-      samples we never see a given value we don't know it belongs to the possible feature space.
-      Has to be corrected.}
-
-\begin{figure}
-\missingfigure[figwidth=\textwidth]{}
-
-\caption{\label{fig:confusion-matrix-dora}Confusion matrix for the 11 classes that make up the dora distribution.}
-\end{figure}
-
 The room categories where $P(x|k)$ threshold gave worst results were:
 Computer Lab, Conference Hall, Meeting Room and Robot Lab.
+
+These are 
+\begin{figure}
+\missingfigure[figwidth=\textwidth]{}
+\caption{\label{fig:confusion-matrix-dora}Confusion matrix for the 11 classes that make up the dora distribution.}
+\end{figure}
 
 That was lead by the fact conditional density threshold gives very poor results on detecting classes
 that are easily confused with other classes using the given feature space (see confusion matrix in
@@ -269,10 +265,36 @@ very small feature spaces and lack of specific features to detect some room cate
 For that we implemented a very simple approach to unconditional density probability and compared the results
 \dots
 
+\begin{sidewaystable}[h]
+\begin{center}
+\scalebox{0.50}{\input{dora-data/explain}}
+\end{center}
+\caption{\label{tab:dora-world-distribution}World model used in Dora. Each column cell shows $P(feature|class)$}
+\end{sidewaystable}
 
 
-\subsubsection{Approximation Models}
+\subsubsection{Modeling the World with Graphical Models}
+The previous experiences assume perfect knowledge on the probability distributions functions.
+This sections presents how Dora models those distributions and how to perform
+novelty detection with them.
 
+Dora uses \emph{probabilistic graphical models} to represent all extracted knowledge from the world.
+Those allow to easily model certain probabilistic properties such as conditional independence.
+And easy the process of several computational problems on the distributions.
+Several tools exists for this type of graphical manipulation such as: \emph{Bayesian networks}, \emph{Markov Random Fields}
+or \emph{Factor Graphs}.
+
+Dora underlying graphical methods are based on \emph{Factor Graphs}\citep{kschischang2001factor}, which are bipartites graph composed of variable and factor nodes representing the random variables and several factor functions between the variables that are used to decomposed the distribution.
+
+
+\begin{figure}
+Graphical model of Dora
+\end{figure}
+
+
+We will use $P(G)$.
+
+We will try to 
 In this section, I should describe how we use graphical models to model both $P(x|k)$ and $P(x)$.
 And made them as $P(G)$ and $P(G')$.
 
@@ -285,6 +307,11 @@ our novelty detection.
 \note{Perform experience with real data}
 
 
+\note{The graphics are a bit "cheated", since theres an added epsilon on the returned value
+      so the probabilities functions do not return 0. This is because at the moment if on the known
+      samples we never see a given value we don't know it belongs to the possible feature space.
+      Has to be corrected.}
+
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{dora-data/roc-simple.pdf}
@@ -295,13 +322,8 @@ our novelty detection.
 
 
 
-\begin{sidewaystable}[h]
-\begin{center}
-\scalebox{0.50}{\input{dora-data/explain}}
-\end{center}
-\caption{\label{tab:dora-world-distribution}World model used in Dora. Each column cell shows $P(feature|class)$}
-\end{sidewaystable}
 
+\clearpage
 \subsection{How Dora models the world?}
 \label{sec:dora-models}
 
