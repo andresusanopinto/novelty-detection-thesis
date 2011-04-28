@@ -4,7 +4,7 @@ def PythonCommand(target, source, options = []):
   for key, value in options:
     e['ENV'][key] = value
   c = e.Command(target, source, 'python $SOURCE.abspath', chdir=1)
-  e.Depends(c, e.Value('%s'%e['ENV']))
+  e.Depends(c, e.Value('%s'%list(sorted(e['ENV'].items()))))
 
 
 
@@ -20,17 +20,24 @@ EXPLAIN_DEPS = ['explain.py'] + ONTOLOGY_DEPS + SCRIPTS_DEPS
 
 env['ENV']['ONTOLOGY_DEFAULT_KNOWLEDGE'] = 'default_knowledge-semmap.xml'
 env['ENV']['ONTOLOGY_DEFAULT_OBJ_PROBS'] = 'defaultprobs-semmap.txt'
-env['ENV']['ONTOLOGY_DROP_FEATURES'] = '''room_category2 object_book 
-                                          object_computer object_robot object_stapler
-                                          '''
+#env['ENV']['ONTOLOGY_DROP_FEATURES'] = '''room_category2 object_book 
+#                                          object_computer object_robot object_stapler
+#                                          '''
+env['ENV']['ONTOLOGY_DROP_FEATURES'] = '''room_category2'''
 
 PythonCommand(['explain.tex'],
               ['explain_ontology.py'] + EXPLAIN_DEPS,
               [('OUTPUT', 'explain.tex')])
 
+
 env['ENV']['LABELLED_SAMPLES']   = '1000'
 env['ENV']['UNLABELLED_SAMPLES'] = '1000'
 env['ENV']['TEST_SAMPLES']       = '10000'
+
+PythonCommand(['classification.pdf'],
+              ['classification.py'] + ONTOLOGY_DEPS + SCRIPTS_DEPS,
+              [('OUTPUT', 'classification.pdf')])
+
 
 PythonCommand(['roc-perfect.pdf'],
               ['run.py'] + ONTOLOGY_DEPS + SCRIPTS_DEPS,
