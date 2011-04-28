@@ -209,7 +209,7 @@ But this time using a more realistic distribution (\autoref{tab:dora-world-distr
 11 different room categories and with a feature space containing semantic data for:
 room size, room shape, visual appearance and 6 different objects.
 
-As expected, having perfect information of the distributions $P(x|c \in known)$ and $P(x)$
+Having perfect information of the distributions $P(x|c \in known)$ and $P(x)$
 allows us to build an optimal detector as seen on \autoref{fig:dora-data-perfect}.
 
 \begin{figure}[h]
@@ -243,13 +243,11 @@ classes (\autoref{fig:roc-curves-missing-1}).
 \caption{\label{fig:roc-curves-missing-1}ROC curves for all one single missing category in the known data.}
 \end{figure}
 
-The room categories where $P(x|k)$ threshold gave worst results were:
-Computer Lab, Conference Hall, Meeting Room and Robot Lab.
-
-These are 
 \begin{figure}
-\missingfigure[figwidth=\textwidth]{}
-\caption{\label{fig:confusion-matrix-dora}Confusion matrix for the 11 classes that make up the dora distribution.}
+\centering
+\includegraphics[width=0.75\textwidth]{dora-data/classification.pdf}
+\caption{\label{fig:confusion-matrix-dora}
+         Confusion matrix for the 11 classes that make up the dora distribution.}
 \end{figure}
 
 That was lead by the fact conditional density threshold gives very poor results on detecting classes
@@ -318,6 +316,11 @@ our novelty detection.
 \caption{ROC curve for thresholds learned on samples from samples in the dora distribution}
 \label{fig:dora-data-simple}
 \end{figure}
+
+\note{The graphics are a bit "cheated", since theres an added epsilon on the returned value
+      so the probabilities functions do not return 0. This is because at the moment if on the known
+      samples we never see a given value we don't know it belongs to the possible feature space.
+      Has to be corrected.}
 
 
 
