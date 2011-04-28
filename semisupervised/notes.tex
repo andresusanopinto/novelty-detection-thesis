@@ -271,30 +271,48 @@ For that we implemented a very simple approach to unconditional density probabil
 \end{sidewaystable}
 
 
-\subsubsection{Modeling the World with Graphical Models}
+\clearpage
+\subsection{Modeling the World with Graphical Models}
 The previous experiences assume perfect knowledge on the probability distributions functions.
-This sections presents how Dora models those distributions and how to perform
-novelty detection with them.
+This sections presents how Dora models those distributions and how to perform novelty detection with them.
 
 Dora uses \emph{probabilistic graphical models} to represent all extracted knowledge from the world.
-Those allow to easily model certain probabilistic properties such as conditional independence.
-And easy the process of several computational problems on the distributions.
+Those allow to easily model certain probabilistic properties such as conditional independence
+and easy the process of several computational problems on the distributions.
 Several tools exists for this type of graphical manipulation such as: \emph{Bayesian networks}, \emph{Markov Random Fields}
 or \emph{Factor Graphs}.
 
-Dora underlying graphical methods are based on \emph{Factor Graphs}\citep{kschischang2001factor}, which are bipartites graph composed of variable and factor nodes representing the random variables and several factor functions between the variables that are used to decomposed the distribution.
+Dora underlying graphical methods are based on \emph{Factor Graphs}\citep{kschischang2001factor}: bipartites graphs composed of variable and factor nodes representing the random variables and several factor functions between the variables that are used to decomposed the distribution.
 
 
-\begin{figure}
-Graphical model of Dora
+\begin{figure}[h]
+\begin{tikzpicture}
+\node[circle,fill=blue!20] (room1) {Room};
+\node[circle,fill=blue!20] (Appearance) {Apperance};
+\end{tikzpicture}
+\caption{Example of a factor graph used for Dora.}
 \end{figure}
 
 
-We will use $P(G)$.
+At any moment dora has a graph $G$ representing a set of random variables the system is aware of and all the probabilistic connections between them.
+The observed values are set by the sensed properties and inferences can be done on the remaining ones.
 
-We will try to 
-In this section, I should describe how we use graphical models to model both $P(x|k)$ and $P(x)$.
-And made them as $P(G)$ and $P(G')$.
+Assuming the graph edges capture the properties of the distribution $P(x|known)$.
+$G$ becomes indeed our replacement for that distribution and so $P(x|known) = P(x|G)$.
+
+In order to generate a simple and interesting properties we decided to model $P(x)$ also with a graphical model.
+
+
+
+Evaluating $P(x|G)/P(x|G')$...
+
+
+Method:
+\begin{enumerate}
+\item Train a graph model for unlabelled data without the labelled variables.
+\item Add the labelled variables and train the factors with the labelled data.
+\item Use $P(x|G)$ as novelty threshold.
+\end{enumerate}
 
 Comparison of the estimated models with respect to the perfect information functions as been done on
 \autoref{fig:dora-data-simple}.
