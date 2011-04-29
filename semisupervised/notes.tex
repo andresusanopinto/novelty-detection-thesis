@@ -284,11 +284,47 @@ or \emph{Factor Graphs}.
 
 Dora underlying graphical methods are based on \emph{Factor Graphs}\citep{kschischang2001factor}: bipartites graphs composed of variable and factor nodes representing the random variables and several factor functions between the variables that are used to decomposed the distribution.
 
+Any probability distributuion can be represented by a \emph{factor graph} and we will denote the probability of a given set of variables outputs $x$ on a graph $G$ as $P_G(x)$.
+
+
+\tikzstyle{var} = [circle,
+                   thick,
+                   draw, fill=red!20,
+                   text width=4.5em,
+                   text badly centered,
+                   node distance=3cm,
+                   inner sep=0pt]
+
+\tikzstyle{factor} = [rectangle,
+                      thick,
+                      draw, fill=blue!20,
+                      text width=1em,
+                      text centered,
+                      minimum height=3em,
+                      minimum width=3em]
+
+\tikzstyle{line} = [draw]
 
 \begin{figure}[h]
-\begin{tikzpicture}
-\node[circle,fill=blue!20] (room1) {Room};
-\node[circle,fill=blue!20] (Appearance) {Apperance};
+\centering
+\begin{tikzpicture}[node distance = 2cm, auto]
+    \matrix[row sep=0.5cm,column sep=0.5cm] {
+      & \node [var] (room) {Room Category}; \\
+      \node [factor] (fAppearance) {}; &
+      \node [factor] (fShape) {}; &
+      \node [factor] (fSize) {}; \\
+
+      \node [var] (appearance) {Appearance}; &
+      \node [var] (shape) {Shape}; &
+      \node [var] (size) {Size}; \\
+    };
+  \path [line] (room) -- (fAppearance);
+  \path [line] (room) -- (fShape);
+  \path [line] (room) -- (fSize);
+
+  \path [line] (fAppearance) -- (appearance);
+  \path [line] (fShape) -- (shape);
+  \path [line] (fSize) -- (size);
 \end{tikzpicture}
 \caption{Example of a factor graph used for Dora.}
 \end{figure}
@@ -296,32 +332,37 @@ Dora underlying graphical methods are based on \emph{Factor Graphs}\citep{kschis
 
 At any moment dora has a graph $G$ representing a set of random variables the system is aware of and all the probabilistic connections between them.
 The observed values are set by the sensed properties and inferences can be done on the remaining ones.
+Assuming the graph $G$ captures the properties of the distribution $P(x|known)$. $G$ becomes indeed our replacement for that distribution and so $P(x|known) = P_G(x)$.
 
-Assuming the graph edges capture the properties of the distribution $P(x|known)$.
-$G$ becomes indeed our replacement for that distribution and so $P(x|known) = P(x|G)$.
+As seen before using the conditional probability as a novelty threshold doesn't gives optimal results. Therefore we try to approximate the unconditional probability to improve our threshold.
+For that we used a very simplistic model assuming independence between all variables that depend on the variable that represents the one we want to detect novelty.
+We build a graph $G'$ as an approximation for $P(x)$ with $P_{G'}(x)$.
 
-In order to generate a simple and interesting properties we decided to model $P(x)$ also with a graphical model.
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance = 2cm, auto]
+    \matrix[row sep=0.5cm,column sep=0.5cm] {
+      \node [factor] (fAppearance) {}; &
+      \node [factor] (fShape) {}; &
+      \node [factor] (fSize) {}; \\
+
+      \node [var] (appearance) {Appearance}; &
+      \node [var] (shape) {Shape}; &
+      \node [var] (size) {Size}; \\
+    };
+  \path [line] (fAppearance) -- (appearance);
+  \path [line] (fShape) -- (shape);
+  \path [line] (fSize) -- (size);
+\end{tikzpicture}
+\caption{Factor graph to model unconditional probability. It assumes independency between\dots}
+\end{figure}
 
 
+Using the described $G$ and $G'$ we evaluated our novelty detectors in the distribution used before and compared with an optimal detector.
+As possible to see in \autoref{fig:dora-data-simple} our approaximation to $P(x)$ althouth very basic was able to improve a novelty detection based only on conditional probability.
 
-Evaluating $P(x|G)/P(x|G')$...
 
-
-Method:
-\begin{enumerate}
-\item Train a graph model for unlabelled data without the labelled variables.
-\item Add the labelled variables and train the factors with the labelled data.
-\item Use $P(x|G)$ as novelty threshold.
-\end{enumerate}
-
-Comparison of the estimated models with respect to the perfect information functions as been done on
-\autoref{fig:dora-data-simple}.
-Important to notice that our model of unconditional probability is very simple, still is able to improve
-our novelty detection.
-
-\note{Describe better which approach we used to model $P(G)/P(G')$}
-\note{Perform experience with real data}
-
+In order to generate a simple model we decided to model the unconditional density probability function also with a graphical model $G'$ and so we approximate $P(x)$ as $P_{G'}(x)$.
 
 \note{The graphics are a bit "cheated", since theres an added epsilon on the returned value
       so the probabilities functions do not return 0. This is because at the moment if on the known
@@ -335,11 +376,19 @@ our novelty detection.
 \label{fig:dora-data-simple}
 \end{figure}
 
-\note{The graphics are a bit "cheated", since theres an added epsilon on the returned value
-      so the probabilities functions do not return 0. This is because at the moment if on the known
-      samples we never see a given value we don't know it belongs to the possible feature space.
-      Has to be corrected.}
 
+
+Evaluating $P(x|G)/P(x|G')$...
+
+
+Method:
+\begin{enumerate}
+\item Train a graph model for unlabelled data without the labelled variables.
+\item Add the labelled variables and train the factors with the labelled data.
+\item Use $P_G(x)$ as novelty threshold.
+\end{enumerate}
+
+\note{Perform experience with real data}
 
 
 
