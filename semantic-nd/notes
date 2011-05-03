@@ -1,0 +1,17 @@
+
+Title:
+  Semantic Novelty Detection on Dora
+  Semantic Novelty Detection with Graphical Models
+
+Contents:
+  Explain how Dora deals with information and uses a probabilistic
+  knowledge representation to reasoning and perform spatial understanding.
+
+  Explain which types of properties are extracted and how room are categorized.
+
+  Explain traditional approach to novelty detection using conditional probability density.
+  Point to the fact large databases exists on the web and ability to draw unconditional
+  probabilities.
+
+  Show improvements in using P(x|k)/P(x) instead of only P(x).
+

@@ -1,0 +1,2 @@
+x = PDF('article.pdf', 'article.tex')
+Depends(x, 'llncs.cls')
