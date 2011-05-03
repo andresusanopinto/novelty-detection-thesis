@@ -281,10 +281,10 @@ Those allow to easily model certain probabilistic properties such as conditional
 and easy the process of several computational problems on the distributions.
 Several tools exists for this type of graphical manipulation such as: \emph{Bayesian networks}, \emph{Markov Random Fields}
 or \emph{Factor Graphs}.
+Those tools are especially useful since they are generative models and allow to compute the probability of any given set of variables $x$.
 
-Dora underlying graphical methods are based on \emph{Factor Graphs}\citep{kschischang2001factor}: bipartites graphs composed of variable and factor nodes representing the random variables and several factor functions between the variables that are used to decomposed the distribution.
-
-Any probability distributuion can be represented by a \emph{factor graph} and we will denote the probability of a given set of variables outputs $x$ on a graph $G$ as $P_G(x)$.
+Dora underlying graphical methods are based on \emph{Chain Graphs} that can be translated into \emph{Factor Graphs}\citep{kschischang2001factor}: bipartite graphs composed of variable and factor nodes representing the random variables and several factor functions between the variables that are used to decomposed the distribution.
+Any probability distribution can be represented by a \emph{factor graph} and we will denote the probability of a given set of variables outputs $x$ on a graph $G$ as $P_G(x)$.
 
 
 \tikzstyle{var} = [circle,
@@ -326,7 +326,7 @@ Any probability distributuion can be represented by a \emph{factor graph} and we
   \path [line] (fShape) -- (shape);
   \path [line] (fSize) -- (size);
 \end{tikzpicture}
-\caption{Example of a factor graph used for Dora.}
+\caption{Example of a factor graph $G$ used for Dora for modelling the labelled samples.}
 \end{figure}
 
 
@@ -354,71 +354,27 @@ We build a graph $G'$ as an approximation for $P(x)$ with $P_{G'}(x)$.
   \path [line] (fShape) -- (shape);
   \path [line] (fSize) -- (size);
 \end{tikzpicture}
-\caption{Factor graph to model unconditional probability. It assumes independency between\dots}
+\caption{A sample factor graph to model the unconditional probability. It assumes independent properties. Factors are trained giving access to the whole set of unlabelled data.}
 \end{figure}
 
-
 Using the described $G$ and $G'$ we evaluated our novelty detectors in the distribution used before and compared with an optimal detector.
-As possible to see in \autoref{fig:dora-data-simple} our approaximation to $P(x)$ althouth very basic was able to improve a novelty detection based only on conditional probability.
+As possible to see in \autoref{fig:dora-data-simple} our approximation $P_{G'}(x)$ to $P(x)$ although very basic was able to improve a novelty detection.
 
 
-In order to generate a simple model we decided to model the unconditional density probability function also with a graphical model $G'$ and so we approximate $P(x)$ as $P_{G'}(x)$.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\textwidth]{dora-data/roc-simple.pdf}
+\caption{ROC curve for thresholds learned on samples from samples in the dora distribution. As possible to see even a simple approach to model $P(x)$ was able to considerably improve our novelty detector.}
+\label{fig:dora-data-simple}
+\end{figure}
+
 
 \note{The graphics are a bit "cheated", since theres an added epsilon on the returned value
       so the probabilities functions do not return 0. This is because at the moment if on the known
       samples we never see a given value we don't know it belongs to the possible feature space.
       Has to be corrected.}
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=\textwidth]{dora-data/roc-simple.pdf}
-\caption{ROC curve for thresholds learned on samples from samples in the dora distribution}
-\label{fig:dora-data-simple}
-\end{figure}
-
-
-
-Evaluating $P(x|G)/P(x|G')$...
-
-
-Method:
-\begin{enumerate}
-\item Train a graph model for unlabelled data without the labelled variables.
-\item Add the labelled variables and train the factors with the labelled data.
-\item Use $P_G(x)$ as novelty threshold.
-\end{enumerate}
-
 \note{Perform experience with real data}
-
-
-
-
-\clearpage
-\subsection{How Dora models the world?}
-\label{sec:dora-models}
-
-Currently dora uses a \emph{probabilistic graphical model} to model the world.
-All variables that the system see are added and connected in between with the
-\emph{probabilistic factors} that the system is aware of.
-Those factors are learned from the labelled data that the system is given when
-training.
-
-The proposal here is to also use such an approach to model the unconditional
-probability.
-Under that a novelty detection threshold can be easily implemented
-reusing the \emph{probabilistic graphical model} $G$ that dora uses as
-representation of the world:
-\begin{description}
-\item[$P(x|know)$] is obtained evaluating $P(G)$.
-\item[$P(x)$] can be obtained by creating $G'$ as an instance of $G$ but with the
-variable node we want to perform novelty detection removed and the factors associated
-with it replaced with factors learned from the unlabelled data.
-\end{description}
-
-We point to an additional simplification that if the original graphical model factors
-depending on the variable to perform novelty detection were previously split on a
-conditional and unconditional factors. Then $G'$ could be obtained by simply removing
-all the factors associated with the variable to perform novelty detection on.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
