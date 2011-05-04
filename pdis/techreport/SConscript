@@ -1,2 +1,48 @@
-PDF(target = 'techreport.pdf',
-    source = 'techreport.tex')
+SConscript('figures/SConscript')
+x = PDF(target = 'techreport.pdf',
+        source = 'techreport.tex')
+
+
+FILES = """
+figures/classification.pdf
+figures/gantt.pdf
+figures/graphical-models/BayesNet.pdf
+figures/graphical-models/FactorGraph.pdf
+figures/graphical-models/MarkovRandomField.pdf
+figures/laser_and_depth_input.pdf
+figures/novelty.pdf
+figures/sift/sift.pdf
+figures/system-representation/graph.pdf
+figures/system-representation/layers.pdf
+figures/system-representation/novelty-detection.pdf
+figures/system-representation/structure.pdf
+figures/gist.jpg
+figures/crfh_model.jpg
+figures/cold/Saarbruecken_CR.jpg
+figures/cold/Saarbruecken_TR.jpg
+figures/cold/Freiburg_PA.jpg
+figures/cold/Freiburg_LO.jpg
+figures/cold/Ljubljana_LAB.jpg
+figures/cold/Ljubljana_2PO.jpg
+figures/cold/Saarbruecken_RL.jpg
+figures/cold/Saarbruecken_PA.jpg
+figures/cold/Freiburg_1PO.jpg
+figures/cold/Freiburg_TL.jpg
+figures/cold/Ljubljana_CR.jpg
+figures/cold/Ljubljana_PA.jpg
+figures/cold/Saarbruecken_CR(1).jpg
+figures/cold/Saarbruecken_TR(1).jpg
+figures/cold/Freiburg_1PO(1).jpg
+figures/cold/Freiburg_TL(1).jpg
+figures/cold/Ljubljana_LAB(1).jpg
+figures/cold/Ljubljana_PA(1).jpg
+figures/labelme_kitchen_sample.png
+figures/ringlinesquare_kpca.jpg
+figures/place_classification.png
+figures/Svm_max_sep_hyperplane_with_margin.png
+figures/feup-logo.pdf
+
+myrefs.bib
+""".split() 
+
+Depends(x, FILES)

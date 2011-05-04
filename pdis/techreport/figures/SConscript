@@ -1,0 +1,29 @@
+
+SVGS = """
+classification.svg
+gantt.svg
+graphical-models/BayesNet.svg
+graphical-models/FactorGraph.svg
+graphical-models/MarkovRandomField.svg
+laser_and_depth_input.svg
+novelty.svg
+sift/sift.svg
+system-representation/graph.svg
+system-representation/layers.svg
+system-representation/novelty-detection.svg
+system-representation/structure.svg
+""".split() 
+
+
+for SVG in SVGS:
+  base = SVG[0:-4]
+  x = Command(base + '.pdf', base +'.svg', 'convert `basename ' +base+'.svg` `basename ' + base + '.pdf`', chdir=1)
+  if SVG == 'system-representation/layers.svg':
+    Depends(x, """system-representation/sensory_map.png system-representation/door.png system-representation/bookshelf1.png
+                  system-representation/milk.png system-representation/sift2.png system-representation/place_map.png
+                  system-representation/gist.png system-representation/sift21.png""".split())
+  if SVG == 'sift/sift.svg':
+    Depends(x, """sift/truck.jpg sift/train.jpg sift/frog.jpg sift/cup.jpg sift/annotated.jpg""".split())                                                
+  if SVG == 'laser_and_depth_input.svg':
+    Depends(x, """kinect-sample-depth.jpg kinect-sample-camera.jpg""".split())
+
