@@ -72,7 +72,7 @@ The novelty threshold is then optimized using an unconditional probability densi
 model that is trained from unlabelled data.
 
 \keywords{novelty detection, semantic data, graphical models, room classification,
-indoor environments, robotics.}
+indoor environments, robotics, multi-modal.}
 \end{abstract}
 
 
@@ -80,6 +80,7 @@ indoor environments, robotics.}
 \section{Introduction}
 \begin{itemize}
 \item Explain context of indoor room categorization and importance of novelty detection.
+\item Introduce Dora and explain how it would benefit or use the semantic novel detection.
 \end{itemize}
 
 There has been several efforts in the area of Artificial Intelligence and Robotics in creating robots
@@ -95,13 +96,29 @@ As Dora moves through the environment its \emph{conceptual layer} builds a struc
 instantiated as a \emph{graphical model}.
 That model connects the sensed properties together with the variables used to model the world.
 And allows to perform queries on the probabilities of aspects of the environment.
-For example: where is the robot most likely to find a cereal box\cite{exploiting}.
+For example: where is most likely to find a cereal box\cite{exploiting}.
 
-\subsection{Semantic Data}
+The ability to recognize novel categories on the modelled variables would allow to increase
+reliability and allow the creation of self-extending behaviours.
+
+
+\section{Related Work}
+Although this paper deals with novelty detection on the robotics area, it does so using very
+standard concepts and techniques such as semantic data and graphical models.
+Those are often found on areas related with information retrieval.
+
+Interesting examples are works in automatic image annotation using an hidden concept layer between visual features and text information\cite{multi-model-image-retrieval}.
+
+\section{Dora Architecture Overview}
 \begin{itemize}
+\item Introduce Dora architecture aspects important for the paper
 \item Explain what we mean by semantic data and how its captured by Dora
+\item Introduce graphical models and how we use them (including notation on the paper)
 \end{itemize}
 
+Dora is composed by several layers, though for the sake of this paper only the conceptual layer is important.
+
+\subsection{Semantic Data}
 Dora has a set of machine learning tools that are used to sense the environment around it.
 The output of those describe a certain high-level property or information that we refer as \emph{semantic data}.
 The following types of probabilistic information are extracted by Dora and used on this paper:
@@ -147,7 +164,14 @@ Dora uses \emph{chain graphs} as modelling tool. Those can be converted to \emph
 \caption{Example of a factor graph used for Dora for representing the environment.}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The edges and factors between the several variables can be seen as a kind of filter to
+the properties of the system.
+
+Graphical models provide a generative model for a distributions of variables.
+Those are mainly interesting since they allows to calculate the probability of any set of variables $x$
+
+As they can be seen as a method to represent distributions of variables. From now on we shall use the notation $P_G(x)$ to denote the probability that the distribution described by a graphical model $G$ generates the set $x$ of variables.
+
 \section{Novelty Detection}
 \begin{itemize}
 \item Explain 
@@ -156,6 +180,9 @@ Dora uses \emph{chain graphs} as modelling tool. Those can be converted to \emph
 \item Usage of conditional density
 \item Assuming of every output is equally likely
 \item Using unlabelled data
+\item What happens if the conditional and unconditional graphs differ only by the addition of a node?
+\item How to implement that in the case a graph is a tree
+\item Novelty detection on any variable of the graphical model!
 \end{itemize}
 
 Novelty detection can be performed by a threshold function sorting the input space in an optimal way to
