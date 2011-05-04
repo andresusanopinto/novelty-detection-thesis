@@ -13,5 +13,7 @@ Contents:
   Point to the fact large databases exists on the web and ability to draw unconditional
   probabilities.
 
+  Explain we need a normalizing factor to be able to use that as a threshold.
+
   Show improvements in using P(x|k)/P(x) instead of only P(x).
 
