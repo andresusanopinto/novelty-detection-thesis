@@ -171,6 +171,9 @@ on any given subset of variables on the graph allowing the system to work even w
 
 \begin{figure}[h]
 \centering
+
+\includegraphics[width=0.50\textwidth]{figures/conceptual-layer.jpg}
+\includegraphics[width=0.49\textwidth]{figures/chain-graph.png}
 \caption{The conceptual layer structures the sensed environment together with the conceptual knowledge in order to
          create a structured probabilistic representation of the world.}
 \end{figure}
@@ -213,8 +216,8 @@ We will use the notation $P_G(x)$ to represent that.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Novelty Detection}
 \begin{itemize}
-\item Explain 
-\item Approach with a threshold function
+\item Define novelty detection 
+\item Explain approach with a threshold function
 \item Need of a normalizing factor for a threshold with dynamic functions
 \item Usage of conditional density
 \item Assuming of every output is equally likely
@@ -224,35 +227,90 @@ We will use the notation $P_G(x)$ to represent that.
 \item Novelty detection on any variable of the graphical model!
 \end{itemize}
 
-Novelty detection can be performed by a threshold function sorting the input space in an optimal way to
-decrease error in detection.
+% Introduce novelty detection
+Novelty detection is an harder problem than that of classification due to its single-class nature.
+Essentially a system is given training data and when given new data has to decide if it belongs
+to the same concept it was trained with.
 
-Its harder than a classification problem as the system only has access to positive samples.
-Under that a common approach is to use conditional probability $P(x|known)$ as a threshold.
+% Explain threshold approach to novelty detection
+Due to the desired of robustness and generalization, a novelty detection system would always possess
+some threshold that describes on how strict the system should be to new data.
+This threshold is often seen as a distance measure to a normal input and several novelty detection
+techniques are based on it.
 
-\subsection{Stable threshold}
-Although in our case we are dealing with a dynamic graph $G$ that keeps changing through time as new variables
-are added. Which increases the dimension of our space and spreads the distribution over the variables.
+When dealing with a statistic point of view, noisy data or unstable features, a decision on a given input has
+an associated error rate. And in this case a novelty detection system is interested in defining an order
+on all the possible inputs equivalent to the order imposed by the error rate: $P(novel|x)$.
 
-This turns it impossible to directly train a threshold function on $P_G(x)$, as we cannot assume $P(x)$ to be constant over any set of $x$.
-So we need to describe $P(x)$ to develop a stable threshold on $P_G(x)/P(x)$.
+Such an ordering can be defined by a R-value function on the input space. And then a threshold can be trained
+on that function in order to accept an expected amount of cases at the cost of failing in others.
 
-A common assumption is that every possible input is equally likely then the threshold
-should be $P_G(x)/(\prod |x_i|)$.
+Based on bayes rule:
 
-\subsection{Unlabelled data}
-Nonetheless in the case of robotics its often the case we can access large amounts of unlabelled data.
-This leads to an interesting point that instead of assuming a constant $P(x)$ we can actually try to build
-model for it.
+\begin{equation}
+P(\overline{novel}|x) = \frac{P(x|\overline{novel}) P(\overline{novel})}{P(x)}
+\end{equation}
 
-Under that we decided to test assuming that all probabilities are independent. That can be modelled as a graph $G'$.
-And corresponding function $P_G(x)/P_{G'}(x)$.
+% Explain approach of using conditional probability
+\subsection{Conditional Probability: $P(x|\overline{novel})$}
+One of the hardest problems is that on most cases novelty detection system only have access to 
+the known data.
+Under that the best approach is to define a threshold based on $P(x|\overline{novel})/P(x)$
+considering that $P(x)$ is constant through all the input space.
 
+In the presented case, $P(x|\overline{novel})$ is approximated by the graphical model $G$ produced
+by the conceptual layer. As so we use $P_G(x)$ as a substitute.
+
+\label{sec:uniform-unconditional}
+In several cases assuming the unconditional probability $P(x)$ is constant leads to discarding the factor,
+nonetheless here the distributions are dynamically changing as the robot learns more on the environment.
+So we need to keep the normalizing argument $P(x)$ and re-calculate it for each new subset of $x$.
+Still assuming that the unconditional distributions generates all possible outcome with the same probability
+we can model it $P(x)=\prod{|x_i|}$, where $|x_i|$ denotes the state space size of variable $x_i$.
+In graphical model terms, this would be equivalent to build a factor graph $G'$ with the same variables but
+without any factors.
+
+Using a graphical model built to model the known data and assuming that in the unconditional case all possible outcomes
+are equally likely a novelty threshold would be given by: $P_G(x)/P_{G'}(x)$, as illustrated on \autoref{fig:unsupervised-threshold}.
+
+\begin{figure}[h]
+\caption{\label{fig:unsupervised-threshold}By producing graphical models $G$ and $G'$ to both conditional and unconditional probability
+         distributions on a set of variables, novelty can be detect on the threshold $P_G(x)/P_{G'}(x)$.
+         In this case the unconditional probability is modelled as a fully uniform distribution.}
+\end{figure}
+
+
+\subsection{Using Unlabelled Data}
+Nonetheless in several cases its often the case that there is access to large amounts of unlabelled data.
+Under that it becomes possible to obtain a better approach to the unconditional probability distribution that
+the uniform one assumed in \autoref{sec:uniform-unconditional}.
+
+For interesting and practical reasons it was assumed that the unconditional distribution could be modelled with
+all the variables independent from each other.
+Which is the same as assuming $P(x)=\prod{P_{x_i}(x_i)}$.
+And so from the unlabelled data we only need to estimate $P_{x_i}$.
+Once again \autoref{fig:semisupervised-threshold} illustrates this in terms of graphs $G$ and $G'$.
+
+\begin{figure}[h]
+\caption{\label{fig:semisupervised-threshold}Using unlabelled data, its possible to create a better approximation
+         for the unconditional probability. Which should lead to a better novelty threshold.}
+\end{figure}
+
+The described ratio between the two graphs can be understood as compensating for an existing bias
+on the unconditional distribution.
+Which is an important step to achieve a correct ordering of the input space for novelty thresholding.
 This way our unconditional function perceive which features are slightly more biased to a certain value and will
 compensate on the probability calculation.
 
-This step is important to achieve a correct order of the input space.
+\subsection{Generalizing to Novelty Detection on a variable}
+Until now, the presented methods describe how to detect data that belongs to a new class of input by creating
+generative models for both conditional and unconditional probabilities distributions.
 
+And although it serves as a method for detecting new classes in the input, it gives us no control in what
+variables novelty is being measured.
+
+Lets assume that the only difference between the conditional and unconditional graph is a single node and its connecting factors
+as seen on figure X.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
