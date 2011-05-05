@@ -1,2 +1,10 @@
 x = PDF('article.pdf', 'article.tex')
 Depends(x, ['llncs.cls', 'refs.bib'])
+
+SVGS = """
+""".split()
+
+for SVG in SVGS:
+  base = SVG[0:-4]
+  x = Command(base + '.pdf', base +'.svg', 'convert `basename ' +base+'.svg` `basename ' + base + '.pdf`', chdir=1)
+

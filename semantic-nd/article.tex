@@ -253,127 +253,74 @@ P(\overline{novel}|x) = \frac{P(x|\overline{novel}) P(\overline{novel})}{P(x)}
 
 % Explain approach of using conditional probability
 \subsection{Conditional Probability: $P(x|\overline{novel})$}
-One of the hardest problems is that on most cases novelty detection system only have access to 
+\label{sec:uniform-unconditional}
+
+One of the hardest problems is that on most cases a novelty detection system only have access to 
 the known data.
 Under that the best approach is to define a threshold based on $P(x|\overline{novel})/P(x)$
 considering that $P(x)$ is constant through all the input space.
 
-In the presented case, $P(x|\overline{novel})$ is approximated by the graphical model $G$ produced
-by the conceptual layer. As so we use $P_G(x)$ as a substitute.
-
-\label{sec:uniform-unconditional}
-In several cases assuming the unconditional probability $P(x)$ is constant leads to discarding the factor,
-nonetheless here the distributions are dynamically changing as the robot learns more on the environment.
-So we need to keep the normalizing argument $P(x)$ and re-calculate it for each new subset of $x$.
-Still assuming that the unconditional distributions generates all possible outcome with the same probability
-we can model it $P(x)=\prod{|x_i|}$, where $|x_i|$ denotes the state space size of variable $x_i$.
-In graphical model terms, this would be equivalent to build a factor graph $G'$ with the same variables but
-without any factors.
-
-Using a graphical model built to model the known data and assuming that in the unconditional case all possible outcomes
-are equally likely a novelty threshold would be given by: $P_G(x)/P_{G'}(x)$, as illustrated on \autoref{fig:unsupervised-threshold}.
+In the presented case the conditional probability is approximated by the graphical model $G$
+produced by the conceptual layer.
+The \autoref{fig:conditional-prob-graph} represents a possible graph $G$ built from the conceptual
+layer to represent the conditional probability on the sensed variables $x$.
+$P_G(x)$ is then used as an approximation for $P(x|\overline{novel})$.
 
 \begin{figure}[h]
 \centering
-\subfloat[Factor graph $G$ used to model conditional probability]{
-\begin{tikzpicture}
-  \matrix[row sep=1em,column sep=1.5em, ampersand replacement=\&] {
-    \& \node [var] (room) {Room Category}; \& \\
-
-    \node [factor] (fAppearance) {}; \&
-    \node [factor] (fShape) {}; \&
-    \node [factor] (fSize) {}; \\
-    
-    \node [var] (appearance) {Appearance}; \&
-    \node [var] (shape) {Shape}; \&
-    \node [var] (size) {Size}; \\
-  };
-  \path [line] (room) -- (fAppearance);
-  \path [line] (room) -- (fShape);
-  \path [line] (room) -- (fSize);
-
-  \path [line] (fAppearance) -- (appearance);
-  \path [line] (fShape) -- (shape);
-  \path [line] (fSize) -- (size);
-\end{tikzpicture}}
-\hfill
-\subfloat[Factor graph $G'$ used to model a unconditional probability distribution]{
-\begin{tikzpicture}
-  \matrix[row sep=1em,column sep=1.5em, ampersand replacement=\&] {
-    \& \node [var] (room) {Room Category}; \& \\
-
-    \node [var] (appearance) {Appearance}; \&
-    \node [var] (shape) {Shape}; \&
-    \node [var] (size) {Size}; \\
-  };
-\end{tikzpicture}}
-
-\caption{\label{fig:unsupervised-threshold}
-         Assuming a uniform unconditional distribution of any subset of the variables $x$,
-         a novelty threshold can be defined on the function $P_G(x)/P_{G'}(x)$.}
+\includegraphics[width=0.70\textwidth]{figures/conditional-prob-graph.pdf}
+\caption{\label{fig:conditional-prob-graph}The conceptual layer models the conditional
+         probability distribution of the sensed variables by using hidden variables.
+         Those are created from the conceptual knowledge and represent the structural
+         and connectivity information the system is aware of.
+         In this case only hidden variables $R_i$ were used to model the room categories
+         where each property was sensed.}
 \end{figure}
+
+
+Its important to notice that in several cases assuming the unconditional probability $P(x)$ is constant leads to discarding the factor.
+Nonetheless, here the distributions are dynamically changing as the system learns more on the environment.
+So we need to keep the normalizing argument $P(x)$ and re-calculate it for each new subset of $x$.
+
+Assuming that the unconditional distributions generates all possible outcome with the same probability
+we can model it with $\prod{1/|x_i|}$, where $|x_i|$ denotes the state space size of variable $x_i$.
+In graphical model terms, this would be equivalent to build a factor graph $U$ with the same variables but
+without any factors as illustrated on \autoref{fig:uniform-prob-graph}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.70\textwidth]{figures/uniform-prob-graph.pdf}
+\caption{\label{fig:uniform-prob-graph}Without any existing factors, this graph $U$ represents a uniform
+         distribution over the set $x$.}
+\end{figure}
+
+Having now a graphical model built to model the known data distribution and assuming that in the unconditional case all possible outcomes are equally likely a novelty threshold would be given by: $P_G(x)/P_{U}(x)$.
 
 
 \subsection{Using Unlabelled Data}
 Nonetheless in several cases its often the case that there is access to large amounts of unlabelled data.
-Under that it becomes possible to obtain a better approach to the unconditional probability distribution that
+Under that it becomes possible to obtain a better approach to the unconditional probability distribution than
 the uniform one assumed in \autoref{sec:uniform-unconditional}.
 
-For interesting and practical reasons it was assumed that the unconditional distribution could be modelled with
-all the variables independent from each other.
-Which is the same as assuming $P(x)=\prod{P_{x_i}(x_i)}$.
+For interesting and practical reasons it was assumed that the unconditional distribution
+could be modelled with all the variables independent from each other.
+Which translates as $P(x)=\prod{P_{x_i}(x_i)}$.
 And so from the unlabelled data we only need to estimate $P_{x_i}$.
-Once again \autoref{fig:semisupervised-threshold} illustrates this in terms of graphs $G$ and $G'$.
+\autoref{fig:semisupervised-threshold} illustrates this in terms of graphs.
 
 \begin{figure}[h]
 \centering
-\subfloat[Factor graph $G$ used to model conditional probability]{
-\begin{tikzpicture}
-  \matrix[row sep=1em,column sep=1.5em, ampersand replacement=\&] {
-    \& \node [var] (room) {Room Category}; \& \\
-
-    \node [factor] (fAppearance) {}; \&
-    \node [factor] (fShape) {}; \&
-    \node [factor] (fSize) {}; \\
-    
-    \node [var] (appearance) {Appearance}; \&
-    \node [var] (shape) {Shape}; \&
-    \node [var] (size) {Size}; \\
-  };
-  \path [line] (room) -- (fAppearance);
-  \path [line] (room) -- (fShape);
-  \path [line] (room) -- (fSize);
-
-  \path [line] (fAppearance) -- (appearance);
-  \path [line] (fShape) -- (shape);
-  \path [line] (fSize) -- (size);
-\end{tikzpicture}}
-\hfill
-\subfloat[Factor graph $G'$ used to model a unconditional probability distribution]{
-\begin{tikzpicture}
-  \matrix[row sep=1em,column sep=1.5em, ampersand replacement=\&] {
-    \node [var] (appearance) {Appearance}; \&
-    \node [var] (shape) {Shape}; \&
-    \node [var] (size) {Size}; \\
-
-    \node [factor] (fAppearance) {}; \&
-    \node [factor] (fShape) {}; \&
-    \node [factor] (fSize) {}; \\
-  };
-  \path [line] (fAppearance) -- (appearance);
-  \path [line] (fShape) -- (shape);
-  \path [line] (fSize) -- (size);
-\end{tikzpicture}}
-
-\caption{\label{fig:semisupervised-threshold}Using unlabelled data, its possible to create a better approximation
-         for the unconditional probability. Which should lead to a better novelty threshold.}
+\includegraphics[width=0.70\textwidth]{figures/independent-prob-graph.pdf}
+\caption{\label{fig:semisupervised-threshold}Using unlabelled data, its possible to estimate
+         the unconditional probability for each variable and this way try to compensate
+         for a possible existent bias on some of the variables.}
 \end{figure}
 
-The described ratio between the two graphs can be understood as compensating for an existing bias
-on the unconditional distribution.
+Once again the novelty threshold would be given by $P_G(x)/P_U(x)$. This ratio between the two graphs
+can be understood as compensating for an existing bias on the unconditional distribution.
 Which is an important step to achieve a correct ordering of the input space for novelty thresholding.
-This way our unconditional function perceive which features are slightly more biased to a certain value and will
-compensate on the probability calculation.
+This way our unconditional function perceives which features are slightly more biased to a certain value
+and will compensate on the novelty calculation.
 
 \subsection{Generalizing to Novelty Detection on a variable}
 Until now, the presented methods describe how to detect data that belongs to a new class of input by creating
