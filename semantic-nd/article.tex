@@ -308,9 +308,21 @@ generative models for both conditional and unconditional probabilities distribut
 
 And although it serves as a method for detecting new classes in the input, it gives us no control in what
 variables novelty is being measured.
+This is the novelty can come from any variable present on the graphs and we have no way to measure it.
 
 Lets assume that the only difference between the conditional and unconditional graph is a single node and its connecting factors
-as seen on figure X.
+as seen on \autoref{fig:measure-room-novelty}.
+
+\begin{figure}
+\caption{\label{fig:measure-room-novelty}In this case the only difference between $G$ and $G'$ is the room category variable,
+         that only exists in the later.}
+\end{figure}
+
+
+From now on we refer to the measure $P_G(x)/P_{G'}(x)$, when $G$ and $G'$ as a novelty measure on the variable $R_{category}$.
+As it attempts to measure on how much adding the variable $R_{category}$ helps to explain the given distribution of values.
+
+Expanding the calculation of $P_G(x)/P_{G'}(x)$ with the sum-product technique. Leads to:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
