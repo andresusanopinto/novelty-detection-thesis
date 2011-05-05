@@ -11,6 +11,7 @@
 % Additional packages
 \usepackage[utf8]{inputenc}
 \usepackage[round]{natbib}
+\usepackage{subfig}
 \usepackage{tikz}
 \usepackage[pdftex,pdfpagelabels,bookmarks,hyperindex,hyperfigures]{hyperref}
 \hypersetup{%
@@ -31,18 +32,17 @@
 \tikzstyle{var} = [circle,
                    thick,
                    draw, fill=red!20,
-                   text width=4.5em,
-                   text badly centered,
-                   node distance=3cm,
+                   font=\scriptsize,
+                   text width=3.5em,
+                   text centered,
+                   node distance=1em,
                    inner sep=0pt]
 
 \tikzstyle{factor} = [rectangle,
                       thick,
                       draw, fill=blue!20,
-                      text width=1em,
-                      text centered,
-                      minimum height=3em,
-                      minimum width=3em]
+                      minimum height=2em,
+                      minimum width=2em]
 
 \tikzstyle{line} = [draw]
 
@@ -274,9 +274,43 @@ Using a graphical model built to model the known data and assuming that in the u
 are equally likely a novelty threshold would be given by: $P_G(x)/P_{G'}(x)$, as illustrated on \autoref{fig:unsupervised-threshold}.
 
 \begin{figure}[h]
-\caption{\label{fig:unsupervised-threshold}By producing graphical models $G$ and $G'$ to both conditional and unconditional probability
-         distributions on a set of variables, novelty can be detect on the threshold $P_G(x)/P_{G'}(x)$.
-         In this case the unconditional probability is modelled as a fully uniform distribution.}
+\centering
+\subfloat[Factor graph $G$ used to model conditional probability]{
+\begin{tikzpicture}
+  \matrix[row sep=1em,column sep=1.5em, ampersand replacement=\&] {
+    \& \node [var] (room) {Room Category}; \& \\
+
+    \node [factor] (fAppearance) {}; \&
+    \node [factor] (fShape) {}; \&
+    \node [factor] (fSize) {}; \\
+    
+    \node [var] (appearance) {Appearance}; \&
+    \node [var] (shape) {Shape}; \&
+    \node [var] (size) {Size}; \\
+  };
+  \path [line] (room) -- (fAppearance);
+  \path [line] (room) -- (fShape);
+  \path [line] (room) -- (fSize);
+
+  \path [line] (fAppearance) -- (appearance);
+  \path [line] (fShape) -- (shape);
+  \path [line] (fSize) -- (size);
+\end{tikzpicture}}
+\hfill
+\subfloat[Factor graph $G'$ used to model a unconditional probability distribution]{
+\begin{tikzpicture}
+  \matrix[row sep=1em,column sep=1.5em, ampersand replacement=\&] {
+    \& \node [var] (room) {Room Category}; \& \\
+
+    \node [var] (appearance) {Appearance}; \&
+    \node [var] (shape) {Shape}; \&
+    \node [var] (size) {Size}; \\
+  };
+\end{tikzpicture}}
+
+\caption{\label{fig:unsupervised-threshold}
+         Assuming a uniform unconditional distribution of any subset of the variables $x$,
+         a novelty threshold can be defined on the function $P_G(x)/P_{G'}(x)$.}
 \end{figure}
 
 
@@ -292,6 +326,45 @@ And so from the unlabelled data we only need to estimate $P_{x_i}$.
 Once again \autoref{fig:semisupervised-threshold} illustrates this in terms of graphs $G$ and $G'$.
 
 \begin{figure}[h]
+\centering
+\subfloat[Factor graph $G$ used to model conditional probability]{
+\begin{tikzpicture}
+  \matrix[row sep=1em,column sep=1.5em, ampersand replacement=\&] {
+    \& \node [var] (room) {Room Category}; \& \\
+
+    \node [factor] (fAppearance) {}; \&
+    \node [factor] (fShape) {}; \&
+    \node [factor] (fSize) {}; \\
+    
+    \node [var] (appearance) {Appearance}; \&
+    \node [var] (shape) {Shape}; \&
+    \node [var] (size) {Size}; \\
+  };
+  \path [line] (room) -- (fAppearance);
+  \path [line] (room) -- (fShape);
+  \path [line] (room) -- (fSize);
+
+  \path [line] (fAppearance) -- (appearance);
+  \path [line] (fShape) -- (shape);
+  \path [line] (fSize) -- (size);
+\end{tikzpicture}}
+\hfill
+\subfloat[Factor graph $G'$ used to model a unconditional probability distribution]{
+\begin{tikzpicture}
+  \matrix[row sep=1em,column sep=1.5em, ampersand replacement=\&] {
+    \node [var] (appearance) {Appearance}; \&
+    \node [var] (shape) {Shape}; \&
+    \node [var] (size) {Size}; \\
+
+    \node [factor] (fAppearance) {}; \&
+    \node [factor] (fShape) {}; \&
+    \node [factor] (fSize) {}; \\
+  };
+  \path [line] (fAppearance) -- (appearance);
+  \path [line] (fShape) -- (shape);
+  \path [line] (fSize) -- (size);
+\end{tikzpicture}}
+
 \caption{\label{fig:semisupervised-threshold}Using unlabelled data, its possible to create a better approximation
          for the unconditional probability. Which should lead to a better novelty threshold.}
 \end{figure}
