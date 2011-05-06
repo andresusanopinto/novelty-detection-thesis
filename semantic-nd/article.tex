@@ -242,13 +242,14 @@ When dealing with a statistic point of view, noisy data or unstable features, a 
 an associated error rate. And in this case a novelty detection system is interested in defining an order
 on all the possible inputs equivalent to the order imposed by the error rate: $P(novel|x)$.
 
-Such an ordering can be defined by a R-value function on the input space. And then a threshold can be trained
-on that function in order to accept an expected amount of cases at the cost of failing in others.
-
-Based on bayes rule:
+Using bayes rule on the reversed order $P(\overline{novel}|x)$ and assuming a constant $P(\overline{novel})$
+we obtain a ratio between a conditional and unconditional probabilites on the input $x$.
+Such a ratio is a suitable function for implementing an optimal novelty detector system with
+thresholding.
 
 \begin{equation}
-P(\overline{novel}|x) = \frac{P(x|\overline{novel}) P(\overline{novel})}{P(x)}
+\label{eq:novelty-threshold}
+P(\overline{novel}|x) = \frac{P(x|\overline{novel}) P(\overline{novel})}{P(x)} = k\frac{P(x|\overline{novel})}{P(x)}
 \end{equation}
 
 % Explain approach of using conditional probability
@@ -294,11 +295,18 @@ without any factors as illustrated on \autoref{fig:uniform-prob-graph}.
          distribution over the set $x$.}
 \end{figure}
 
-Having now a graphical model built to model the known data distribution and assuming that in the unconditional case all possible outcomes are equally likely a novelty threshold would be given by: $P_G(x)/P_{U}(x)$.
+Having now a graphical model built to model the known data distribution and assuming that in the unconditional case all
+possible outcomes are equally likely a novelty threshold would be given by: $P_G(x)/P_{U}(x)$.
+
+Here $P_{U}(x)$ can be seen as a normalizing factor to lever all the $P_G(x)$ on any set of variables $x$ into the same
+measure units, such that a static threshold can be implemented.
+For example in very large sets of variables $x$, a large dimension space, the conditional probability would spread over
+the tails of the functions and would always yield very small values.
+As so a novelty measure is seen as a ratio on how much introducing the known concepts helps to understand the observed result.
 
 
 \subsection{Using Unlabelled Data}
-Nonetheless in several cases its often the case that there is access to large amounts of unlabelled data.
+Nonetheless its often the case that there is access to large amounts of unlabelled data.
 Under that it becomes possible to obtain a better approach to the unconditional probability distribution than
 the uniform one assumed in \autoref{sec:uniform-unconditional}.
 
@@ -306,7 +314,7 @@ For interesting and practical reasons it was assumed that the unconditional dist
 could be modelled with all the variables independent from each other.
 Which translates as $P(x)=\prod{P_{x_i}(x_i)}$.
 And so from the unlabelled data we only need to estimate $P_{x_i}$.
-\autoref{fig:semisupervised-threshold} illustrates this in terms of graphs.
+\autoref{fig:semisupervised-threshold} illustrates a graph $I$ to model independent variables.
 
 \begin{figure}[h]
 \centering
@@ -316,8 +324,9 @@ And so from the unlabelled data we only need to estimate $P_{x_i}$.
          for a possible existent bias on some of the variables.}
 \end{figure}
 
-Once again the novelty threshold would be given by $P_G(x)/P_U(x)$. This ratio between the two graphs
-can be understood as compensating for an existing bias on the unconditional distribution.
+Once again the novelty threshold would be given by $P_G(x)/P_I(x)$.
+This time the addition of the variables unconditional factors can be understood as an attempt to compensate
+for an existing bias on the unconditional distribution.
 Which is an important step to achieve a correct ordering of the input space for novelty thresholding.
 This way our unconditional function perceives which features are slightly more biased to a certain value
 and will compensate on the novelty calculation.
@@ -327,28 +336,79 @@ Until now, the presented methods describe how to detect data that belongs to a n
 generative models for both conditional and unconditional probabilities distributions.
 
 And although it serves as a method for detecting new classes in the input, it gives us no control in what
-variables novelty is being measured.
-This is the novelty can come from any variable present on the graphs and we have no way to measure it.
+is novel in the input.
+Recall that the graph $G$ used by Dora gives us a lot of semantic and conceptual information that we are
+interested in analizying and improving with time. Being able to measure if the novel case derives from
+a novel room category or from any other variables would be highly desirable on the system.
 
 Lets assume that the only difference between the conditional and unconditional graph is a single node and its connecting factors
 as seen on \autoref{fig:measure-room-novelty}.
 
-\begin{figure}
-\caption{\label{fig:measure-room-novelty}In this case the only difference between $G$ and $G'$ is the room category variable,
-         that only exists in the later.}
+\begin{figure}[h]
+\subfloat[Conditional probability distribution $G$]{\includegraphics[width=0.45\textwidth]{figures/simple-conditional-prob-graph.pdf}}
+\hfill
+\subfloat[Unconditional probability distribution $G'$]{\includegraphics[width=0.45\textwidth]{figures/simple-unconditional-prob-graph.pdf}}
+
+\caption{\label{fig:measure-room-novelty}In this case the only difference between $G$ and $G'$ is the room category variable
+         and the associated factors that only exists in the former.}
 \end{figure}
 
+The notation $N_v$ is now used to refer to the measure $P_G(x)/P_{G'}(x)$, when $G$ and $G'$ differ only in the variable node $v$ and
+its associated factor nodes.
+And use it as a novelty measure of the variable $v$, as it attempts to measure on how much adding the variable $v$ helps to explain the
+given distribution of values.
 
-From now on we refer to the measure $P_G(x)/P_{G'}(x)$, when $G$ and $G'$ as a novelty measure on the variable $R_{category}$.
-As it attempts to measure on how much adding the variable $R_{category}$ helps to explain the given distribution of values.
+By assuming the graph is a tree and blabla, and expanding the calculation of $P_G(x)/P_{G'}(x)$ with the sum-product technique, leads to:
 
-Expanding the calculation of $P_G(x)/P_{G'}(x)$ with the sum-product technique. Leads to:
+\begin{equation}
+N_v(x) = \frac{\sum_{s \in States(v)}x / normalizing_{factor1}}{\prod{...} / normalizing_{factor2}}
+\end{equation}
+
+blablablaaa....
+I haven't done the math here yet.... but it should give us a method for measuring on how much each variable is contributing to the novelty
+threshold.
+Also due to the nature of the graphical models it should be possible to calculate in $O(N)$ time for all the $N$ variables.
+After the whole variables can be sorted by the contributions and presented to the user explaining where the novelty comes from.
+
+Quotting Andrzej: """ Being able to automatically explain why a class is novel and what
+makes it different from any of the other classes -- This is super important for communication with the user and active learning of new room categories."""
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
 \begin{itemize}
 \item Show results and how much it improves by using a simple method for unconditional probability
 \end{itemize}
+
+In order to verify the improvements obtained by using unlabelled data, a fictitious simple dataset was generated.
+The fictitious distribution assumes that an independent and variable size set of features $x$ is generated by a
+given room category category. In whole there was 11 different room categories and 7 different measured properties types.
+
+The known data was extracted by generating samples from 6 of the 11 classes. Together with the generated known data, the
+room category that generated is given as label. Using that we built the factors for the generation of graphs representing
+the conditional distribution $G$.
+Using unlabelled data we trained also a graph $I$ representing an unconditional distribution where all features are independent.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.60\textwidth]{figures/roc-simple.pdf}
+
+This graph is from a previous experience. Where there was even no need for the normalizing factor.
+
+\caption{\label{fig:fictitious-roc}ROC curve comparing novelty detection performance between an optimal detector,
+         $P_G(x)/P_U(x)$ a graph ratio considering an uniform unconditional distribution and
+         $P_G(x)/P_I(x)$ a graph ratio considering an independent unconditional distribution}
+\end{figure}
+
+Since the distribution is fictitious we were able to create an optimal novelty detector, as we can exactly measure $P(novel|x)$.
+That served as a comparison on how optimal a detector could be.
+A ROC curve was plotted for the three methods on \autoref{fig:fictitious-roc}.
+As possible to see a correct estimation on the unconditional probability is important for obtaining a correct ordering of the
+input space.
+
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions and Future Work}

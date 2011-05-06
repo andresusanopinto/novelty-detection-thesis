@@ -1,6 +1,8 @@
 x = PDF('article.pdf', 'article.tex')
 Depends(x, ['llncs.cls', 'refs.bib'])
 
+Command('figures/roc-simple.pdf', '../semisupervised/dora-data/roc-simple.pdf', 'cp $SOURCE $TARGET')
+
 SVGS = """
 """.split()
 
