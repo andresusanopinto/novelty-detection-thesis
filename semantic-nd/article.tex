@@ -51,7 +51,7 @@
 \mainmatter  % start of an individual contribution
 
 % first the title is needed
-\title{Semantic Novelty Detection with Graphical Models}
+\title{Using Graphical Models for Novelty Detection on Semantic Room Classification}
 
 % a short form should be given in case it is too long for the running head
 % \titlerunning{Lecture Notes in Computer Science: Authors' Instructions}
@@ -79,13 +79,12 @@
 
 
 \begin{abstract}
-This papers presents an approach on implementing novelty detection at semantic level
-for indoor room classification in Dora. \emph{Graphical models} are used to model
-probabilistic knowledge and novelty detection is implemented on top of them.
+This papers presents an approach on implementing novelty detection for indoor room classification
+using semantic data.
+\emph{Graphical models} are used to model probabilistic knowledge and a novelty threshold is
+defined in terms of conditional and unconditional probabilities.
 The novelty threshold is then optimized using an unconditional probability density
-model that is trained from unlabelled data.
-The concepts are then generalized to measure novelty introduced by each modelled
-variable allowing the system to explain why a class is novel.
+model trained from unlabelled data.
 
 
 \keywords{novelty detection, semantic data, probabilistic graphical models,
@@ -100,17 +99,19 @@ room classification, indoor environments, robotics, multi-modal classification.}
 \item Introduce Dora and explain how it would benefit or use the semantic novel detection.
 \end{itemize}
 
-There has been several efforts in the area of Artificial Intelligence and Robotics in creating robots
-that are able to interact with humans and their environments.
-One of the existing problems is a reliable high-level localization method that can be deployed into new
-and unknown environments.
-In this article we focus on the mapping, using \emph{semantic data}, of indoor environments such as houses and offices to room categories
-such as kitchen, corridor, office.
-And how to perform novelty detection on them: \emph{detect a new room category that was not present in the labelled data}.
+There has been several efforts in the area of Artificial Intelligence and Robotics in creating
+robots that are able to interact with humans and their environments.
+One of the existing problems is a reliable high-level localization method that can be deployed
+into new and unknown environments.
+This article focus on the mapping, using \emph{semantic data}, of indoor environments such as
+houses and offices to room categories such as kitchen, corridor, office.
+And how to perform novelty detection on them: \emph{detect a new room category that was not
+present in the labelled data}.
 
-Dora\cite{dora} (CogX: Dora) was used as a base system where this novelty detection would be implemented.
-As Dora moves through the environment its \emph{conceptual layer} builds a structural and probabilistic representation of the space
-instantiated as a \emph{graphical model}.
+Dora\cite{dora} (CogX: Dora) was used as a base system where to implement the presented novelty
+detection system.
+As Dora moves through the environment its \emph{conceptual layer} builds a structural and
+probabilistic representation of the space instantiated as a \emph{graphical model}.
 That model connects the sensed properties together with the variables used to model the world.
 And allows to perform queries on the probabilities of aspects of the environment.
 For example: where is most likely to find a cereal box\cite{exploiting}.
@@ -167,7 +168,7 @@ a probabilistic graphical model that merges both Bayesian Networks and Random Ma
 
 The use of graphical models to describe distributions of variables has useful properties.
 The edges between the variables can be seen as a kind of filter to the properties of the system.
-Properties those that we expect to capture by the conceptual knowledge.
+Properties those that are expected to be captured by the conceptual knowledge.
 At the same time they are a generative models and therefore allow to calculate the probability
 on any given subset of variables on the graph allowing the system to work even when some
 information is missing.
@@ -183,14 +184,15 @@ information is missing.
 \end{figure}
 
 \subsection{Factor Graphs}
-Although the conceptual layer works with \emph{chain graph}, those can be converted into \emph{factor graphs}.
+Although the conceptual layer works with \emph{chain graphs}, those can be converted into \emph{factor graphs}.
 Those are used through this paper as they provide an easier manipulation in terms of factorization.
 
-A \emph{factor graph} is a bipartite graph connecting nodes representing random variables and factors.
+A \emph{factor graph} $G$ is a bipartite graph connecting a set of nodes $V_G$ representing
+random variables and factors $\phi_G$.
 Each factor represents a function dependent only on the variables to where its connected.
 As so given factor graph $G$ can be seen as description of a distribution function over a set
 of variables obtained by the product of all the factors. In order to represent a probability
-a factor $Z$ is defined
+a normalization factor $Z$ needs to be introduced:
 
 \begin{equation}
 P_G(X_V) = \frac{1}{Z}\prod_{}{\phi(...)},\qquad Z = \sum\prod{\phi(...)}
@@ -201,7 +203,7 @@ Sum-Product to efficiently calculate marginals on any given subset $x$ of variab
 exploiting conditional independency between variables.
 
 \begin{equation}
-M_G(x) = \frac{1}{Z}\sum_{V \\ x}{\prod{\phi(...)}}
+P_G(x) = \frac{1}{Z}\sum_{V \\ x}{\prod{\phi(...)}}
 \end{equation}
 
 \begin{figure}[h]
@@ -237,9 +239,6 @@ M_G(x) = \frac{1}{Z}\sum_{V \\ x}{\prod{\phi(...)}}
 \item Usage of conditional density
 \item Assuming of every output is equally likely
 \item Using unlabelled data
-\item What happens if the conditional and unconditional graphs differ only by the addition of a node?
-\item How to implement that in the case a graph is a tree
-\item Novelty detection on any variable of the graphical model!
 \end{itemize}
 
 % Introduce novelty detection
@@ -302,8 +301,9 @@ Nonetheless, here the distributions are dynamically changing as the system learn
 So the normalizing argument $P(x)$ has to be evaluated for each new subset of $x$.
 
 Assuming that the unconditional distributions generates all possible outcome with the same probability
-we can model it with $\prod{1/|x_i|}$, where $|x_i|$ denotes the state space size of variable $x_i$.
-In graphical model terms, this would be equivalent to build a factor graph $U$ with the same variables but
+we can model it with $\prod{1/\# x_i}$, where $\# x_i$ denotes the cardinality of the state space
+of variable $x_i$.
+In graphical model terms this is represented to a factor graph $U$ with the variables but
 without any factors as illustrated on \autoref{fig:uniform-prob-graph}.
 
 \begin{figure}
@@ -318,9 +318,8 @@ possible outcomes are equally likely a novelty threshold would be given by: $P_G
 
 Here $P_{U}(x)$ can be seen as a normalizing factor to lever all the $P_G(x)$ on any set of
 variables $x$ into the same measure units (error rate), such that a static threshold can be implemented.
-For example in very large sets of variables $x$, a large dimension space, the conditional
-probability would spread over the tails of the functions and $P_G(x)$ would always yield very
-small values.
+For example the conditional probability would yield very small values on large sets of variables
+$x$ than in small sets due to the spreading over the dimensions of the input space.
 As so a novelty measure is seen as a ratio on how much introducing the known concepts helps to
 understand the observed result.
 
@@ -345,64 +344,10 @@ And so from the unlabelled data we only need to estimate the probability of each
 \end{figure}
 
 Once again the novelty threshold would be given by $P_G(x)/P_I(x)$.
-This time the addition of the variables unconditional factors can be understood as an attempt to compensate
-for an existing bias on the unconditional distribution.
-Which is an important step to achieve a correct ordering of the input space for novelty thresholding.
-
-\subsection{Generalizing to Novelty Detection on a Variable}
-Until now, the presented methods describe how to detect data that belongs to a new class of input
-by creating generative models for both conditional and unconditional probabilities distributions.
-
-And although it serves as a method for detecting new classes in the input, it gives no information
-in why a class is novel.
-The graphical model used by Dora gives a lot of semantic and conceptual information that would be
-interesting in exploiting to be able to communicate novelty with a user and to perform
-active learning of new classes.
-Being able to measure which part of the graph is responsible for triggering novelty would be
-a desirable property on the system.
-In that sense focus as been made on detecting the impact of any given node.
-
-\begin{figure}[h]
-\subfloat[Conditional probability distribution $G$]{\includegraphics[width=0.45\textwidth]{figures/simple-conditional-prob-graph.pdf}}
-\qquad
-\subfloat[Unconditional probability distribution $G'$]{\includegraphics[width=0.45\textwidth]{figures/simple-unconditional-prob-graph.pdf}}
-
-\caption{\label{fig:measure-room-novelty}In this case the only difference between $G$ and $G'$ is the room category variable
-         and the associated factors that only exists in the former.}
-\end{figure}
-
-Let the conditional and unconditional probabilities distributions be modeled by graphs
-$G$ and $G'$.
-And the only difference between those be the non-existence of factors connected to a given
-variable $A$ as seen on \autoref{fig:measure-room-novelty}.
-Let $N_A$ denote the set of neighbour variables of node $A$.
-
-The ratio: $P_G(x)/P_{G'}(x)$ is then given by:
-
-\begin{equation}
-\frac{\sum \prod ... }{\sum \prod ...}  \frac{Z_{G'}}{Z_G}
-\end{equation}
-
-
-The notation $N_v$ is now used to refer to the measure $P_G(x)/P_{G'}(x)$, when $G$ and $G'$ differ only in the variable node $v$ and
-its associated factor nodes.
-And use it as a novelty measure of the variable $v$, as it attempts to measure on how much adding the variable $v$ helps to explain the
-given distribution of values.
-
-By assuming the graph is a tree and blabla, and expanding the calculation of $P_G(x)/P_{G'}(x)$ with the sum-product technique, leads to:
-
-\begin{equation}
-N_v(x) = \frac{\sum_{s \in States(v)}x / normalizing_{factor1}}{\prod{...} / normalizing_{factor2}}
-\end{equation}
-
-blablablaaa....
-I haven't done the math here yet.... but it should give us a method for measuring on how much each variable is contributing to the novelty
-threshold.
-Also due to the nature of the graphical models it should be possible to calculate in $O(N)$ time for all the $N$ variables.
-After the whole variables can be sorted by the contributions and presented to the user explaining where the novelty comes from.
-
-Quotting Andrzej: """ Being able to automatically explain why a class is novel and what
-makes it different from any of the other classes -- This is super important for communication with the user and active learning of new room categories."""
+This time the addition of the variables unconditional factors can be understood as an
+attempt to compensate for an existing bias on the unconditional distribution.
+Which is an important step to achieve a correct ordering of the input space for novelty
+thresholding.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -449,6 +394,19 @@ input space.
 \item Show unlabelled data can be used for it.
 \item Although focus on Room Categorization we expect the results and techniques to be usable on other areas.
 \end{itemize}
+
+On this paper it was presented how to define a stable novelty threshold function on top of
+\emph{probabilistic graphical models} instantiated dynamically from sensed semantic data and
+conceptual knowledge.
+
+It was also shown that unlabelled data can be used to approximate unconditional probability and
+improve a novelty threshold.
+
+
+
+Quotting Andrzej: """ Being able to automatically explain why a class is novel and what
+makes it different from any of the other classes -- This is super important for communication with the user and active learning of new room categories."""
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{plainnat}
