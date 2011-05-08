@@ -84,9 +84,12 @@ for indoor room classification in Dora. \emph{Graphical models} are used to mode
 probabilistic knowledge and novelty detection is implemented on top of them.
 The novelty threshold is then optimized using an unconditional probability density
 model that is trained from unlabelled data.
+The concepts are then generalized to measure novelty introduced by each modelled
+variable allowing the system to explain why a class is novel.
 
-\keywords{novelty detection, semantic data, graphical models, room classification,
-indoor environments, robotics, multi-modal.}
+
+\keywords{novelty detection, semantic data, probabilistic graphical models,
+room classification, indoor environments, robotics, multi-modal classification.}
 \end{abstract}
 
 
@@ -166,7 +169,8 @@ The use of graphical models to describe distributions of variables has useful pr
 The edges between the variables can be seen as a kind of filter to the properties of the system.
 Properties those that we expect to capture by the conceptual knowledge.
 At the same time they are a generative models and therefore allow to calculate the probability
-on any given subset of variables on the graph allowing the system to work even when some information is missing.
+on any given subset of variables on the graph allowing the system to work even when some
+information is missing.
 
 
 \begin{figure}[h]
@@ -174,20 +178,31 @@ on any given subset of variables on the graph allowing the system to work even w
 
 \includegraphics[width=0.50\textwidth]{figures/conceptual-layer.jpg}
 \includegraphics[width=0.49\textwidth]{figures/chain-graph.png}
-\caption{The conceptual layer structures the sensed environment together with the conceptual knowledge in order to
-         create a structured probabilistic representation of the world.}
+\caption{The conceptual layer structures the sensed environment together with the conceptual knowledge
+         in order to create a structured probabilistic representation of the world.}
 \end{figure}
 
 \subsection{Factor Graphs}
 Although the conceptual layer works with \emph{chain graph}, those can be converted into \emph{factor graphs}.
-We opted to use those as describing the ideas on this paper as they tend to be easier to understand.
+Those are used through this paper as they provide an easier manipulation in terms of factorization.
 
 A \emph{factor graph} is a bipartite graph connecting nodes representing random variables and factors.
 Each factor represents a function dependent only on the variables to where its connected.
-As so given factor graph $G$ can be seen as description of a distribution function over a set of variables obtained by
-the product of all the factors. This manipulation allows to use algorithms such as the Sum-Product to efficiently calculate
-probabilities on any given subset $x$ of those variables by exploiting conditional independency between variables.
-We will use the notation $P_G(x)$ to represent that.
+As so given factor graph $G$ can be seen as description of a distribution function over a set
+of variables obtained by the product of all the factors. In order to represent a probability
+a factor $Z$ is defined
+
+\begin{equation}
+P_G(X_V) = \frac{1}{Z}\prod_{}{\phi(...)},\qquad Z = \sum\prod{\phi(...)}
+\end{equation}
+
+Describing the distribution function in terms of graphs allows to use algorithms such as the
+Sum-Product to efficiently calculate marginals on any given subset $x$ of variables by
+exploiting conditional independency between variables.
+
+\begin{equation}
+M_G(x) = \frac{1}{Z}\sum_{V \\ x}{\prod{\phi(...)}}
+\end{equation}
 
 \begin{figure}[h]
 \centering
@@ -233,30 +248,32 @@ Essentially a system is given training data and when given new data has to decid
 to the same concept it was trained with.
 
 % Explain threshold approach to novelty detection
-Due to the desired of robustness and generalization, a novelty detection system would always possess
+Due to the desire of robustness and generalization, a novelty detection system would always possess
 some threshold that describes on how strict the system should be to new data.
 This threshold is often seen as a distance measure to a normal input and several novelty detection
 techniques are based on it.
 
-When dealing with a statistic point of view, noisy data or unstable features, a decision on a given input has
-an associated error rate. And in this case a novelty detection system is interested in defining an order
-on all the possible inputs equivalent to the order imposed by the error rate: $P(novel|x)$.
+When dealing with a statistic point of view, noisy data or unstable features, a decision on a
+given input has an associated error rate. A novelty detection system is interested in defining an
+order on all the possible inputs equivalent to the order imposed by the error rate: $P(novel|x)$.
 
 Using bayes rule on the reversed order $P(\overline{novel}|x)$ and assuming a constant $P(\overline{novel})$
-we obtain a ratio between a conditional and unconditional probabilites on the input $x$.
+we obtain a ratio between a conditional and unconditional probabilities of the input $x$.
 Such a ratio is a suitable function for implementing an optimal novelty detector system with
 thresholding.
 
 \begin{equation}
 \label{eq:novelty-threshold}
-P(\overline{novel}|x) = \frac{P(x|\overline{novel}) P(\overline{novel})}{P(x)} = k\frac{P(x|\overline{novel})}{P(x)}
+          P(\overline{novel}|x)
+  =       \frac{P(x|\overline{novel}) P(\overline{novel})}{P(x)}
+  \propto \frac{P(x|\overline{novel})}{P(x)}
 \end{equation}
 
 % Explain approach of using conditional probability
 \subsection{Conditional Probability: $P(x|\overline{novel})$}
 \label{sec:uniform-unconditional}
 
-One of the hardest problems is that on most cases a novelty detection system only have access to 
+One of the hardest problems is that on most cases a novelty detection system only has access to 
 the known data.
 Under that the best approach is to define a threshold based on $P(x|\overline{novel})/P(x)$
 considering that $P(x)$ is constant through all the input space.
@@ -265,7 +282,7 @@ In the presented case the conditional probability is approximated by the graphic
 produced by the conceptual layer.
 The \autoref{fig:conditional-prob-graph} represents a possible graph $G$ built from the conceptual
 layer to represent the conditional probability on the sensed variables $x$.
-$P_G(x)$ is then used as an approximation for $P(x|\overline{novel})$.
+$M_G(x)$ is used as an approximation for $P(x|\overline{novel})$.
 
 \begin{figure}[h]
 \centering
@@ -279,9 +296,10 @@ $P_G(x)$ is then used as an approximation for $P(x|\overline{novel})$.
 \end{figure}
 
 
-Its important to notice that in several cases assuming the unconditional probability $P(x)$ is constant leads to discarding the factor.
+Its important to notice that in several cases assuming the unconditional probability $P(x)$
+is constant leads to discarding the factor.
 Nonetheless, here the distributions are dynamically changing as the system learns more on the environment.
-So we need to keep the normalizing argument $P(x)$ and re-calculate it for each new subset of $x$.
+So the normalizing argument $P(x)$ has to be evaluated for each new subset of $x$.
 
 Assuming that the unconditional distributions generates all possible outcome with the same probability
 we can model it with $\prod{1/|x_i|}$, where $|x_i|$ denotes the state space size of variable $x_i$.
@@ -291,29 +309,31 @@ without any factors as illustrated on \autoref{fig:uniform-prob-graph}.
 \begin{figure}
 \centering
 \includegraphics[width=0.70\textwidth]{figures/uniform-prob-graph.pdf}
-\caption{\label{fig:uniform-prob-graph}Without any existing factors, this graph $U$ represents a uniform
-         distribution over the set $x$.}
+\caption{\label{fig:uniform-prob-graph}Without any existing factors, this graph $U$ represents a
+         uniform distribution over any set of its variables.}
 \end{figure}
 
 Having now a graphical model built to model the known data distribution and assuming that in the unconditional case all
-possible outcomes are equally likely a novelty threshold would be given by: $P_G(x)/P_{U}(x)$.
+possible outcomes are equally likely a novelty threshold would be given by: $P_G(x)/P_U(x)$.
 
-Here $P_{U}(x)$ can be seen as a normalizing factor to lever all the $P_G(x)$ on any set of variables $x$ into the same
-measure units, such that a static threshold can be implemented.
-For example in very large sets of variables $x$, a large dimension space, the conditional probability would spread over
-the tails of the functions and would always yield very small values.
-As so a novelty measure is seen as a ratio on how much introducing the known concepts helps to understand the observed result.
+Here $P_{U}(x)$ can be seen as a normalizing factor to lever all the $P_G(x)$ on any set of
+variables $x$ into the same measure units (error rate), such that a static threshold can be implemented.
+For example in very large sets of variables $x$, a large dimension space, the conditional
+probability would spread over the tails of the functions and $P_G(x)$ would always yield very
+small values.
+As so a novelty measure is seen as a ratio on how much introducing the known concepts helps to
+understand the observed result.
 
 
 \subsection{Using Unlabelled Data}
 Nonetheless its often the case that there is access to large amounts of unlabelled data.
-Under that it becomes possible to obtain a better approach to the unconditional probability distribution than
-the uniform one assumed in \autoref{sec:uniform-unconditional}.
+Under that it becomes possible to obtain a better approach to the unconditional probability
+distribution than the uniform one assumed in \autoref{sec:uniform-unconditional}.
 
 For interesting and practical reasons it was assumed that the unconditional distribution
 could be modelled with all the variables independent from each other.
 Which translates as $P(x)=\prod{P_{x_i}(x_i)}$.
-And so from the unlabelled data we only need to estimate $P_{x_i}$.
+And so from the unlabelled data we only need to estimate the probability of each feature $x_i$.
 \autoref{fig:semisupervised-threshold} illustrates a graph $I$ to model independent variables.
 
 \begin{figure}[h]
@@ -328,30 +348,41 @@ Once again the novelty threshold would be given by $P_G(x)/P_I(x)$.
 This time the addition of the variables unconditional factors can be understood as an attempt to compensate
 for an existing bias on the unconditional distribution.
 Which is an important step to achieve a correct ordering of the input space for novelty thresholding.
-This way our unconditional function perceives which features are slightly more biased to a certain value
-and will compensate on the novelty calculation.
 
-\subsection{Generalizing to Novelty Detection on a variable}
-Until now, the presented methods describe how to detect data that belongs to a new class of input by creating
-generative models for both conditional and unconditional probabilities distributions.
+\subsection{Generalizing to Novelty Detection on a Variable}
+Until now, the presented methods describe how to detect data that belongs to a new class of input
+by creating generative models for both conditional and unconditional probabilities distributions.
 
-And although it serves as a method for detecting new classes in the input, it gives us no control in what
-is novel in the input.
-Recall that the graph $G$ used by Dora gives us a lot of semantic and conceptual information that we are
-interested in analizying and improving with time. Being able to measure if the novel case derives from
-a novel room category or from any other variables would be highly desirable on the system.
-
-Lets assume that the only difference between the conditional and unconditional graph is a single node and its connecting factors
-as seen on \autoref{fig:measure-room-novelty}.
+And although it serves as a method for detecting new classes in the input, it gives no information
+in why a class is novel.
+The graphical model used by Dora gives a lot of semantic and conceptual information that would be
+interesting in exploiting to be able to communicate novelty with a user and to perform
+active learning of new classes.
+Being able to measure which part of the graph is responsible for triggering novelty would be
+a desirable property on the system.
+In that sense focus as been made on detecting the impact of any given node.
 
 \begin{figure}[h]
 \subfloat[Conditional probability distribution $G$]{\includegraphics[width=0.45\textwidth]{figures/simple-conditional-prob-graph.pdf}}
-\hfill
+\qquad
 \subfloat[Unconditional probability distribution $G'$]{\includegraphics[width=0.45\textwidth]{figures/simple-unconditional-prob-graph.pdf}}
 
 \caption{\label{fig:measure-room-novelty}In this case the only difference between $G$ and $G'$ is the room category variable
          and the associated factors that only exists in the former.}
 \end{figure}
+
+Let the conditional and unconditional probabilities distributions be modeled by graphs
+$G$ and $G'$.
+And the only difference between those be the non-existence of factors connected to a given
+variable $A$ as seen on \autoref{fig:measure-room-novelty}.
+Let $N_A$ denote the set of neighbour variables of node $A$.
+
+The ratio: $P_G(x)/P_{G'}(x)$ is then given by:
+
+\begin{equation}
+\frac{\sum \prod ... }{\sum \prod ...}  \frac{Z_{G'}}{Z_G}
+\end{equation}
+
 
 The notation $N_v$ is now used to refer to the measure $P_G(x)/P_{G'}(x)$, when $G$ and $G'$ differ only in the variable node $v$ and
 its associated factor nodes.
@@ -372,6 +403,7 @@ After the whole variables can be sorted by the contributions and presented to th
 
 Quotting Andrzej: """ Being able to automatically explain why a class is novel and what
 makes it different from any of the other classes -- This is super important for communication with the user and active learning of new room categories."""
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
