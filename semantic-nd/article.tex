@@ -94,11 +94,6 @@ room classification, indoor environments, robotics, multi-modal classification.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-\begin{itemize}
-\item Explain context of indoor room categorization and importance of novelty detection.
-\item Introduce Dora and explain how it would benefit or use the semantic novel detection.
-\end{itemize}
-
 There has been several efforts in the area of Artificial Intelligence and Robotics in creating
 robots that are able to interact with humans and their environments.
 One of the existing problems is a reliable high-level localization method that can be deployed
@@ -143,12 +138,6 @@ Interesting examples are works in automatic image annotation using an hidden con
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dora Architecture Overview}
-\begin{itemize}
-\item Introduce Dora architecture aspects important for the paper
-\item Explain what we mean by semantic data and how its captured by Dora
-\item Introduce graphical models and how we use them (including notation on the paper)
-\end{itemize}
-
 Short paragraph describing dora. Short paragraph describing dora. Short paragraph describing dora. Short paragraph describing dora. Short paragraph describing dora.
 
 From its architecture only the \emph{conceptual layer} is of interest to this article.
@@ -232,15 +221,6 @@ P_G(x) = \frac{1}{Z}\sum_{V \\ x}{\prod{\phi(...)}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Novelty Detection}
-\begin{itemize}
-\item Define novelty detection 
-\item Explain approach with a threshold function
-\item Need of a normalizing factor for a threshold with dynamic functions
-\item Usage of conditional density
-\item Assuming of every output is equally likely
-\item Using unlabelled data
-\end{itemize}
-
 % Introduce novelty detection
 Novelty detection is an harder problem than that of classification due to its single-class nature.
 Essentially a system is given training data and when given new data has to decide if it belongs
@@ -352,10 +332,6 @@ thresholding.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
-\begin{itemize}
-\item Show results and how much it improves by using a simple method for unconditional probability
-\end{itemize}
-
 In order to verify the improvements obtained by using unlabelled data, a fictitious simple
 dataset was generated.
 The fictitious distribution assumes that an independent and variable size set of features
@@ -388,7 +364,7 @@ unconditional distributions trained from the labelled and unlabelled data.
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.60\textwidth]{figures/roc-simple.pdf}
+\includegraphics[width=0.40\textwidth]{figures/roc-simple.pdf}
 
 This graph is from a previous experience. Where there was even no need for the normalizing factor.
 
@@ -409,16 +385,16 @@ input space increases and allows the several existing classes to become easily d
 
 For comparison ROC curves where plot for the developed threshold based on the number of input features.
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 
-\subfloat[3 sensed variables]{5 sensed variables}
+\subfloat[3 sensed variables]{\includegraphics[width=0.40\textwidth]{figures/roc-simple.pdf}}
 \qquad
-\subfloat[5 sensed variables]{5 sensed variables}
+\subfloat[5 sensed variables]{\includegraphics[width=0.40\textwidth]{figures/roc-simple.pdf}}
 
-\subfloat[10 sensed variables]{10 sensed variables}
+\subfloat[10 sensed variables]{\includegraphics[width=0.40\textwidth]{figures/roc-simple.pdf}}
 \qquad
-\subfloat[50 sensed variables]{50 sensed variables}
+\subfloat[50 sensed variables]{\includegraphics[width=0.40\textwidth]{figures/roc-simple.pdf}}
 
 \caption{\label{fig:fictitious-roc-breakdown}ROC curves plotted showing performance of the
          presented novelty detection method on graphs generated for different amount of
@@ -433,11 +409,6 @@ For comparison ROC curves where plot for the developed threshold based on the nu
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions and Future Work}
-\begin{itemize}
-\item Show a correct estimation of unconditional probability to be important in establishing a novelty detection threshold
-\item Show unlabelled data can be used for it.
-\item Although focus on Room Categorization we expect the results and techniques to be usable on other areas.
-\end{itemize}
 
 On this paper it was presented how to define a stable novelty threshold function on top of
 \emph{probabilistic graphical models} instantiated dynamically from sensed semantic data and
