@@ -1,0 +1,57 @@
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+
+\usepackage{url}
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+% Additional packages
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\mainmatter  % start of an individual contribution
+
+% first the title is needed
+\title{Using Graphical Models for Novelty Detection on Semantic Room Classification}
+
+% a short form should be given in case it is too long for the running head
+% \titlerunning{Lecture Notes in Computer Science: Authors' Instructions}
+
+% the name(s) of the author(s) follow(s) next
+%
+% NB: Chinese authors should write their first names(s) in front of
+% their surnames. This ensures that the names appear correctly in
+% the running heads and the author index.
+%
+\author{Ommited for Review}
+%
+%\authorrunning{Lecture Notes in Computer Science: Authors' Instructions}
+% (feature abused for this document to repeat the title also on left hand pages)
+
+% the affiliations are given next; don't give your e-mail address
+% unless you accept that it will be published
+\institute{Institution ommited for Review}
+
+\toctitle{Lecture Notes in Computer Science}
+\tocauthor{Authors' Instructions}
+\maketitle
+
+
+\begin{abstract}
+This papers presents an approach on implementing novelty detection for indoor room classification
+using semantic data.
+\emph{Graphical models} are used to model probabilistic knowledge and a novelty threshold is
+defined in terms of conditional and unconditional probabilities.
+The novelty threshold is then optimized using an unconditional probability density
+model trained from unlabelled data.
+
+
+\keywords{novelty detection, semantic data, probabilistic graphical models,
+room classification, indoor environments, robotics, multi-modal classification.}
+\end{abstract}
+
+\end{document}

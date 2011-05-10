@@ -1,3 +1,4 @@
+x = PDF('abstract.pdf', 'abstract.tex')
 x = PDF('article.pdf', 'article.tex')
 Depends(x, ['llncs.cls', 'refs.bib'])
 
