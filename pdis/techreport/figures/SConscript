@@ -17,7 +17,7 @@ system-representation/structure.svg
 
 for SVG in SVGS:
   base = SVG[0:-4]
-  x = Command(base + '.pdf', base +'.svg', 'convert `basename ' +base+'.svg` `basename ' + base + '.pdf`', chdir=1)
+  x = Command(base + '.pdf', base +'.svg', 'inkscape `basename ' +base+'.svg` --export-pdf=`basename ' + base + '.pdf`', chdir=1)
   if SVG == 'system-representation/layers.svg':
     Depends(x, """system-representation/sensory_map.png system-representation/door.png system-representation/bookshelf1.png
                   system-representation/milk.png system-representation/sift2.png system-representation/place_map.png

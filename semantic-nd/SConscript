@@ -1,13 +1,20 @@
-x = PDF('abstract.pdf', 'abstract.tex')
+abstract_submission = PDF('abstract.pdf', 'abstract.tex')
+Depends(abstract_submission, ['llncs.cls', 'refs.bib'])
+
 x = PDF('article.pdf', 'article.tex')
 Depends(x, ['llncs.cls', 'refs.bib'])
 
 Command('figures/roc-simple.pdf', '../semisupervised/dora-data/roc-simple.pdf', 'cp $SOURCE $TARGET')
 
 SVGS = """
+figures/independent-prob-graph.svg
+figures/simple-unconditional-prob-graph.svg
+figures/conditional-prob-graph.svg
+figures/simple-conditional-prob-graph.svg
+figures/uniform-prob-graph.svg
 """.split()
 
 for SVG in SVGS:
   base = SVG[0:-4]
-  x = Command(base + '.pdf', base +'.svg', 'convert `basename ' +base+'.svg` `basename ' + base + '.pdf`', chdir=1)
+  x = Command(base + '.pdf', base +'.svg', 'inkscape `basename ' +base+'.svg` --export-pdf=`basename ' + base + '.pdf`', chdir=1)
 

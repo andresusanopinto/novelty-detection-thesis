@@ -19,7 +19,6 @@
 #
 import script
 import ontology
-import explain
 import random
 import dataset
 import graph

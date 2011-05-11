@@ -1,3 +1,3 @@
-Command('NoveltyDetection.pdf', 'NoveltyDetection.svg', 'convert $SOURCE $TARGET')
-Command('place_classification.pdf', 'place_classification.svg', 'convert $SOURCE $TARGET')
-Command('RobotLayers.pdf', 'RobotLayers.svg', 'convert $SOURCE $TARGET')
+Command('NoveltyDetection.pdf', 'NoveltyDetection.svg', 'inkscape $SOURCE --export-pdf=$TARGET')
+Command('place_classification.pdf', 'place_classification.svg', 'inkscape $SOURCE --export-pdf=$TARGET')
+Command('RobotLayers.pdf', 'RobotLayers.svg', 'inkscape $SOURCE --export-pdf=$TARGET')
