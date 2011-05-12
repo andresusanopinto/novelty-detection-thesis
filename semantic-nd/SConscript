@@ -4,8 +4,6 @@ Depends(abstract_submission, ['llncs.cls', 'refs.bib'])
 x = PDF('article.pdf', 'article.tex')
 Depends(x, ['llncs.cls', 'refs.bib'])
 
-Command('figures/roc-simple.pdf', '../semisupervised/dora-data/roc-simple.pdf', 'cp $SOURCE $TARGET')
-
 SVGS = """
 figures/independent-prob-graph.svg
 figures/simple-unconditional-prob-graph.svg
