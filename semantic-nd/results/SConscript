@@ -1,0 +1,27 @@
+def PythonCommand(target, source, options = []):
+  e = env.Clone()
+  for key, value in options:
+    e['ENV'][key] = value
+  c = e.Command(target, source, 'python $SOURCE.abspath', chdir=1)
+  e.Depends(c, e.Value('%s'%list(sorted(e['ENV'].items()))))
+
+
+
+env = Environment()
+env.PrependENVPath('PYTHONPATH', '#scripts/')
+
+
+env['ENV']['ONTOLOGY_DEFAULT_KNOWLEDGE'] = 'default_knowledge-semmap.xml'
+env['ENV']['ONTOLOGY_DEFAULT_OBJ_PROBS'] = 'defaultprobs-semmap.txt'
+env['ENV']['ONTOLOGY_DROP_FEATURES'] = '''room_category2'''
+
+PythonCommand(['synthetic-all.pdf',
+               'synthetic-3features.pdf',
+               'synthetic-5features.pdf',
+               'synthetic-10features.pdf',
+               'synthetic-50features.pdf'],
+              ['synthetic.py',
+               'ontology.py',
+               'default_knowledge-semmap.xml',
+               'defaultprobs-semmap.txt'])
+

@@ -1,3 +1,5 @@
+SConscript('results/SConscript')
+
 abstract_submission = PDF('abstract.pdf', 'abstract.tex')
 Depends(abstract_submission, ['llncs.cls', 'refs.bib'])
 

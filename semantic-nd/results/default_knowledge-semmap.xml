@@ -1,0 +1,235 @@
+<default>
+    <default_room_category_connectivity_potential>0.1</default_room_category_connectivity_potential>
+    <room_category_connectivity>
+	<item room_category1="anteroom"       room_category2="bathroom"       potential="1"/>
+	<item room_category1="anteroom"       room_category2="hallway"       potential="1"/>
+
+	<item room_category1="bathroom"       room_category2="anteroom"       potential="1"/>
+
+	<item room_category1="computerlab"       room_category2="hallway"       potential="0.5"/>
+
+	<item room_category1="conferencehall"       room_category2="hallway"       potential="0.25"/>
+
+	<item room_category1="doubleoffice"       room_category2="hallway"       potential="1"/>
+
+	<item room_category1="hallway"       room_category2="anteroom"       potential="1"/>
+	<item room_category1="hallway"       room_category2="computerlab"       potential="0.5"/>
+	<item room_category1="hallway"       room_category2="conferencehall"       potential="0.25"/>
+	<item room_category1="hallway"       room_category2="doubleoffice"       potential="1"/>
+	<item room_category1="hallway"       room_category2="hallway"       potential="0.5"/>
+	<item room_category1="hallway"       room_category2="kitchen"       potential="0.5"/>
+	<item room_category1="hallway"       room_category2="meetingroom"       potential="0.5"/>
+	<item room_category1="hallway"       room_category2="professorsoffice"       potential="1"/>
+	<item room_category1="hallway"       room_category2="robotlab"       potential="0.5"/>
+	<item room_category1="hallway"       room_category2="singleoffice"       potential="1"/>
+
+	<item room_category1="kitchen"       room_category2="hallway"       potential="0.5"/>
+
+	<item room_category1="meetingroom"       room_category2="hallway"       potential="0.5"/>
+
+	<item room_category1="professorsoffice"       room_category2="hallway"       potential="1"/>
+
+	<item room_category1="robotlab"       room_category2="hallway"       potential="0.5"/>
+
+	<item room_category1="singleoffice"       room_category2="hallway"       potential="1"/>
+    </room_category_connectivity>
+    <default_object_existence_probability>0.1</default_object_existence_probability>
+    <shape_property_given_room_category>
+	<item room_category1="anteroom"       shape_property="elongated"    probability="0.1"/>
+	<item room_category1="anteroom"       shape_property="rectangular"  probability="0.3"/>
+	<item room_category1="anteroom"       shape_property="square"       probability="0.6"/>
+
+	<item room_category1="bathroom"       shape_property="elongated"    probability="0.1"/>
+	<item room_category1="bathroom"       shape_property="rectangular"  probability="0.3"/>
+	<item room_category1="bathroom"       shape_property="square"       probability="0.6"/>
+
+	<item room_category1="computerlab"       shape_property="elongated"    probability="0.1"/>
+	<item room_category1="computerlab"       shape_property="rectangular"  probability="0.3"/>
+	<item room_category1="computerlab"       shape_property="square"       probability="0.6"/>
+
+	<item room_category1="conferencehall"       shape_property="elongated"    probability="0.1"/>
+	<item room_category1="conferencehall"       shape_property="rectangular"  probability="0.3"/>
+	<item room_category1="conferencehall"       shape_property="square"       probability="0.6"/>
+
+	<item room_category1="doubleoffice"       shape_property="elongated"    probability="0.1"/>
+	<item room_category1="doubleoffice"       shape_property="rectangular"  probability="0.3"/>
+	<item room_category1="doubleoffice"       shape_property="square"       probability="0.6"/>
+
+	<item room_category1="hallway"       shape_property="elongated"    probability="0.6"/>
+	<item room_category1="hallway"       shape_property="rectangular"  probability="0.3"/>
+	<item room_category1="hallway"       shape_property="square"       probability="0.1"/>
+
+	<item room_category1="kitchen"       shape_property="elongated"    probability="0.1"/>
+	<item room_category1="kitchen"       shape_property="rectangular"  probability="0.3"/>
+	<item room_category1="kitchen"       shape_property="square"       probability="0.6"/>
+
+	<item room_category1="meetingroom"       shape_property="elongated"    probability="0.1"/>
+	<item room_category1="meetingroom"       shape_property="rectangular"  probability="0.6"/>
+	<item room_category1="meetingroom"       shape_property="square"       probability="0.3"/>
+
+	<item room_category1="professorsoffice"       shape_property="elongated"    probability="0.1"/>
+	<item room_category1="professorsoffice"       shape_property="rectangular"  probability="0.3"/>
+	<item room_category1="professorsoffice"       shape_property="square"       probability="0.6"/>
+
+	<item room_category1="robotlab"       shape_property="elongated"    probability="0.1"/>
+	<item room_category1="robotlab"       shape_property="rectangular"  probability="0.3"/>
+	<item room_category1="robotlab"       shape_property="square"       probability="0.6"/>
+
+	<item room_category1="singleoffice"       shape_property="elongated"    probability="0.1"/>
+	<item room_category1="singleoffice"       shape_property="rectangular"  probability="0.6"/>
+	<item room_category1="singleoffice"       shape_property="square"       probability="0.3"/>
+    </shape_property_given_room_category>
+    <default_shape_property_given_room_category>
+	<item shape_property="elongated"   probability="0.33333"/>
+	<item shape_property="rectangular" probability="0.33333"/>
+	<item shape_property="square"      probability="0.33333"/>
+    </default_shape_property_given_room_category>
+    <size_property_given_room_category>
+	<item room_category1="anteroom"       size_property="small"    probability="0.6"/>
+	<item room_category1="anteroom"       size_property="medium"  probability="0.3"/>
+	<item room_category1="anteroom"       size_property="large"       probability="0.1"/>
+
+	<item room_category1="bathroom"       size_property="small"    probability="0.6"/>
+	<item room_category1="bathroom"       size_property="medium"  probability="0.3"/>
+	<item room_category1="bathroom"       size_property="large"       probability="0.1"/>
+
+	<item room_category1="computerlab"       size_property="small"    probability="0.1"/>
+	<item room_category1="computerlab"       size_property="medium"  probability="0.3"/>
+	<item room_category1="computerlab"       size_property="large"       probability="0.6"/>
+
+	<item room_category1="conferencehall"       size_property="small"    probability="0.1"/>
+	<item room_category1="conferencehall"       size_property="medium"  probability="0.3"/>
+	<item room_category1="conferencehall"       size_property="large"       probability="0.6"/>
+
+	<item room_category1="doubleoffice"       size_property="small"    probability="0.2"/>
+	<item room_category1="doubleoffice"       size_property="medium"  probability="0.6"/>
+	<item room_category1="doubleoffice"       size_property="large"       probability="0.2"/>
+
+	<item room_category1="hallway"       size_property="small"    probability="0.1"/>
+	<item room_category1="hallway"       size_property="medium"  probability="0.3"/>
+	<item room_category1="hallway"       size_property="large"       probability="0.6"/>
+
+	<item room_category1="kitchen"       size_property="small"    probability="0.1"/>
+	<item room_category1="kitchen"       size_property="medium"  probability="0.3"/>
+	<item room_category1="kitchen"       size_property="large"       probability="0.6"/>
+
+	<item room_category1="meetingroom"       size_property="small"    probability="0.2"/>
+	<item room_category1="meetingroom"       size_property="medium"  probability="0.6"/>
+	<item room_category1="meetingroom"       size_property="large"       probability="0.2"/>
+
+	<item room_category1="professorsoffice"       size_property="small"    probability="0.2"/>
+	<item room_category1="professorsoffice"       size_property="medium"  probability="0.6"/>
+	<item room_category1="professorsoffice"       size_property="large"       probability="0.2"/>
+
+	<item room_category1="robotlab"       size_property="small"    probability="0.1"/>
+	<item room_category1="robotlab"       size_property="medium"  probability="0.3"/>
+	<item room_category1="robotlab"       size_property="large"       probability="0.6"/>
+
+	<item room_category1="singleoffice"       size_property="small"    probability="0.2"/>
+	<item room_category1="singleoffice"       size_property="medium"  probability="0.6"/>
+	<item room_category1="singleoffice"       size_property="large"       probability="0.2"/>
+    </size_property_given_room_category>
+    <default_size_property_given_room_category>
+	<item size_property="small"   probability="0.33333"/>
+	<item size_property="medium"      probability="0.33333"/>
+	<item size_property="large"      probability="0.33333"/>
+    </default_size_property_given_room_category>
+    <appearance_property_given_room_category>
+	<item room_category1="anteroom"       appearance_property="anteroom"        probability="0.88"/>
+	<item room_category1="anteroom"       appearance_property="bathroom"        probability="0.02"/>
+	<item room_category1="anteroom"       appearance_property="hallway"         probability="0.02"/>
+	<item room_category1="anteroom"       appearance_property="kitchen"         probability="0.02"/>
+	<item room_category1="anteroom"       appearance_property="lab"             probability="0.02"/>
+	<item room_category1="anteroom"       appearance_property="meetingroom"     probability="0.02"/>
+	<item room_category1="anteroom"       appearance_property="office"          probability="0.02"/>
+
+	<item room_category1="bathroom"       appearance_property="anteroom"        probability="0.02"/>
+	<item room_category1="bathroom"       appearance_property="bathroom"        probability="0.88"/>
+	<item room_category1="bathroom"       appearance_property="hallway"         probability="0.02"/>
+	<item room_category1="bathroom"       appearance_property="kitchen"         probability="0.02"/>
+	<item room_category1="bathroom"       appearance_property="lab"             probability="0.02"/>
+	<item room_category1="bathroom"       appearance_property="meetingroom"     probability="0.02"/>
+	<item room_category1="bathroom"       appearance_property="office"          probability="0.02"/>
+
+	<item room_category1="computerlab"       appearance_property="anteroom"        probability="0.02"/>
+	<item room_category1="computerlab"       appearance_property="bathroom"        probability="0.02"/>
+	<item room_category1="computerlab"       appearance_property="hallway"         probability="0.02"/>
+	<item room_category1="computerlab"       appearance_property="kitchen"         probability="0.02"/>
+	<item room_category1="computerlab"       appearance_property="lab"             probability="0.88"/>
+	<item room_category1="computerlab"       appearance_property="meetingroom"     probability="0.02"/>
+	<item room_category1="computerlab"       appearance_property="office"          probability="0.02"/>
+
+	<item room_category1="conferencehall"       appearance_property="anteroom"        probability="0.02"/>
+	<item room_category1="conferencehall"       appearance_property="bathroom"        probability="0.02"/>
+	<item room_category1="conferencehall"       appearance_property="hallway"         probability="0.02"/>
+	<item room_category1="conferencehall"       appearance_property="kitchen"         probability="0.02"/>
+	<item room_category1="conferencehall"       appearance_property="lab"             probability="0.02"/>
+	<item room_category1="conferencehall"       appearance_property="meetingroom"     probability="0.88"/>
+	<item room_category1="conferencehall"       appearance_property="office"          probability="0.02"/>
+
+	<item room_category1="doubleoffice"       appearance_property="anteroom"        probability="0.02"/>
+	<item room_category1="doubleoffice"       appearance_property="bathroom"        probability="0.02"/>
+	<item room_category1="doubleoffice"       appearance_property="hallway"         probability="0.02"/>
+	<item room_category1="doubleoffice"       appearance_property="kitchen"         probability="0.02"/>
+	<item room_category1="doubleoffice"       appearance_property="lab"             probability="0.02"/>
+	<item room_category1="doubleoffice"       appearance_property="meetingroom"     probability="0.02"/>
+	<item room_category1="doubleoffice"       appearance_property="office"          probability="0.88"/>
+
+	<item room_category1="hallway"       appearance_property="anteroom"        probability="0.02"/>
+	<item room_category1="hallway"       appearance_property="bathroom"        probability="0.02"/>
+	<item room_category1="hallway"       appearance_property="hallway"         probability="0.88"/>
+	<item room_category1="hallway"       appearance_property="kitchen"         probability="0.02"/>
+	<item room_category1="hallway"       appearance_property="lab"             probability="0.02"/>
+	<item room_category1="hallway"       appearance_property="meetingroom"     probability="0.02"/>
+	<item room_category1="hallway"       appearance_property="office"          probability="0.02"/>
+
+	<item room_category1="kitchen"       appearance_property="anteroom"        probability="0.02"/>
+	<item room_category1="kitchen"       appearance_property="bathroom"        probability="0.02"/>
+	<item room_category1="kitchen"       appearance_property="hallway"         probability="0.02"/>
+	<item room_category1="kitchen"       appearance_property="kitchen"         probability="0.88"/>
+	<item room_category1="kitchen"       appearance_property="lab"             probability="0.02"/>
+	<item room_category1="kitchen"       appearance_property="meetingroom"     probability="0.02"/>
+	<item room_category1="kitchen"       appearance_property="office"          probability="0.02"/>
+
+	<item room_category1="meetingroom"       appearance_property="anteroom"        probability="0.02"/>
+	<item room_category1="meetingroom"       appearance_property="bathroom"        probability="0.02"/>
+	<item room_category1="meetingroom"       appearance_property="hallway"         probability="0.02"/>
+	<item room_category1="meetingroom"       appearance_property="kitchen"         probability="0.02"/>
+	<item room_category1="meetingroom"       appearance_property="lab"             probability="0.02"/>
+	<item room_category1="meetingroom"       appearance_property="meetingroom"     probability="0.88"/>
+	<item room_category1="meetingroom"       appearance_property="office"          probability="0.02"/>
+
+	<item room_category1="professorsoffice"       appearance_property="anteroom"        probability="0.02"/>
+	<item room_category1="professorsoffice"       appearance_property="bathroom"        probability="0.02"/>
+	<item room_category1="professorsoffice"       appearance_property="hallway"         probability="0.02"/>
+	<item room_category1="professorsoffice"       appearance_property="kitchen"         probability="0.02"/>
+	<item room_category1="professorsoffice"       appearance_property="lab"             probability="0.02"/>
+	<item room_category1="professorsoffice"       appearance_property="meetingroom"     probability="0.02"/>
+	<item room_category1="professorsoffice"       appearance_property="office"          probability="0.88"/>
+
+	<item room_category1="robotlab"       appearance_property="anteroom"        probability="0.02"/>
+	<item room_category1="robotlab"       appearance_property="bathroom"        probability="0.02"/>
+	<item room_category1="robotlab"       appearance_property="hallway"         probability="0.02"/>
+	<item room_category1="robotlab"       appearance_property="kitchen"         probability="0.02"/>
+	<item room_category1="robotlab"       appearance_property="lab"             probability="0.88"/>
+	<item room_category1="robotlab"       appearance_property="meetingroom"     probability="0.02"/>
+	<item room_category1="robotlab"       appearance_property="office"          probability="0.02"/>
+
+	<item room_category1="singleoffice"       appearance_property="anteroom"        probability="0.02"/>
+	<item room_category1="singleoffice"       appearance_property="bathroom"        probability="0.02"/>
+	<item room_category1="singleoffice"       appearance_property="hallway"         probability="0.02"/>
+	<item room_category1="singleoffice"       appearance_property="kitchen"         probability="0.02"/>
+	<item room_category1="singleoffice"       appearance_property="lab"             probability="0.02"/>
+	<item room_category1="singleoffice"       appearance_property="meetingroom"     probability="0.02"/>
+	<item room_category1="singleoffice"       appearance_property="office"          probability="0.88"/>
+    </appearance_property_given_room_category>
+    <default_appearance_property_given_room_category>
+	<item appearance_property="anteroom"        probability="0.143"/>
+	<item appearance_property="bathroom"        probability="0.143"/>
+	<item appearance_property="hallway"         probability="0.143"/>
+	<item appearance_property="kitchen"         probability="0.143"/>
+	<item appearance_property="lab"             probability="0.143"/>
+	<item appearance_property="meetingroom"     probability="0.143"/>
+	<item appearance_property="office"          probability="0.143"/>
+    </default_appearance_property_given_room_category>
+</default>

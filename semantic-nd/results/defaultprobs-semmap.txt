@@ -1,0 +1,76 @@
+INROOM book anteroom 0.1
+INROOM cerealbox anteroom 0.1
+INROOM computer anteroom 0.1
+INROOM robot anteroom 0.1
+INROOM stapler anteroom 0.1
+INROOM toiletpaper anteroom 0.1
+
+INROOM book bathroom 0.12536459
+INROOM cerealbox bathroom 0.1
+INROOM computer bathroom 0.170347
+INROOM robot bathroom 0.1
+INROOM stapler bathroom 0.1
+INROOM toiletpaper bathroom 0.6782982
+
+INROOM book computerlab 0.1
+INROOM stapler computerlab 0.1
+INROOM toiletpaper computerlab 0.1
+INROOM cerealbox computerlab 0.1
+INROOM computer computerlab 0.28988653
+INROOM robot computerlab 0.1
+
+INROOM book conferencehall 0.1
+INROOM cerealbox conferencehall 0.1
+INROOM computer conferencehall 0.1
+INROOM robot conferencehall 0.1
+INROOM stapler conferencehall 0.1
+INROOM toiletpaper conferencehall 0.1
+
+INROOM book doubleoffice 0.42819896
+INROOM cerealbox doubleoffice 0.1
+INROOM computer doubleoffice 0.8790428
+INROOM robot doubleoffice 0.1
+INROOM stapler doubleoffice 0.8038152
+INROOM toiletpaper doubleoffice 0.1
+
+INROOM book hallway 0.1
+INROOM cerealbox hallway 0.1
+INROOM computer hallway 0.1
+INROOM robot hallway 0.1
+INROOM stapler hallway 0.1
+INROOM toiletpaper hallway 0.1
+
+INROOM book kitchen 0.15062384
+INROOM cerealbox kitchen 0.33602318
+INROOM computer kitchen 0.1
+INROOM robot kitchen 0.1
+INROOM stapler kitchen 0.21891372
+INROOM toiletpaper kitchen 0.38181776
+
+INROOM book meetingroom 0.1
+INROOM cerealbox meetingroom 0.1
+INROOM computer meetingroom 0.1
+INROOM robot meetingroom 0.1
+INROOM stapler meetingroom 0.1
+INROOM toiletpaper meetingroom 0.1
+
+INROOM book professorsoffice 0.42819896
+INROOM cerealbox professorsoffice 0.1
+INROOM computer professorsoffice 0.5790428
+INROOM robot professorsoffice 0.1
+INROOM stapler professorsoffice 0.8038152
+INROOM toiletpaper professorsoffice 0.1
+
+INROOM book robotlab 0.1
+INROOM cerealbox robotlab 0.1
+INROOM computer robotlab 0.28988653
+INROOM robot robotlab 0.7
+INROOM stapler robotlab 0.1
+INROOM toiletpaper robotlab 0.1
+
+INROOM book singleoffice 0.42819896
+INROOM cerealbox singleoffice 0.1
+INROOM computer singleoffice 0.5790428
+INROOM robot singleoffice 0.1
+INROOM stapler singleoffice 0.8038152
+INROOM toiletpaper singleoffice 0.1
