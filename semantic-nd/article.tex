@@ -122,31 +122,41 @@ reasoning over it.
 Implementing novelty detection capabilities on an agent such as Dora, would allow to
 to increase reliability and allow the creation of self-extending behaviours.
 
-Its with a final interest on integrated the developed methods on Dora that this
+Its with a final interest on integrating the developed methods on Dora that this
 initial work focus on the novelty detection using probabilistic graphical models
 that model the conceptual knowledge and information handled by Dora.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related Work}
-\cite{quattoni2009recognizing} showed that most scene recognition models work poorly in indoor
-scenes when compared to outdoor scenes results.
-Since the properties that characterize rooms changes conforming its category. Namely corridors are
-well described by global properties and bookstores are well described by the presence of specific objects (books).
-Their work shows a multi-modal approach is expected to yield better performance by mixing several sources of information.
+\cite{quattoni2009recognizing} showed that most scene recognition models work poorly
+in indoor scenes when compared to outdoor scenes results since the properties that
+characterize rooms changes conforming its category. Namely corridors are well
+described by global properties and bookstores are well described by the presence of
+specific objects (books). Their work shows a multi-modal approach is expected to
+yield better performance by mixing several sources of information.
 
-\cite{galindo2005multi} defines a bidirectional relation between object and room category, where object defines a room category and a room category provides information on where objects may be found.
+\cite{galindo2005multi} defines a bidirectional relation between object and room
+category, where object defines a room category and a room category provides
+information on where objects may be found.
 
-Probabilistic representations are used in several localised functions in robots operating in the real-world~\cite{gross2009toomas,maierprobabilistic}. And some employ, up to some extent, a probabilistic representation across some subsystems~\cite{kraft2008exploration}.
-\cite{vasudevan2008bayesian} performed room categorization through Bayesian reasoning about the presence of objects but did not included observations models (perception is considered deterministic).
-And \cite{boutell2006factor} have studied outdoor scene classification using \emph{factor graphs} and modelling spatial relations between objects in the scene to extract better knowledge from semantic (high-level) features.
+Probabilistic representations are used in several localised functions in robots
+operating in the real-world~\cite{gross2009toomas,maierprobabilistic}.
+And some employ, up to some extent, a probabilistic representation across some
+subsystems~\cite{kraft2008exploration}.
+And \cite{boutell2006factor} have studied outdoor scene classification using
+\emph{factor graphs} and modelling spatial relations between objects in the scene
+to extract better knowledge from semantic (high-level) features.
 
-Its expected that using a unified probabilistic model from the whole system, such as \cite{pronobis2011exploiting}, more information can be reused to correctly predict a given random variable.
+% Its expected that using a unified probabilistic model from the whole system,
+% such as \cite{pronobis2011exploiting}, more information can be reused to correctly
+% predict a given random variable.
 
-Although this paper deals with novelty detection on the robotics area, it does so using very
-standard concepts and techniques such as semantic data and graphical models.
+Although this paper deals with novelty detection on the robotics area, it does so
+using standard concepts and techniques such as semantic data and graphical models.
 Those are often found on areas related with information retrieval.
-Interesting examples are works in automatic image annotation using an hidden concept layer between visual features and text information\cite{zhang2005probabilistic}.
+An interesting example is the work in automatic image annotation using an hidden
+concept layer between visual features and text information by \cite{zhang2005probabilistic}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dora Architecture Overview}
@@ -191,28 +201,26 @@ information is missing.
 \end{figure}
 
 \subsection{Factor Graphs}
-Although the conceptual layer works with \emph{chain graphs}, those can be converted into \emph{factor graphs}.
-Those are used through this paper as they provide an easier manipulation in terms of factorization.
+Although the conceptual layer works with \emph{chain graphs}, those can be converted
+into \emph{factor graphs}. Those are used through this paper as they provide an
+easier manipulation in terms of factorization.
 
 A \emph{factor graph} is a bipartite graph connecting a set of nodes representing
-random variables and factors $\phi_G$.
+random variables and factors.
 Each factor represents a function dependent only on the variables to where its connected.
 As so given factor graph can be seen as description of a distribution function over a set
 of variables obtained by the product of all the factors. In order to represent a probability
 a normalization factor needs to be introduced:
 
 \begin{equation}
-P_G(x) = \frac{1}{Z}\prod_{}{\phi(...)},\qquad Z = \sum\prod{\phi(...)}
+P_G(x) = \frac{1}{Z}\prod_{\phi \in F_G}{\phi(x_{\phi})},\qquad
+Z = \sum_{x \in X_G}\prod_{\phi \in F_G}{\phi(x_{\phi})}
 \end{equation}
 
 Describing the distribution function in terms of graphs allows to use algorithms
 such as the Sum-Product~\citep{kschischang2001factor} to efficiently calculate
-marginals on any given subset $x$ of variables by exploiting conditional
+marginals on any given subset $x_m$ of variables by exploiting conditional
 independence between variables.
-
-\begin{equation}
-P_G(x) = \frac{1}{Z}\sum_{V \\ x}{\prod{\phi(...)}}
-\end{equation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Novelty Detection}
