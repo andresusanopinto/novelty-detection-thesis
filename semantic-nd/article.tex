@@ -111,8 +111,8 @@ This article focus on the mapping, using \emph{semantic data}, of indoor
 environments such as houses and offices to room categories such as kitchen,
 corridor, office.
 
-Due to unknown and dynamic nature of the operating environment of the agent the
-mapping methods should be resilient to new room categories it has never seen
+Due to the unknown and dynamic nature of the operating environment the
+mapping methods should be resilient to new room categories the agent has never seen
 before. This is: perform novelty detection on the concepts the agent is aware of.
 
 Dora\cite{dora} (CogX: Dora) was used as a base system where to implement the
@@ -129,34 +129,41 @@ that model the conceptual knowledge and information handled by Dora.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related Work}
-\cite{quattoni2009recognizing} showed that most scene recognition models work poorly
-in indoor scenes when compared to outdoor scenes results since the properties that
+The usage of multi-modal approaches, such as combining semantic data extracted from
+several sources or classifiers is expected to have better performance on scene
+recognition than single approaches according to \cite{quattoni2009recognizing}
+that showed that most scene recognition models work poorly in indoor scenes when
+compared to outdoor scenes results since the properties that
 characterize rooms changes conforming its category. Namely corridors are well
 described by global properties and bookstores are well described by the presence of
-specific objects (books). Their work shows a multi-modal approach is expected to
-yield better performance by mixing several sources of information.
+specific objects (books).
+\cite{galindo2005multi} also exploits this by defining a bidirectional relation
+between object and room category, where object defines a room category and a room
+category provides information on where objects may be found.
 
-\cite{galindo2005multi} defines a bidirectional relation between object and room
-category, where object defines a room category and a room category provides
-information on where objects may be found.
-
-Probabilistic representations are used in several localised functions in robots
-operating in the real-world~\cite{gross2009toomas,maierprobabilistic}.
+Probabilistic representations have also been used in several localised functions
+in robots operating in the real-world~\cite{gross2009toomas,maierprobabilistic}.
 And some employ, up to some extent, a probabilistic representation across some
 subsystems~\cite{kraft2008exploration}.
 And \cite{boutell2006factor} have studied outdoor scene classification using
 \emph{factor graphs} and modelling spatial relations between objects in the scene
 to extract better knowledge from semantic (high-level) features.
 
-% Its expected that using a unified probabilistic model from the whole system,
-% such as \cite{pronobis2011exploiting}, more information can be reused to correctly
-% predict a given random variable.
-
-Although this paper deals with novelty detection on the robotics area, it does so
+Also although this paper deals with robotics area, it does so
 using standard concepts and techniques such as semantic data and graphical models.
 Those are often found on areas related with information retrieval.
 An interesting example is the work in automatic image annotation using an hidden
 concept layer between visual features and text information by \cite{zhang2005probabilistic}.
+
+Novelty detection has been studied for some years and there is several approaches
+based on statistical analysis as reported by \cite{markou2003novelty}.
+Graphical models have been used to learn distributions of variables, both in
+supervised and unsupervised ways and by using thresholds on those distributions
+based solely on the conditional probability as seen on \cite{bishop1994novelty}
+a novelty system can be trivially implemented.
+But as far as we known there is no reference on how to perform novelty detection
+by using graphs that are dynamically generated.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dora Architecture Overview}
@@ -234,7 +241,7 @@ rendering normal classification methods invalid.
 Due to the desire of robustness and generalization, a novelty detection system would
 always possess some threshold that describes on how strict the system should be to
 new data.
-This threshold describes a trade of between generalization and certainty.
+This threshold describes a trade between error and rejection.
 And is often seen as a distance measure to the known class.
 
 When dealing with a statistic point of view, noisy data or unstable features, a decision on a
