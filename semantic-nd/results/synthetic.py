@@ -39,7 +39,7 @@ ALL_CLASSES = ontology.rooms.keys()
 POTENTIAL   = ontology.potential
 PROB        = dict()
 
-KNOWN_CLASSES = """singleoffice kitchen robotlab""".split()
+KNOWN_CLASSES = """bathroom hallway kitchen robotlab singleoffice""".split()
 for label in KNOWN_CLASSES: assert label in ALL_CLASSES
 
 """Make potentials normalized. And calculate probabilities for the synthetic distribution."""
@@ -171,14 +171,14 @@ def roc_performance(detector, data, known_labels):
     
 
 
-for output, nfeatures in [('synthetic-all.pdf', [3, 5, 7, 10, 15, 20, 25, 35, 50]),
+for output, nfeatures in [('synthetic-all.pdf', [5, 10, 15, 20, 35, 50]),
                           ('synthetic-3features.pdf',  [3]),
                           ('synthetic-5features.pdf',  [5]),
                           ('synthetic-10features.pdf', [10]),
                           ('synthetic-50features.pdf', [50])]:
   print "Generating ", output
   test_samples = list(generate_samples(classes = ALL_CLASSES,
-                                  samples = 1000,
+                                  samples = 5000,
                                   labelled = True,
                                   nfeatures = nfeatures))
   R1 = roc_performance(exact_novelty_detector,       test_samples, KNOWN_CLASSES)
