@@ -226,7 +226,7 @@ Z = \sum_{x \in X_G}\prod_{\phi \in F_G}{\phi(x_{\phi})}
 
 Describing the distribution function in terms of graphs allows to use algorithms
 such as the Sum-Product~\citep{kschischang2001factor} to efficiently calculate
-marginals on any given subset $x_m$ of variables by exploiting conditional
+marginals on any given subset of variables by exploiting conditional
 independence between variables.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -398,7 +398,7 @@ Since the distribution is synthetic there is access to $P(x)$ and $P(x|concept)$
 and so a perfect threshold function could also be created to test how far the
 presented thresholds are from optimal.
 
-\subsection{Suitable functions for implementing a Static Threshold}
+\subsection{Probability ratio comparison}
 %%% Results 1
 % Show the threshold ratio is an optimal detector (if perfect information was available)
 % Show that the thresholds are suitable functions for implementing a static threshold.
@@ -434,10 +434,10 @@ or not.
 
 %%% Results 2
 % Measure performance of the thresholds as more information becomes available.
-\subsection{Performance impact as more information becomes available}
+\subsection{Performance changes with amount of available information}
 In order to measure the performance impact as more semantic information becomes
 available ROC curves were plotted for samples grouped by the number of sensed
-semantic properties.
+semantic features.
 
 \begin{figure}[h]
 \centering
@@ -470,9 +470,7 @@ where its performs almost no better than random.
 It performance increases as the size of sensed features increases but nonetheless
 its always very small when compared to how optimal a threshold could be.
 This shows that at least under semantic distributions as the one modelled with the
-synthetic data assuming an uniform unconditional distribution is a very bad choice.
-
-
+synthetic data assuming an uniform unconditional distribution leads to poor results.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
