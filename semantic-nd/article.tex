@@ -100,25 +100,31 @@ room classification, indoor environments, robotics, multi-modal classification.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-There has been several efforts in the area of Artificial Intelligence and Robotics in creating
-robots that are able to interact with humans and their environments.
-One of the existing problems is a reliable high-level localization method that can be deployed
-into new and unknown environments.
-This article focus on the mapping, using \emph{semantic data}, of indoor environments such as
-houses and offices to room categories such as kitchen, corridor, office.
-And how to perform novelty detection on them: \emph{detect a new room category that was not
-present in the labelled data}.
+There has been several efforts in the area of Artificial Intelligence and Robotics
+in creating robots that are able to interact with humans and their environments.
+One of the existing problems is a reliable high-level localization method that can
+be deployed into new and unknown environments or where its impossible to access a
+previously labelled map of the area. Nonetheless the need of reliability and ability
+to deal with new cases also arises due to dynamic changes on the environment through
+time and with human action.
+This article focus on the mapping, using \emph{semantic data}, of indoor
+environments such as houses and offices to room categories such as kitchen,
+corridor, office.
 
-Dora\cite{dora} (CogX: Dora) was used as a base system where to implement the presented novelty
-detection system.
-As Dora moves through the environment its \emph{conceptual layer} builds a structural and
-probabilistic representation of the space instantiated as a \emph{graphical model}.
-That model connects the sensed properties together with the variables used to model the world.
-And allows to perform queries on the probabilities of aspects of the environment.
-For example: where is most likely to find a cereal box\cite{exploiting}.
+Due to unknown and dynamic nature of the operating environment of the agent the
+mapping methods should be resilient to new room categories it has never seen
+before. This is: perform novelty detection on the concepts the agent is aware of.
 
-The ability to recognize novel categories on the modelled variables would allow to increase
-reliability and allow the creation of self-extending behaviours.
+Dora\cite{dora} (CogX: Dora) was used as a base system where to implement the
+presented novelty detection system as it already possesses a developed architecture
+oriented on dealing with probabilistic and semantic information and performing
+reasoning over it.
+Implementing novelty detection capabilities on an agent such as Dora, would allow to
+to increase reliability and allow the creation of self-extending behaviours.
+
+Its with a final interest on integrated the developed methods on Dora that this
+initial work focus on the novelty detection using probabilistic graphical models
+that model the conceptual knowledge and information handled by Dora.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -145,6 +151,12 @@ Interesting examples are works in automatic image annotation using an hidden con
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dora Architecture Overview}
 Short paragraph describing dora. Short paragraph describing dora. Short paragraph describing dora. Short paragraph describing dora. Short paragraph describing dora.
+
+As Dora moves through the environment its \emph{conceptual layer} builds a structural and
+probabilistic representation of the space instantiated as a \emph{graphical model}.
+That model connects the sensed properties together with the variables used to model the world.
+And allows to perform queries on the probabilities of aspects of the environment.
+For example: where is most likely to find a cereal box\cite{exploiting}.
 
 From its architecture only the \emph{conceptual layer} is of interest to this article.
 Its role is to aggregate the following semantic information coming from other layers:
