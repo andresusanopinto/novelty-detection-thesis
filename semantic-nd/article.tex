@@ -79,31 +79,45 @@ room classification, indoor environments, robotics, multi-modal classification.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-There has been several efforts in the area of Artificial Intelligence and Robotics
+
+There has been several efforts in the areas of artificial intelligence and robotics
 in creating robots that are able to interact with humans and their environments.
-One of the existing problems is a reliable high-level localization method that can
-be deployed into new and unknown environments or where its impossible to access a
-previously labelled map of the area. Nonetheless the need of reliability and ability
-to deal with new cases also arises due to dynamic changes on the environment through
-time and with human action.
-This article focus on the mapping, using \emph{semantic data}, of indoor
-environments such as houses and offices to room categories such as kitchen,
-corridor, office.
+One of the important aspects is to endow those robots with a deeper understanding
+of human environments, not just for the purpose of navigation and obstacle avoidance, 
+but also in terms of human semantics and functionality. An important problem
+in creating reliable representations of space for robots that are to be deployed 
+in new and unknown realistic environments is to be able to automatically 
+identify gaps in robot's knowledge and act in order to fill those gaps. 
 
-Due to the unknown and dynamic nature of the operating environment the
-mapping methods should be resilient to new room categories the agent has never seen
-before. This is: perform novelty detection on the concepts the agent is aware of.
+This article addresses the problem of \emph{novelty detection} within the context
+of semantic mapping i.e. generating maps containing \emph{semantic information} 
+about indoor environments, such as homes or offices. In that context, the ability 
+to detect that the observations result from a semantic concept unknown to the robot, 
+and cannot be explained by one of its models, is crucial for generating fully autonomous
+and reliable behavior. In order to be robust, the robot must identify 
+novel concepts and instead of making a costly error, refrain from the decision
+and initiate learning. In particular, we address the problem of novelty detection for
+room categorization i.e. detecting whether the area in the environment identified as a
+separate room can be assigned one of the semantic labels that the robot knows (e.g. as \emph{a kitchen} 
+or \emph{an office}) or belongs to a yet unknown semantic category.
 
-Dora (CogX: Dora) was used as a base system where to implement the
-presented novelty detection system as it already possesses a developed architecture
-oriented on dealing with probabilistic and semantic information and performing
-reasoning over it.
-Implementing novelty detection capabilities on an agent such as Dora, would allow to
-to increase reliability and allow the creation of self-extending behaviours.
 
-Its with a final interest on integrating the developed methods on Dora that this
-initial work focus on the novelty detection using probabilistic graphical models
-that model the conceptual knowledge and information handled by Dora.
+The novelty detection algorithm is implemented within a cognitive robot Dora the Explorer,
+which already possesses a developed architecture based on proababilistic graphical models 
+oriented towards dealing with uncertain semantic information and reasoning about it~\cite{ijcai}.
+One of the major problems in using the probabilistic models of the environments for novelty
+detection is selecting the optimal threshold above which the test sample is considered
+novel. This problem becomes more difficult when, as in case of dora, the representation
+grows as the robot explores the environment. Methods are required to find
+optimal parameters given the current structure of the model. To this end, this work 
+studies methods for novelty threshold selection using probabilistic graphical models.
+
+The rest of this paper is structured as follows. First, we briefly review the related work on
+room categorization and novelty detection (Section~\ref{}). Then, we give an outline of the 
+architecture of Dora and the structure of the conceptual map representing the semantic information
+(Section~\ref{}). Next, we discuss the methods for novelty detection (Section~\ref{}) 
+and present results of our prelimianary experiments (Section~\ref{}). This paper concludes with a 
+summary in Section~\ref{}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
