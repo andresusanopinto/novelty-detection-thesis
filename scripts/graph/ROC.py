@@ -19,7 +19,7 @@ def ROC(data, style = 'ro-', label = None):
   if fpr[-1] != 0: fpr /= fpr[-1]
   if tpr[-1] != 0: tpr /= tpr[-1]
   
-  P.plot(fpr, tpr, style, markevery=(len(fpr)/10, len(fpr)/10), label = label)
+  P.plot(fpr, tpr, style, markersize=10.0, markevery=(len(fpr)/10, len(fpr)/10), label = label)
   P.xlim([-0.05,1.05])
   P.ylim([-0.05,1.05])
   P.xlabel('False Positive Rate')
