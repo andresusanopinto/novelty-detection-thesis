@@ -127,26 +127,26 @@ summary in Section \ref{sec:conclusion}.
 The problem of room categorization based on visual information was first addressed
 in the computer vision community. In this case, the research focused mainly on the
 problem of classifying single images captured in indoor or outdoor environments
-(scene classification)\cite{oliva2006building,torralba2003contextual}.
+(scene classification)~\cite{oliva2006building,torralba2003contextual}.
 At the same time, robotics researchers initially employed
 the 2D laser range sensor being much more robust to variations occurring in the
-environment and much easier to handle computationally in real time\cite{mozos2005supervised}.
+environment and much easier to handle computationally in real time~\cite{mozos2005supervised}.
 
 Multi-modal approaches, such as combining semantic data extracted from
 several sources or classifiers are expected to have better performance on scene
-recognition than single-cue approaches. Quattoni and Torralba\cite{quattoni2009recognizing}
+recognition than single-cue approaches. Quattoni and Torralba~\cite{quattoni2009recognizing}
 showed that most scene recognition models work poorly in indoor scenes when
 compared to outdoor scenes since the properties that
 characterize rooms changes depending on the category. For instance corridors are well
 described by global properties and bookstores are well described by the presence of
 specific objects (books).
-Galindo et al.\cite{galindo2005multi} also exploits this by defining a bidirectional relation
+Galindo et al.~\cite{galindo2005multi} also exploits this by defining a bidirectional relation
 between object and room category, where object defines a room category and a room
 category provides information on where objects may be found.
 
 Probabilistic representations have been frequently used for spatial modelling
-in robots operating in the real-world\cite{gross2009toomas,maier2010probabilistic}.
-Boutell et al.\cite{boutell2006factor} have studied outdoor scene classification using
+in robots operating in the real-world~\cite{gross2009toomas,maier2010probabilistic}.
+Boutell et al.~\cite{boutell2006factor} have studied outdoor scene classification using
 \emph{factor graphs} and modelling spatial relations between objects in the scene
 to extract better knowledge from semantic (high-level) features.
 
@@ -154,13 +154,13 @@ Although our approach is presented in the context of mobile robotics it relies o
 standard concepts and techniques such as semantic data and graphical models.
 Those are often used in the area of information retrieval.
 An interesting example is the usage of an hidden concept layer between visual features
-and text information to provide automatic image annotation\cite{zhang2006probabilistic}.
+and text information to provide automatic image annotation~\cite{zhang2006probabilistic}.
 
 Novelty detection has been studied for many years and there are several approaches
-based on statistical analysis\cite{markou2003novelty}.
+based on statistical analysis~\cite{markou2003novelty}.
 Graphical models have been used to learn distributions of variables, both in
 supervised and unsupervised ways and by using thresholds on those distributions
-based solely on the conditional probability as seen on Bishop\cite{bishop1994novelty}
+based solely on the conditional probability as seen on Bishop~\cite{bishop1994novelty}
 a novelty system can be trivially implemented.
 
 However to the knowledge of the authors there is no reference on how to perform
@@ -173,15 +173,16 @@ novelty detection using graphs that are dynamically generated.
 
 \begin{figure}[h]
 \centering
-\subfloat[Conceptual layer]{\includegraphics[width=0.50\textwidth]{figures/conceptual-layer.jpg}}
-\subfloat[Chain graph]{\includegraphics[width=0.49\textwidth]{figures/chain-graph.png}}
-
-\caption{The conceptual layer structures the sensed environment together with the conceptual knowledge
-         in order to create a structured probabilistic representation of the world.}
-\label{fig:system}
+\includegraphics[width=0.9\textwidth]{figures/conceptual-layer.jpg}
+\caption{\label{fig:conceptual-layer}Interaction of the sub-systems
+         in Dora with special focus on the conceptual layer.}
 \end{figure}
 
-The Dora system~\cite{ijcai} consists of several co-operating sub-systems, all of which actively use or maintain the spatial knowledge representation (see Figure~\ref{fig:system}). Only the \emph{conceptual layer} of the representation is of interest to this article. Its role is to aggregate the following semantic information coming from other sub-systems:
+The Dora system~\cite{ijcai} consists of several co-operating sub-systems,
+all of which actively use or maintain the spatial knowledge representation
+(see \autoref{fig:conceptual-layer}).
+Only the \emph{conceptual layer} of the representation is of interest to this article.
+Its role is to aggregate the following semantic information coming from other sub-systems:
 \begin{description}
  \item[Doorway detection] is used to segment the continuous space into rooms and map connectivity between them.
  \item[Room size and shape] are classified by using 2D laser scans data from laser range finder mounted on the robot and are used as properties of a given room. The system utilizes pre-trained set of classifiers to extract rooms sizes (either large, medium or small) and shapes (rectangular or elongated).
@@ -197,7 +198,8 @@ contains the information that kitchens commonly contain cereal boxes and have ce
 general appearance and allows the robot to infer that the cornflakes box in front of the 
 robot makes it more likely that the current room is a kitchen. The conceptual layer is 
 described in terms of a probabilistic ontology defining spatial concepts and linking 
-those concepts to instances of spatial entities (see the example of the ontology in Figure~\ref{fig:system}). 
+those concepts to instances of spatial entities (see the example of the ontology in
+\autoref{fig:conceptual-layer}).
 
 \subsection{Conceptual Map}
 
@@ -207,7 +209,16 @@ layer. Chain graphs are probabilistic graphical models that combine the properti
 both Bayesian Networks and Random Markov Fields. This results in an efficient approach to 
 probabilistic modeling and reasoning about conceptual knowledge.
 
-An exemplary chain graph corresponding to the conceptual map ontology is presented in Fig.~\ref{fig:system}. 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.90\textwidth]{figures/chain-graph.png}
+\caption{\label{fig:chain-graph}Example chain-graph produced by the \emph{conceptual layer}.}
+\end{figure}
+
+%The conceptual layer structures the sensed environment together with the conceptual knowledge
+%in order to create a structured probabilistic representation of the world.
+An exemplary chain graph corresponding to the conceptual map ontology is presented
+in \autoref{fig:chain-graph}. 
 Each discrete place identified in the environment is represented by a set of random variables, 
 one for each class of relation linked to that place. These are each connected to a random variable
 over the categories of rooms, representing the ``is-a'' relation between rooms and their categories. 
@@ -230,10 +241,10 @@ information is missing.
 
 \subsection{Factor Graphs}
 Although the conceptual layer works with \emph{chain graphs}, those can be converted
-into \emph{factor graphs}\cite{kschischang2001factor}. Factor graphs are used throughout this paper as they provide an
+into \emph{factor graphs}~\cite{kschischang2001factor}. Factor graphs are used throughout this paper as they provide an
 easier manipulation due to factorization.
 Moreover, there exists efficient implementation of inference engines operating on factor graph
-representations\cite{Mooij_libDAI_10}.
+representations~\cite{Mooij_libDAI_10}.
 Describing the distribution function in terms of graphs allows to use those engines to
 efficently calculate marginals on any given subset of variables by exploiting conditional
 independence between variables.
@@ -257,23 +268,22 @@ Z = \sum_{X_G}\prod_{\phi \in F_G}{\phi(x_{\phi})}
 \label{sec:novelty-detection}
 % Introduce novelty detection
 Novelty detection deals with detecting that a new input was generated by a class
-other than the ones the system knows about\cite{markou2003novelty}.
+other than the ones the system knows about~\cite{markou2003novelty}.
 It is harder than classification as only positive samples of a class are available
 rendering normal classification methods invalid.
 
-Adding capabilities to an agent to detect a normal sample allows to increase its
-reliability. As a novelty signal can then be interpreted by the system to proceed
-with more caution as its on the presence of a situation where its knowledge
-does not correctly describes reality.
+Adding capabilities to an agent to detect novel samples allows to increase its
+reliability. Novelty signal can then be interpreted by the system to proceed
+with more caution as its knowledge does not correctly describe reality.
 
 % Explain threshold approach to novelty detection
 Due to the desire of robustness, a novelty detection system is often given the option
-to reject normal samples. This is implemented as a threshold that describes a trade
+to classify non-novel samples as novel. This is implemented as a threshold that describes a trade
 between error and rejection: the more the system tries to reduce rejection, the more
 prone to produce errors it becomes.
 
 When dealing with a statistic point of view, noisy data or unstable features, a decision to
-classify a sample as novel as an associated error probability of $P(\overline{novel}|x)$.
+classify a sample as novel has an associated error probability of $P(\overline{novel}|x)$.
 And the error rate of a system that classifies the set of inputs $N$ as novel is given by
 the equation:
 
