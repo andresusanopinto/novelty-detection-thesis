@@ -112,9 +112,10 @@ that model the conceptual knowledge and information handled by Dora.
 The problem of room categorization based on visual information was first addressed
 in the computer vision community. In this case, the research focused mainly on the
 problem of classifying single images captured in indoor or outdoor environments
-(scene classification). At the same time, robotics researchers initially employed
+(scene classification)\cite{oliva2006building,torralba2003contextual}.
+At the same time, robotics researchers initially employed
 the 2D laser range sensor being much more robust to variations occurring in the
-environment and much easier to handle computationally in real time.
+environment and much easier to handle computationally in real time\cite{mozos2005supervised}.
 
 Multi-modal approaches, such as combining semantic data extracted from
 several sources or classifiers are expected to have better performance on scene
@@ -129,7 +130,7 @@ between object and room category, where object defines a room category and a roo
 category provides information on where objects may be found.
 
 Probabilistic representations have been frequently used for spatial modelling
-in robots operating in the real-world\cite{gross2009toomas,maierprobabilistic}.
+in robots operating in the real-world\cite{gross2009toomas,maier2010probabilistic}.
 Boutell et al.\cite{boutell2006factor} have studied outdoor scene classification using
 \emph{factor graphs} and modelling spatial relations between objects in the scene
 to extract better knowledge from semantic (high-level) features.
@@ -271,7 +272,7 @@ thresholding.
 
 In the presented case, the conditional probability is approximated by the graphical model $G$
 produced by the conceptual layer.
-\autoref{fig:conditional-prob-graph} represents a possible graph $G$ built from the conceptual
+\autoref{fig:conditional-prob-graph} presents a possible graph $G$ built from the conceptual
 layer to represent the conditional probability on the sensed variables $x$.
 $P_G(x)$ is used as an approximation for $P(x|\overline{novel})$.
 
@@ -288,10 +289,8 @@ $P_G(x)$ is used as an approximation for $P(x|\overline{novel})$.
 
 \subsection{Unconditional Probability}
 \label{sec:unconditional-prob}
-One of the hardest problems is that on most cases a novelty detection system only
-has access to the known data.
-Under that the best approach is to define a threshold assuming that $P(x)$ is
-constant through all the input space.
+With only access to labelled data a common approach is to define a threshold assuming
+that $P(x)$ is constant through all the samples.
 
 Its important to notice that in several cases assuming it to be constant leads to
 discarding the factor.
