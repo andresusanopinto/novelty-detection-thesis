@@ -283,23 +283,41 @@ thresholding.
 \subsection{Conditional Probability}
 \label{sec:conditional-prob}
 
+The conditional probability models the distribution of variables given that the sample
+is not novel for the agent.
+This is: it should model the distribution of the sensed features considering that the
+knowledge the agent possesses holds true. Under that its natural to model it with a graphical
+model that combines the information acquired with the relations that the describe the
+relations learned by the agent between the variables.
 
-In the presented case, the conditional probability is approximated by the graphical model $G$
-produced by the conceptual layer.
-\autoref{fig:conditional-prob-graph} presents a possible graph $G$ built from the conceptual
-layer to represent the conditional probability on the sensed variables $x$.
-$P_G(x)$ is used as an approximation for $P(x|\overline{novel})$.
+In Dora case, this is equivalent to use the graphical model used by it to describe its
+current believes on the variables modelled by the system.
+That graph is built, by the conceptual layer, by instancing the information extracted from
+other layers together with the conceptual knowledge such as: objects are properties of rooms,
+rooms are connected between each other.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.70\textwidth]{figures/conditional-prob-graph.pdf}
-\caption{\label{fig:conditional-prob-graph}The conceptual layer models the conditional
-         probability distribution of the sensed variables by using hidden variables.
-         Those are created from the conceptual knowledge and represent the structural
-         and connectivity information the system is aware of.
-         In this case only hidden variables $R_i$ were used to model the room categories
-         where each property was sensed.}
+\caption{\label{fig:conditional-prob-graph}A sample of a factor graph modelling a distribution
+         of a set $x$ of sensed variables.}
 \end{figure}
+
+\autoref{fig:conditional-prob-graph} presents a possible graph $G$ built from the conceptual
+layer to represent the conditional probability on the sensed variables $x$.
+A set of hidden variables is added to represent the conceptual knowledge the system is aware of.
+In the presented graph variables $R_i$ were added to model the room categories that influence
+the directly sensed features on each physical room, as well connectivity factors between each
+room.
+
+The factors connecting the variables are trained by the system by searching databases of
+common knowledge to build potentials describing how likely it is that a specific set of
+values for a set of variables is more likely to occur over than any other set of values.
+For instance: it is very likely to find a cereal box in a kitchen; and it is unlikely to find
+bathroom connected to another bathroom.
+
+We propose using such a graph $G$ built by the conceptual layer for modelling $P_G(x)$
+as an approximation for $P(x|\overline{novel})$.
 
 \subsection{Unconditional Probability}
 \label{sec:unconditional-prob}
