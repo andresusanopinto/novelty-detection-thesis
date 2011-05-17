@@ -224,14 +224,16 @@ other than the ones the system knows about\cite{markou2003novelty}.
 It is harder than classification as only positive samples of a class are available
 rendering normal classification methods invalid.
 
+Adding capabilities to an agent to detect a normal sample allows to increase its
+reliability. As a novelty signal can then be interpreted by the system to proceed
+with more caution as its on the presence of a situation where its knowledge
+does not correctly describes reality.
+
 % Explain threshold approach to novelty detection
-Due to the desire of robustness, a novelty detection system would
-always possess some threshold that describes on how strict the system should be to
-new samples. This threshold describes a trade between error and rejection: as the
-more the system tries to reduce rejection the more prone to produce
-errors it becomes.
-This threshold if often seen as a max allowed distance between a sample and the known
-class.
+Due to the desire of robustness, a novelty detection system is often given the option
+to reject normal samples. This is implemented as a threshold that describes a trade
+between error and rejection: the more the system tries to reduce rejection, the more
+prone to produce errors it becomes.
 
 When dealing with a statistic point of view, noisy data or unstable features, a decision to
 classify a sample as novel as an associated error probability of $P(\overline{novel}|x)$.
@@ -247,7 +249,7 @@ $a$ as novel should also detect novelty on any sample $b$ satisfying
 $P(\overline{novel}|b) < P(\overline{novel}|a)$.
 As that would always reduce the error probability.
 This way a novelty detection system is interested in defining an
-order on all the possible inputs equivalent to the order defined by
+order relation on all the possible inputs equivalent to the order defined by
 the error rate: $P(\overline{novel}|x)$.
 
 Using Bayes rule and assuming a constant $P(\overline{novel})$
