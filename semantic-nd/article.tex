@@ -220,19 +220,34 @@ It is harder than classification as only positive samples of a class are availab
 rendering normal classification methods invalid.
 
 % Explain threshold approach to novelty detection
-Due to the desire of robustness and generalization, a novelty detection system would
+Due to the desire of robustness, a novelty detection system would
 always possess some threshold that describes on how strict the system should be to
-new data.
-This threshold describes a trade between error and rejection.
-And is often seen as a distance measure to the known class.
+new samples. This threshold describes a trade between error and rejection: as the
+more the system tries to reduce rejection the more prone to produce
+errors it becomes.
+This threshold if often seen as a max allowed distance between a sample and the known
+class.
 
-When dealing with a statistic point of view, noisy data or unstable features, a decision on a
-given input has an associated error rate. A novelty detection system is interested in defining an
-order on all the possible inputs equivalent to the order imposed by the error rate: $P(novel|x)$.
+When dealing with a statistic point of view, noisy data or unstable features, a decision to
+classify a sample as novel as an associated error probability of $P(\overline{novel}|x)$.
+And the error rate of a system that classifies the set of inputs $N$ as novel is given by
+the equation:
 
-Using bayes rule on the reversed order $P(\overline{novel}|x)$ and assuming a constant $P(\overline{novel})$
+\begin{equation}
+P(e) = \frac{\sum_{n \in N}{P(\overline{novel}|n)P(n)}}{\sum_{n \in N}{P(n)}}
+\end{equation}
+
+Therefore any novelty system that decides to acknowledge a sample
+$a$ as novel should also detect novelty on any sample $b$ satisfying
+$P(\overline{novel}|b) < P(\overline{novel}|a)$.
+As that would always reduce the error probability.
+This way a novelty detection system is interested in defining an
+order on all the possible inputs equivalent to the order defined by
+the error rate: $P(\overline{novel}|x)$.
+
+Using Bayes rule and assuming a constant $P(\overline{novel})$
 a ratio between a conditional and unconditional probabilities of the input $x$ is obtained.
-Such a ratio is a suitable function for implementing an optimal novelty detector system with
+Such a ratio is a suitable function for implementing a novelty detector system with optimal
 thresholding.
 
 \begin{equation}
