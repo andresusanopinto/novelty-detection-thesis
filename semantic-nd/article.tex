@@ -170,35 +170,6 @@ novelty detection using graphs that are dynamically generated.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dora Architecture Overview}
 \label{sec:overview}
-Short paragraph describing dora. Short paragraph describing dora. Short paragraph describing dora. Short paragraph describing dora. Short paragraph describing dora.
-
-As Dora moves through the environment its \emph{conceptual layer} builds a structural and
-probabilistic representation of the space instantiated as a \emph{graphical model}.
-That model connects the sensed properties together with the variables used to model the world.
-And allows to perform queries on the probabilities of aspects of the environment.
-For example: where is most likely to find a cereal box.
-
-From its architecture only the \emph{conceptual layer} is of interest to this article.
-Its role is to aggregate the following semantic information coming from other layers:
-
-\begin{description}
- \item[Doorway detection] is used to segment the low-level space into rooms and map connectivity between them.
- \item[Room size and shape] are classified by using 2D laser scans data and are associated as properties of a given room. The system utilizes pre-trained set of classifiers to label size as (large, medium, small) and shape as (rectangular or elongated).
- \item[Object detection] is performed using the visual input in order to detect . The system keeps track of the number of object and types seen per each room. Objects are once again detected by running a pre-trained set of detectors for: book, cereal box, computer, robot, stapler, toilet paper.
- \item[Room appearance] is categorized from the visual input by using CRFH and a pre-trained set of 7 different models.
-\end{description}
-
-With the extracted information and conceptual knowledge the conceptual layer creates a structured probabilistic representation
-in order to model all known variables and their relations.
-As so, in order to represent the knowledge the layer builds a \emph{chain graph}:
-a probabilistic graphical model that merges both Bayesian Networks and Random Markov Fields.
-
-The use of graphical models to describe distributions of variables has useful properties.
-The edges between the variables can be seen as a kind of filter to the properties of the system.
-Properties those that are expected to be captured by the conceptual knowledge.
-At the same time they are a generative models and therefore allow to calculate the probability
-on any given subset of variables on the graph allowing the system to work even when some
-information is missing.
 
 \begin{figure}[h]
 \centering
@@ -207,7 +178,55 @@ information is missing.
 
 \caption{The conceptual layer structures the sensed environment together with the conceptual knowledge
          in order to create a structured probabilistic representation of the world.}
+\label{fig:system}
 \end{figure}
+
+The Dora system~\cite{ijcai} consists of several co-operating sub-systems, all of which actively use or maintain the spatial knowledge representation (see Figure~\ref{fig:system}). Only the \emph{conceptual layer} of the representation is of interest to this article. Its role is to aggregate the following semantic information coming from other sub-systems:
+\begin{description}
+ \item[Doorway detection] is used to segment the continuous space into rooms and map connectivity between them.
+ \item[Room size and shape] are classified by using 2D laser scans data from laser range finder mounted on the robot and are used as properties of a given room. The system utilizes pre-trained set of classifiers to extract rooms sizes (either large, medium or small) and shapes (rectangular or elongated).
+ \item[Object detection] is performed in the images acquired by the robot through its camera. The system keeps track of the number of objects of each type in each room. Objects are detected by running a pre-trained set of detectors for the following object types: book, cereal box, computer, robot, stapler, toilet paper.
+ \item[Room appearance] is categorized from the visual input by using global visual features and a pre-trained set of 7 different models.
+\end{description}
+
+As Dora moves through the environment its \emph{conceptual layer} builds a structural and
+probabilistic representation of the space instantiated as a \emph{graphical model}.
+It includes taxonomy of human-compatible spatial concepts which are linked to the sensed 
+instances of these concepts drawn from lower layers. It is the conceptual layer which 
+contains the information that kitchens commonly contain cereal boxes and have certain 
+general appearance and allows the robot to infer that the cornflakes box in front of the 
+robot makes it more likely that the current room is a kitchen. The conceptual layer is 
+described in terms of a probabilistic ontology defining spatial concepts and linking 
+those concepts to instances of spatial entities (see the example of the ontology in Figure~\ref{fig:system}). 
+
+\subsection{Conceptual Map}
+
+Based on this design, a \emph{chain graph} model is proposed as a 
+representation for performing inferences on the knowledge represented in the conceptual 
+layer. Chain graphs are probabilistic graphical models that combine the properties of 
+both Bayesian Networks and Random Markov Fields. This results in an efficient approach to 
+probabilistic modeling and reasoning about conceptual knowledge.
+
+An exemplary chain graph corresponding to the conceptual map ontology is presented in Fig.~\ref{fig:system}. 
+Each discrete place identified in the environment is represented by a set of random variables, 
+one for each class of relation linked to that place. These are each connected to a random variable
+over the categories of rooms, representing the ``is-a'' relation between rooms and their categories. 
+Moreover, the room category variables are connected by undirected links to one another according 
+to the topological map. The remaining variables represent: shape and appearance properties of space 
+as observed from each place, and the presence of objects. 
+These are connected to observations of features extracted directly from 
+the sensory input. Finally, the 
+distributions $p_{s}(\cdot|\cdot)$, $p_a(\cdot|\cdot)$, $p_{o_i}(\cdot|\cdot)$ 
+represent the common sense knowledge about shape, appearance, and object co-occurrence, respectively. 
+They allow for inference about other properties and room categories e.g. that the room is likely to be a kitchen,
+because you are likely to have observed cornflakes in it. 
+
+The use of graphical models to describe distributions of variables has useful properties.
+First, the permit inference about uncertain conceptual knowledge. At the same time, they are 
+generative models and therefore allow to calculate the probability
+on any given subset of variables of the graph, allowing the system to work even when some
+information is missing.
+
 
 \subsection{Factor Graphs}
 Although the conceptual layer works with \emph{chain graphs}, those can be converted
