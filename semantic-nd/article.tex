@@ -269,7 +269,7 @@ thresholding.
 \label{sec:conditional-prob}
 
 
-In the presented case the conditional probability is approximated by the graphical model $G$
+In the presented case, the conditional probability is approximated by the graphical model $G$
 produced by the conceptual layer.
 \autoref{fig:conditional-prob-graph} represents a possible graph $G$ built from the conceptual
 layer to represent the conditional probability on the sensed variables $x$.
@@ -324,14 +324,14 @@ understand the observed result.
 
 
 \subsection{Semi Supervised: Using Unlabelled Data}
-Nonetheless its often the case that there is access to large amounts of unlabelled data.
+Nonetheless, its often the case that there is access to large amounts of unlabelled data.
 Under that it becomes possible to obtain a better approach to the unconditional probability
 distribution than the uniform one.
 
-For interesting and practical reasons it was assumed that the unconditional distribution
+For practical reasons it was assumed that the unconditional distribution
 could be modelled with all the variables independent from each other.
 Which translates as $P(x)=\prod{P_{x_i}(x_i)}$.
-From the unlabelled data only the probability of each feature $x_i$ needs to be estimated.
+From the unlabelled data, only the probability of each feature $x_i$ needs to be estimated.
 \autoref{fig:semisupervised-threshold} illustrates a graph $I$ to model independent variables.
 
 \begin{figure}[h]
@@ -343,10 +343,10 @@ From the unlabelled data only the probability of each feature $x_i$ needs to be 
 \end{figure}
 
 Once again the novelty threshold would be given by $P_G(x)/P_I(x)$.
-This time the addition of the variables unconditional factors can be understood as an
+This time the addition of the unconditional factors can be understood as an
 attempt to compensate for an existing bias on the unconditional distribution.
-Which is an important step to achieve a correct ordering of the input space for novelty
-thresholding.
+This is an important step to achieve a correct order-relation of the inputs sample
+for implementing a novelty threshold.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
