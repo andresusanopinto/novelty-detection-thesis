@@ -129,40 +129,40 @@ that model the conceptual knowledge and information handled by Dora.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related Work}
-The usage of multi-modal approaches, such as combining semantic data extracted from
-several sources or classifiers is expected to have better performance on scene
-recognition than single approaches according to \cite{quattoni2009recognizing}
-that showed that most scene recognition models work poorly in indoor scenes when
-compared to outdoor scenes results since the properties that
-characterize rooms changes conforming its category. Namely corridors are well
+Multi-modal approaches, such as combining semantic data extracted from
+several sources or classifiers are expected to have better performance on scene
+recognition than single-cue approaches. \cite{quattoni2009recognizing}
+showed that most scene recognition models work poorly in indoor scenes when
+compared to outdoor scenes since the properties that
+characterize rooms changes depending on the category. For instance corridors are well
 described by global properties and bookstores are well described by the presence of
 specific objects (books).
 \cite{galindo2005multi} also exploits this by defining a bidirectional relation
 between object and room category, where object defines a room category and a room
 category provides information on where objects may be found.
 
-Probabilistic representations have also been used in several localised functions
+Probabilistic representations have been frequently used for spatial modelling
 in robots operating in the real-world~\cite{gross2009toomas,maierprobabilistic}.
-And some employ, up to some extent, a probabilistic representation across some
+FIX/REMOVE: And some employ, up to certain extent, a probabilistic representation across some
 subsystems~\cite{kraft2008exploration}.
-And \cite{boutell2006factor} have studied outdoor scene classification using
+\cite{boutell2006factor} have studied outdoor scene classification using
 \emph{factor graphs} and modelling spatial relations between objects in the scene
 to extract better knowledge from semantic (high-level) features.
 
-Also although this paper deals with robotics area, it does so
-using standard concepts and techniques such as semantic data and graphical models.
-Those are often found on areas related with information retrieval.
+Although our approach is presented in the context of mobile robotics it relies on
+standard concepts and techniques such as semantic data and graphical models.
+Those are often used in the area of information retrieval.
 An interesting example is the work in automatic image annotation using an hidden
 concept layer between visual features and text information by \cite{zhang2005probabilistic}.
 
-Novelty detection has been studied for some years and there is several approaches
+Novelty detection has been studied for many years and there are several approaches
 based on statistical analysis as reported by \cite{markou2003novelty}.
 Graphical models have been used to learn distributions of variables, both in
 supervised and unsupervised ways and by using thresholds on those distributions
 based solely on the conditional probability as seen on \cite{bishop1994novelty}
 a novelty system can be trivially implemented.
-But as far as we known there is no reference on how to perform novelty detection
-by using graphs that are dynamically generated.
+However to the knowledge of the authors there is no reference on how to perform
+novelty detection using graphs that are dynamically generated.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -209,25 +209,30 @@ information is missing.
 
 \subsection{Factor Graphs}
 Although the conceptual layer works with \emph{chain graphs}, those can be converted
-into \emph{factor graphs}. Those are used through this paper as they provide an
-easier manipulation in terms of factorization.
-
-A \emph{factor graph} is a bipartite graph connecting a set of nodes representing
-random variables and factors.
-Each factor represents a function dependent only on the variables to where its connected.
-As so given factor graph can be seen as description of a distribution function over a set
-of variables obtained by the product of all the factors. In order to represent a probability
-a normalization factor needs to be introduced:
-
-\begin{equation}
-P_G(x) = \frac{1}{Z}\prod_{\phi \in F_G}{\phi(x_{\phi})},\qquad
-Z = \sum_{x \in X_G}\prod_{\phi \in F_G}{\phi(x_{\phi})}
-\end{equation}
+into \emph{factor graphs}. Factor graphs are used throughout this paper as they provide an
+easier manipulation due to factorization.
+Moreover, there exists efficient implementation of inference engines operating on factor graph
+representations \cite{Mooij_libDAI_10}.
 
 Describing the distribution function in terms of graphs allows to use algorithms
 such as the Sum-Product~\citep{kschischang2001factor} to efficiently calculate
 marginals on any given subset of variables by exploiting conditional
 independence between variables.
+
+A \emph{factor graph} is a bipartite graph connecting two sets of nodes $X_G$ and $F_G$
+representing random variables and factors.
+Each factor is described by function $\phi$ dependent only on the variables $x_\phi$
+to which the factor is connected.
+Thus, a factor graph can be seen as a description of probability density function obtained
+by a product of all the factors. In order to represent the probability,
+a normalization factor needs to be introduced, resulting in the following equation
+defining the distribution:
+
+\begin{equation}
+P_G(x) = \frac{1}{Z}\prod_{\phi \in F_G}{\phi(x_{\phi})},\qquad
+Z = \sum_{X_G}\prod_{\phi \in F_G}{\phi(x_{\phi})}
+\end{equation}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Novelty Detection}
