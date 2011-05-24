@@ -151,7 +151,19 @@
   %% Bibliography
   %% Comment the next command if BibTeX file not used, 
   %% bibliography is in ``myrefs.bib''
-  \PrintBib{refs}
+  % \PrintBib{refs}
+
+  % SCons build system does not recognized the bibliography
+  % if its nested inside this templates and new commands of
+  % feup-teses.
+  % For that reason instead of using \PrintBib{Refs}
+  % the contents of that command is pasted here.
+  \renewcommand{\bibname}{References}%
+  \bibliographystyle{alpha}%
+  \cleardoublepage%
+  \phantomsection%
+  \addcontentsline{toc}{chapter}{References}%
+  \bibliography{refs}
 
   %% Index
   %% Uncomment next command if index is required,
