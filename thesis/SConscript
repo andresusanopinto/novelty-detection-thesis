@@ -1,0 +1,9 @@
+thesis = PDF('thesis.pdf', 'thesis.tex')
+
+Depends(thesis, ['feupteses.sty', 'mieicpatch.sty', 'figures/feup-logo.pdf']
+              + ['abstract.tex',
+                 'acknows.tex',
+                 'introduction.tex',
+                 'results.tex',
+                 'conclusion.tex',
+                 'refs.bib'])

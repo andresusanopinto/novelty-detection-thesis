@@ -55,12 +55,17 @@
 
 %% Path to the figures directory
 %% TIP: use folder ``figures'' to keep all your figures
-\graphicspath{{figures/}}       
+% \graphicspath{{figures/}}       
+
+% For making gloassaries.
+% http://en.wikibooks.org/wiki/LaTeX/Glossary
+\usepackage[acronym]{glossaries}
+\makeglossaries
 
 %%----------------------------------------
 %% TIP: if you want to define more macros, use an external file to
 %% keep them
-\include{mymacros}
+\input{macros}
 %%----------------------------------------
 
 %%========================================
@@ -71,18 +76,17 @@
 %%----------------------------------------
 %% Information about the work
 %%----------------------------------------
-\title{Title of the Dissertation}
-\author{Name of the Author}
+\title{Novelty Detection for Semantic Place Categorization}
+\author{André Susano Pinto}
 \degree{Master in Informatics and Computing Engineering}
 %% Date of submission
-\thesisdate{28$^{th}$ June, 2010}
+\thesisdate{17$^{th}$ June, 2011}
 
 %% Insert copyright text if used
 %\copyrightnotice{Name of the Author, 2008}
 
-\supervisor{Supervisor}{Name of the Supervisor}{(Title)}
-%% Uncomment next line if necessary
-%\supervisor{Second Supervisor}{Name of the Supervisor}{(Title)}
+\supervisor{Supervisor}{Luís Paulo Reis}{(Dr.)}
+\supervisor{Second Supervisor}{Andrzej Pronobis}{(Dr.)}
 
 %% Uncomment committee stuff in the final version
 \committeetext{Approved in oral examination by the committee:}
@@ -93,7 +97,7 @@
 \committeedate{31$^{st}$ July, 2010}
 
 %% Specify cover logo (in folder ``figures'')
-\logo{feup-logo.pdf}
+\logo{figures/feup-logo.pdf}
 
 %%----------------------------------------
 %% Cover page(s)
@@ -108,9 +112,9 @@
 %% Preliminary materials
 \StartPrelim
 \begin{singlespace}
-  \include{abstract_en} % the abstract
-  \include{acknows_en}  % the acknowledgments
-  %\include{quote}    % initial quotation if desired
+  \input{abstract} % the abstract
+  \input{acknows}  % the acknowledgments
+  %\input{quote}    % initial quotation if desired
   \cleardoublepage
   \pdfbookmark[0]{Table of Contents}{contents}
   \tableofcontents
@@ -121,21 +125,23 @@
   \pdfbookmark[0]{List of Tables}{tables}
   \listoftables
   \cleardoublepage
-  \pdfbookmark[0]{Abbreviations}{abbrevs}
-  \include{abbrevs_en}  % the list of abbreviations used
+  \pdfbookmark[0]{Glossary}{glossary}
+  \printglossaries
+  \cleardoublepage
+  %\pdfbookmark[0]{Abbreviations}{abbrevs}
+  %\input{abbrevs_en}  % the list of abbreviations used
 \end{singlespace}
 
+\input{glossary}
 %%----------------------------------------
 %% Body
 %%----------------------------------------
 \StartBody
 
 %% TIP: use a separate file for each chapter
-\include{chapter1} 
-\include{chapter2}
-\include{chapter3}
-\include{chapter4}
-\include{chapter5} 
+\input{introduction} 
+\input{results}
+\input{conclusion} 
 
 %%----------------------------------------
 %% Final materials
@@ -145,7 +151,7 @@
   %% Bibliography
   %% Comment the next command if BibTeX file not used, 
   %% bibliography is in ``myrefs.bib''
-  \PrintBib{myrefs}
+  \PrintBib{refs}
 
   %% Index
   %% Uncomment next command if index is required,
@@ -153,8 +159,8 @@
   %\PrintIndex
 
   %% Comment next 2 commands if numbered appendixes not used
-  \appendix
-  \include{appendix1}
+  % \appendix
+  % \input{appendix1}
 \end{singlespace}
 
 \end{document}
