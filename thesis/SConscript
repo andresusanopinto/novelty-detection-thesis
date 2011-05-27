@@ -4,3 +4,21 @@ Depends(thesis, ['feupteses.sty', 'mieicpatch.sty', 'figures/feup-logo.pdf']
               + ['abstract.tex',
                  'contents.tex',
                  'refs.bib'])
+
+SVGS = """
+figures/sift/sift.svg
+""".split() 
+
+
+for SVG in SVGS:
+  base = SVG[0:-4]
+  x = Command(base + '.pdf', base +'.svg', 'inkscape `basename ' +base+'.svg` --export-pdf=`basename ' + base + '.pdf`', chdir=1)
+  if SVG == 'figures/sift/sift.svg':
+    Depends(x, """figures/sift/truck.jpg
+                  figures/sift/train.jpg
+                  figures/sift/frog.jpg
+                  figures/sift/cup.jpg
+                  figures/sift/annotated.jpg""".split())
+
+
+
