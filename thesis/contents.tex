@@ -358,13 +358,105 @@ to train classifiers based on this feature.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Important sections of this chapter begin here.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 \section{Probability Theory}
 \subsection{Bayes Theorem}
 
 
 \section{Probabilistic Graphical Models}
 \label{sec:graphical-models}
+% THIS IS ALL JUNK TEXT COPIED
+Graphical models usage can be tracked back to earlies 1920 but they only become
+popular in mid-eighties when researchers started to use \emph{Bayesian Networks}
+to model expert systems~\citep{borgelt2002graphical}.
+
+They serve as a better tool to model \emph{random variables}
+(nodes on the graph) and their probabilities as they model the conditional
+dependence between variables (edges on the graph). Important to note that here
+\emph{random variables} does not denotes a truly random variable but one that is
+unknown by the system and is conditioned by other variables/evidences.
+
+This type of graphs provide a generative model where the probability of any
+given scenario can be determined. As opposed to non-generative models where a
+given probability can only be calculated if certain data is given.
+This means when a graphical model is learned, it can be used to generate new
+samples from the learned distribution.
+
+They have been successfully used in several machine-learning task such as:
+information extraction, speech recognition, computer vision.
+They are also useful due to their ability to deal with semantic (high-level)
+features~\citep{boutell2006factor} and ability to represent properties of the
+reality they try to model.
+
+Two main types of graphical models have been used: Bayesian Networks which model
+directed edges between variables and Markov Random Fields where variables are
+connected by a potential but no special direction is given to edges.
+
+An important property of these graphs is the \emph{Markov-blanket} of a node.
+For a given variable $a$, a \emph{Markov-blanket} is a set of variables in the
+surroundings of $a$ that when given the value of $a$ becomes independent of the
+rest of the graph~\citep{pearl1988probabilistic}.
+On non-directional graphs it is directly determined by the nodes connected to $a$.
+This allows the usage of graph algorithms such as \emph{min-cut} to quickly
+determine most likely scenarios. In the case of directed edges a node blanket is
+also influenced by the direction of the edges and a more complex schemes need to
+be used.
+
+As \cite{lauritzen2002chain} points this two types of models can be represented
+as a \emph{chain graph} where both directed and undirected edges can co-exist.
+Though this generalization is hard to implement due to mis-understandings on the
+concepts the graph-models use.
+
+Another useful interpretation of graphical-models are \emph{factor graphs}.
+Those are able to handle both \emph{Bayesian Networks} and
+\emph{Markov Random Fields}. Under this interpretation a graph is seen as a
+bipartite graph that connects variables with factors that influence
+them~\citep{bishop2006pattern}.
+This gives a very useful framework to develop belief propagation on them by
+seeing a message-passing mechanism between nodes. Belief propagation is used to
+calculate marginal-probabilities.
+
+\begin{figure}[ht]
+    \begin{minipage}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/graphical-models/BayesNet.pdf}
+        \caption{Bayes Networks}
+    \end{minipage}
+    \hspace{0.5cm}
+    \begin{minipage}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/graphical-models/MarkovRandomField.pdf}
+        \caption{Markov Random Field}
+    \end{minipage}
+    \hspace{0.5cm}
+    \begin{minipage}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/graphical-models/FactorGraph.pdf}
+        \caption{Factor Graph}
+    \end{minipage}
+\end{figure}
+
 \subsection{Factor Graphs}
+A \emph{factor graph} is a bipartite graph connecting two sets of nodes $X_G$ and $F_G$
+representing random variables and factors.
+Each factor is described by function $\phi$ dependent only on the variables $x_\phi$
+to which the factor is connected.
+Thus, a factor graph can be seen as a description of probability density function obtained
+by a product of all the factors. In order to represent the probability,
+a normalization factor needs to be introduced, resulting in the following equation:
+
+\begin{equation}
+P_G(x) = \frac{1}{Z}\prod_{\phi \in F_G}{\phi(x_{\phi})},\qquad
+Z = \sum_{X_G}\prod_{\phi \in F_G}{\phi(x_{\phi})}
+\end{equation}
+
+
+More often we are only interested in a marginal of the probability distribution.
+
+\begin{equation}
+M_G(x) = \frac{1}{Z}\sum_{X_G \backslash x}{\prod_{\phi \in F_G}{\phi(x_{\phi})}}
+\end{equation}
+
 \subsection{Inference Engines}
 Exact Inference and Approximate Inference methods
 
@@ -404,7 +496,44 @@ distribution shall be picked, etc\dots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Novelty Detection}\label{chap:novelty-intro}
+\begin{itemize}
+\item Introduction
+\item History
+\item Approaches to Novelty Detection
+\end{itemize}
+\section{Novelty Detection Review and Related Work}
+
 \section{Novelty Detection as a Threshold}
+When dealing with a statistic point of view, noisy data or unstable features, a decision to
+classify a sample as novel has an associated error probability of $P(\overline{novel}|x)$.
+And the error rate of a system that classifies the set of inputs $N$ as novel is given by
+the equation:
+
+\begin{equation}
+P(e) = \frac{\sum_{n \in N}{P(\overline{novel}|n)P(n)}}{\sum_{n \in N}{P(n)}}
+\end{equation}
+
+Therefore any novelty system that decides to acknowledge a sample
+$a$ as novel should also detect novelty on any sample $b$ satisfying
+$P(\overline{novel}|b) < P(\overline{novel}|a)$.
+As that would always reduce the error probability.
+This way a novelty detection system is interested in defining an
+order relation on all the possible inputs equivalent to the order defined by
+the error rate: $P(\overline{novel}|x)$.
+
+Using Bayes rule and assuming a constant $P(\overline{novel})$
+a ratio between a conditional and unconditional probabilities of the input $x$ is obtained.
+Such a ratio is a suitable function for implementing a novelty detector system with optimal
+thresholding.
+
+\begin{equation}
+\label{eq:novelty-threshold}
+          P(\overline{novel}|x)
+  =       \frac{P(x|\overline{novel}) P(\overline{novel})}{P(x)}
+  \propto \frac{P(x|\overline{novel})}{P(x)}
+\end{equation}
+
+
 \subsection{Conditional Probability}
 \subsection{Unconditional Probability}
 
@@ -413,7 +542,28 @@ distribution shall be picked, etc\dots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Novelty Detection on Semantic Representations}\label{chap:novelty}
-\section{Detecting New Classes} 
+On the previous chapter, novelty as been introduced as a statistical
+measure on the error-likelihood ratio between a conditional and unconditional
+probability of a given .
+
+
+\section{Detecting New Classes}
+Explain exactly and formally how to obtain a novelty measure on a single
+variable of a graph.\footnote{I am sure on the math of this.}
+
+\section{Copping with Multiple Novel Variables}
+On the previous section we show how to detect a novel class but that assumes
+the rest of the graph holds true.
+
+In this section we show how to handle novelty in several variables
+in simultaneous.\footnote{I am almost sure the math here will work out the
+way I think}
+
+\subsection{Handling novelty signals from the low-level classifiers}
+Explain how to handle novelty signals from low-level classifiers, now that we
+have a model with the ability to still reason when several variables can be
+novel.
+
 \section{Detecting New Structure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

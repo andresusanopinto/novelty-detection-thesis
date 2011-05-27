@@ -7,6 +7,9 @@ Depends(thesis, ['feupteses.sty', 'mieicpatch.sty', 'figures/feup-logo.pdf']
 
 SVGS = """
 figures/sift/sift.svg
+figures/graphical-models/BayesNet.svg
+figures/graphical-models/FactorGraph.svg
+figures/graphical-models/MarkovRandomField.svg
 """.split() 
 
 
