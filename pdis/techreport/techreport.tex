@@ -28,6 +28,8 @@
 \usepackage{mieic-distrib/feupteses}
 %\usepackage[alpharefs]{feupteses} 
 
+\RequirePackage[round]{natbib}
+
 %% Options: 
 %% - portuges: titles, etc in portuguese
 %% - provisional: the thesis has not been approved yet
@@ -144,7 +146,19 @@
   %% Bibliography
   %% Comment the next command if BibTeX file not used, 
   %% bibliography is in ``myrefs.bib''
-  \PrintBib{myrefs}
+  % \PrintBib{refs}
+
+  % SCons build system does not recognized the bibliography
+  % if its nested inside this templates and new commands of
+  % feup-teses.
+  % For that reason instead of using \PrintBib{Refs}
+  % the contents of that command is pasted here.
+  \renewcommand{\bibname}{References}%
+  \bibliographystyle{plainnat}%
+  \cleardoublepage%
+  \phantomsection%
+  \addcontentsline{toc}{chapter}{References}%
+  \bibliography{myrefs}
 
   %% Index
   %% Uncomment next command if index is required,
