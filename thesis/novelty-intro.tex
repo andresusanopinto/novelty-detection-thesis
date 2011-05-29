@@ -57,10 +57,15 @@ equation:
 P(\textnormal{false positive}|\textnormal{positive}) = \frac{\sum_{n \in N}{P(\overline{novel}|n)P(n)}}{\sum_{n \in N}{P(n)}}
 \end{equation}
 
-Therefore any novelty system that decides to acknowledge a sample
-$a$ as novel should also detect novelty on any sample $b$ satisfying
+Theres a problem with this proof. I need to review it. The original explanation
+for me to model it as a threshold function required to have both true positive
+and false positive ratios. But for the paper I though I could do it with only
+the FPR, but its clear wrong.
+
+Therefore any novelty system that considers to acknowledge a sample
+$a$ as novel should before detect novelty on any sample $b$ satisfying
 $P(\overline{novel}|b) < P(\overline{novel}|a)$.
-As that always reduce the error probability described in
+As that would always yield a reduced the error probability described in
 \autoref{eq:false-positive} as shown:
 
 \begin{equation}
