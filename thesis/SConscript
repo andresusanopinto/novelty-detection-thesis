@@ -23,5 +23,13 @@ for SVG in SVGS:
                   figures/sift/cup.jpg
                   figures/sift/annotated.jpg""".split())
 
-
+# Copy data from semantic-nd article.
+Command('figures/simple-cond-graph.pdf', '../semantic-nd/figures/simple-cond-graph.pdf', 'cp $SOURCE $TARGET')
+Command('figures/simple-uniform-graph.pdf', '../semantic-nd/figures/simple-uniform-graph.pdf', 'cp $SOURCE $TARGET')
+Command('figures/simple-independent-graph.pdf', '../semantic-nd/figures/simple-independent-graph.pdf', 'cp $SOURCE $TARGET')
+Command('results/synthetic-all.pdf', '../semantic-nd/results/synthetic-all.pdf', 'cp $SOURCE $TARGET')
+Command('results/synthetic-3features.pdf', '../semantic-nd/results/synthetic-3features.pdf', 'cp $SOURCE $TARGET')
+Command('results/synthetic-5features.pdf', '../semantic-nd/results/synthetic-5features.pdf', 'cp $SOURCE $TARGET')
+Command('results/synthetic-10features.pdf', '../semantic-nd/results/synthetic-10features.pdf', 'cp $SOURCE $TARGET')
+Command('results/synthetic-50features.pdf', '../semantic-nd/results/synthetic-50features.pdf', 'cp $SOURCE $TARGET')
 
