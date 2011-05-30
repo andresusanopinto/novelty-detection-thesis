@@ -169,18 +169,33 @@ knowledge and active learning.
 
 
 \section{Detecting New Classes}
-Initially the work will focus on detecting a novel class on single variable of
-the conceptual map.
-As seen before on \autoref{chap:novelty-intro}, novelty detection can be
-done by implementing a threshold on $P(x|\overline{novel})/P(x)$.
-In order to correctly represent novelty detection on single variable of the
-graph
+This section focus on detecting a novel class on single variable of the
+conceptual map. As seen before on \autoref{chap:novelty-intro},
+novelty detection can be done by implementing a threshold on
+$P(x|\overline{novel})/P(x)$.
+In order to correctly measure novelty on a single variable both
+conditional and unconditional probabilities need to be coherently defined:
+
 
 The conceptual layer build a \emph{probabilistic graphical model} $G$ that
 represents the distribution of the sensed features assuming that both the known
 structure and the known classes hold in the sample.
 For that reason the correct approach is to use $P_G(x)$ as an approximation for
-the $P(x|\overline{novel})$.
+$P(x|\overline{novel})$.
+
+Assume now that everything the conceptual layer knows holds true except the
+class of a single variable $a$, which the system possess no information on. 
+In that case the correct approach is to replace the factors associated with
+that variable with factors representing the prior-information the system has on
+the unconditional distribution of those factors.
+In case no information is available this means replace by a uniform factor\footnote{In case the
+unconditional factors are uniform, this is the same as omitting the factors
+from the graph structure.} accordingly to the principle of maximum entropy.
+Note that in case some information was known on the prior distribution, the
+correct approach is to replace the factors by the distributions that have that
+information in account (as is the case in \autoref{sec:unlabelled-data}).
+Let this new factor graph with unconditional factors $\phi_u$ on the variable
+$a$ be $U$. $P(x)$ is then approximated by $P_U(x)$.
 
 \begin{figure}[h]
 \centering
@@ -192,29 +207,19 @@ the $P(x|\overline{novel})$.
           where only variable $a$ does not conforms to any class the system
           has learned before.]{
           Hello get a graph here.}
+
+\caption{\label{fig:nd-single-variable}Graphs used to model novelty detection on
+         a class of a single variable $a$, assuming all the other variables
+         classes and graph structure are correctly modelled by the agent
+         knowledge.}
 \end{figure}
 
 
-able to detect novel classes those capabilities 
-and with the background introduced in the previous chapter,
-the developed methods are presented on this chapter.
-
-
-classes types on room categories
-or any other variable.
-This means the uncertain reasoning is not allowed to refrain from classifying
-a room in one of the known categories.
-
-On the previous chapter, novelty detection as been introduced as threshold
-function on top of a ratio between a conditional and unconditional
-probability of a given set of sensed features $x$.
-
-Explain exactly and formally how to obtain a novelty measure on a single
-variable of a graph.\footnote{I am sure on the math of this.}
-
 \section{Copping with Multiple Novel Variables}
-On the previous section we show how to detect a novel class but that assumes
-the rest of the graph holds true.
+On the previous section it was shown how to detect a novel class on a variable
+assuming that the rest of the graph variables and structure hold true with the
+knowledge acquired by the agent.
+
 
 In this section we show how to handle novelty in several variables
 in simultaneous.\footnote{I am almost sure the math here will work out the
