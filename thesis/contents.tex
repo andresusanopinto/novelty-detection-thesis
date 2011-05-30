@@ -63,7 +63,7 @@ provide: Get me a beer/milk concept.
 % Both in terms of novel classes as of novel structure.
 %
 Given a probabilistic structure representing the sensed conceptual knowledge
-obtained by the agent develop methods to be able to detect novelty present
+obtained by the agent develop methods able to detect novelty present
 either on new semantic concepts (new classes) or even on structure that was
 previously unknown.
 
@@ -147,12 +147,68 @@ interesting directions for future works.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Novelty Detection on Semantic Representations}\label{chap:novelty}
-On the previous chapter, novelty as been introduced as a statistical
-measure on the error-likelihood ratio between a conditional and unconditional
-probability of a given .
+The semantic mapping representation presented in \autoref{chap:semantic-mapping}
+permits the agent to understand and reason over the human semantic concepts of
+space. By using semantic data not only it eases the process of communicating 
+but also reduces complexity and allows easy implementation of high-level
+decisions.
+Due to the nature of semantic data, variables have to be considered
+uncertain. For that reason the whole semantic representation is instantiated
+as a probabilistic structure: a \emph{conceptual map}. 
+
+Although the conceptual map permits uncertain reasoning it does not incorporates
+any detection mechanism for identifying or copping with knowledge gaps.
+This means the system needs to consider the knowledge absolute and is not
+able to detect by itself that some of it does not correctly describes reality. 
+
+The main goal of this thesis is to address this issue by developing methods
+able to detect both novel classes and novel structures on the semantic
+representation. Allowing a more efficient behaviour when performing on unknown
+and new environments. It is an important milestone on developing of high-level
+knowledge and active learning.
 
 
 \section{Detecting New Classes}
+Initially the work will focus on detecting a novel class on single variable of
+the conceptual map.
+As seen before on \autoref{chap:novelty-intro}, novelty detection can be
+done by implementing a threshold on $P(x|\overline{novel})/P(x)$.
+In order to correctly represent novelty detection on single variable of the
+graph
+
+The conceptual layer build a \emph{probabilistic graphical model} $G$ that
+represents the distribution of the sensed features assuming that both the known
+structure and the known classes hold in the sample.
+For that reason the correct approach is to use $P_G(x)$ as an approximation for
+the $P(x|\overline{novel})$.
+
+\begin{figure}[h]
+\centering
+\subfloat[Factor graph modelling the probability distribution in the case both
+          the variables types and graph structure hold true.]{
+          Hello get a graph here.}
+\qquad\qquad
+\subfloat[Factor graph modelling the probability distribution in the case
+          where only variable $a$ does not conforms to any class the system
+          has learned before.]{
+          Hello get a graph here.}
+\end{figure}
+
+
+able to detect novel classes those capabilities 
+and with the background introduced in the previous chapter,
+the developed methods are presented on this chapter.
+
+
+classes types on room categories
+or any other variable.
+This means the uncertain reasoning is not allowed to refrain from classifying
+a room in one of the known categories.
+
+On the previous chapter, novelty detection as been introduced as threshold
+function on top of a ratio between a conditional and unconditional
+probability of a given set of sensed features $x$.
+
 Explain exactly and formally how to obtain a novelty measure on a single
 variable of a graph.\footnote{I am sure on the math of this.}
 
