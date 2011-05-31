@@ -6,6 +6,7 @@ Depends(thesis, ['feupteses.sty', 'mieicpatch.sty', 'figures/feup-logo.pdf']
                  'background.tex',
                  'contents.tex',
                  'novelty-intro.tex',
+                 'novelty.tex',
                  'refs.bib'])
 
 SVGS = """
