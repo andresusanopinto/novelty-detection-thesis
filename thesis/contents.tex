@@ -217,9 +217,21 @@ $a$ be $U$. $P(x)$ is then approximated by $P_U(x)$.
 
 \section{Copping with Multiple Novel Variables}
 On the previous section it was shown how to detect a novel class on a variable
-assuming that the rest of the graph variables and structure hold true with the
-knowledge acquired by the agent.
+assuming that the rest of the graph variables and structure is correctly modeled
+by the agent knowledge.
+But the test to detect a given variable $a$ is novel requires both a structure
+$G$ representing the case where no knowledge gaps exist and a structure $U$
+representing the case where $a$ was identified as a novel class.
 
+It may be tempting to use a deterministic approach on the system such as:
+when the agent determines a variable to have a novel class, it marks it as novel
+and proceeds.
+
+Such an approach would no longer be optimal and not be dynamic
+executes on a new
+structure $U$ 
+of the semantic structure it does not allows the
+semantic structure to be used
 
 In this section we show how to handle novelty in several variables
 in simultaneous.\footnote{I am almost sure the math here will work out the
