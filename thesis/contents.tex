@@ -2,121 +2,7 @@
 % Novelty Detection for Visual Indoor Categorization
 % Novelty Detection on Semantic Representations.
 
-
-\chapter{Introduction}
-% Introduce:
-%  Mobile Robotics, A.I.
-%  Interaction with Humans
-%  Need for concepts/semantic information
-%  Dynamic human environment
-%  Non-feasibility of hard-coded concepts
-%  Requirements to detect novelty and handle it.
-For a long time humanity has fantasized that one day robots will walk among us.
-They will move and be able to interact with us. Understand our concepts and
-be able to reason.
-
-They need to possess ability to adapt to situations as its infeasible to rely
-on extensive man-work to tag objects, map space and code all the aspects that
-make up our human-reality.
-
-% == Introduce the need of semantic representations ==
-%
-% There is a lot of low-level methods (or specific knowledge to robots)
-% But the creation of semantic representations allow to bridge that low-level
-% sensing with high-level concepts that facilitate several high-level Tasks.
-
-
-% Importance of mapping and localization in a robot as well as reasoning on
-% properties of each space.
-% Humans give labels to space that characterized the properties and activities
-% expected to be performed on them.
-% Such information is of great interest to be structured and organized in such
-% a way reasoning and planning can be implemented.
-%
-% It also holds an important role in long-term planning and stability as it
-% hides the space-time local details and allows to focus on high-level thinking.
-
-% Deal with uncertainty -> need for probabilistic models.
-% Deal with semantic    -> need of structured models such as graphical models.
-
-
-Example of what kind of an high-level thinking on space and its semantics can
-provide: Get me a beer/milk concept.
-
-% == Reasoning about need for Novelty Detection ==
-%
-% Dynamic environment (inability to know the environment or even to be possible
-% to map all semantic concepts to interact with humans).
-%
-% Knowledge-Awareness (knowing what we know... And detecting novel cases)
-% Identify gaps in the semantic knowledge.
-% Automatic detection and learning of novel concepts.
-%
-% Increase robustness
-% Self-Extending
-%
-
-
-\section{Problem and Goals}
-% Extend a probabilistic graphical modelling framework with capabilities to
-% detect novelty.
-% Both in terms of novel classes as of novel structure.
-%
-Given a probabilistic structure representing the sensed conceptual knowledge
-obtained by the agent develop methods able to detect novelty present
-either on new semantic concepts (new classes) or even on structure that was
-previously unknown.
-
-
-% Yeah thats what you call dream :P
-In an extreme ideal case the agent should be able to go from zero-knowledge to
-understanding presence of certain objects (as generators of a set of sensed
-sensed properties grouped locally), understand areas within rooms (sink-area on
-on a kitchen), rooms as separated by doors, and understand environments such
-as office, home, warehouse, spaceship.
-
-
-For that the probabilistic semantic representation presented by
-\cite{andrzej2011phd} is used.
-
-% If everything goes fine... 2 of the "Future Directions" proposed are 
-% Novelty Detection and Learning of Novel Concepts:
-%  Identify Gaps in Spatial and Semantic Knowledge -> Addressed
-%  Performing learning of new concepts -> Outside Scope / No Time
-%
-% Using Properties for Space Segmentation
-%  If we move on detecting novel structures on the graph we are addressing this
-%  issue.
-
-
-
-\section{Thesis Outline}
-The rest of this thesis is structured as follows:
-
-\autoref{chap:background} introduces background concepts for understanding the
-presented thesis. In particular \autoref{sec:graphical-models} introduces
-\emph{probabilistic graphical models} that lay the base modelling tool for
-the used structured semantic representation.
-
-\autoref{chap:semantic-mapping} describes the system proposed by
-\cite{andrzej}. In special it introduces the \emph{conceptual map} of the system
-that is responsible for the creation of the \emph{probabilistic semantic
-representation} that this thesis aims at improving by developing methods with
-the capability to identify knowledge gaps.
-
-\autoref{chap:novelty-intro} introduces novelty detection under a
-statistical view point and how to interpret it as a threshold function.
-A simple approach on how to perform novelty on very simple graphs
-is given together with some results on the impact of using semi-supervised
-novelty detection to improve the system performance.
-
-\autoref{chap:novelty} presents the developed techniques developed to identify
-novelty on the semantic representation.
-
-\autoref{chap:conclusions} draws conclusions on the developed work and presents
-interesting directions for future works.
-
-
+\input{introduction}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -124,23 +10,7 @@ interesting directions for future works.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Semantic Mapping}\label{chap:semantic-mapping}
-
-% Advantages of Multi-modal approaches
-% 
-
-\section{Dora Architecture Overview}
-\subsection{System organization}
-\subsubsection{Sensory Layer}
-\subsubsection{Categorical Layer}
-\subsubsection{Place Layer}
-\subsubsection{Conceptual Layer}
-
-\section{Features}
-
-\section{Conceptual Knowledge}
-\section{Conceptual Map}
-\label{sec:clues-from-low-level}
+\input{semantic-mapping}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

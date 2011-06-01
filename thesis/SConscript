@@ -3,8 +3,10 @@ thesis = PDF('thesis.pdf', 'thesis.tex')
 Depends(thesis, ['feupteses.sty', 'mieicpatch.sty', 'figures/feup-logo.pdf']
               + ['abstract.tex',
                  'acknows.tex',
+                 'introduction.tex',
                  'background.tex',
                  'contents.tex',
+                 'semantic-mapping.tex',
                  'novelty-intro.tex',
                  'novelty.tex',
                  'refs.bib'])
