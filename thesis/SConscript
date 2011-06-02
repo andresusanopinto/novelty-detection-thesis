@@ -1,6 +1,6 @@
 thesis = PDF('thesis.pdf', 'thesis.tex')
 
-Depends(thesis, ['feupteses.sty', 'mieicpatch.sty', 'figures/feup-logo.pdf']
+Depends(thesis, ['feupteses.sty', 'mieicpatch.sty', 'tkz-base.sty', 'tkz-arith.sty', 'figures/feup-logo.pdf']
               + ['abstract.tex',
                  'acknows.tex',
                  'introduction.tex',

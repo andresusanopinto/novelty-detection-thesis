@@ -51,19 +51,90 @@ from the graph structure.}. In case some information is known
 unconditional factors using the principle of maximum entropy as seen on
 \autoref{sec:unlabelled-data}.
 
+
+
+
 \begin{figure}[h]
 \centering
 \subfloat[Factor graph modelling the probability distribution in the case both
           the variables types and graph structure hold true.]{
-          Hello get a graph here.}
+\begin{tikzpicture}
+\node [matrix,matrix anchor=mid, column sep=20pt, row sep=10pt,ampersand replacement=\&] {
+\&
+\&
+\node (room3) [latent] {$R_3$}; \& \\
+\& \& \& \\
+\&
+\node (room1) [latent] {$R_1$}; \& \&
+\node (room2) [latent] {$R_2$}; \\
+\& \& \& \\
+\node (shape1f) [factor] {}; \&
+\node (appearance1f) [factor] {}; \&
+\node (object1f) [factor] {}; \&
+\node (factor2) [factor] {}; \\
+\node (shape1l) [obs] {$S_p$}; \&
+\node (appearance1l) [obs] {$A_p$}; \&
+\node (object1l) [obs] {$O_p$}; \&
+\node (prop2) [obs] {$X_p$}; \\
+};
+
+\draw [-] (room1) -- (shape1f) -- (shape1l);
+\draw [-] (room1) -- (appearance1f) -- (appearance1l);
+\draw [-] (room1) -- (object1f) -- (object1l);
+\draw [-] (room2) -- (factor2) -- (prop2);
+
+\draw [-] (room1) -- (room2) node (r12f) [midway,factor] {};
+\draw [-] (room1) -- (room3) node (r13f) [midway,factor] {};
+\draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+
+\plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+\plate{places2}{(factor2)(prop2)}{$\dots$}{};
+
+\end{tikzpicture} %
+          }
 \qquad\qquad
 \subfloat[Factor graph modelling the probability distribution in the case
           where only variable $a$ does not conforms to any class the system
           has learned before.]{
-          Hello get a graph here.}
+\begin{tikzpicture}
+\node [matrix,matrix anchor=mid, column sep=20pt, row sep=10pt,ampersand replacement=\&] {
+\&
+\&
+\node (room3) [latent] {$R_3$}; \& \\
+\& \& \& \\
+\&
+\node (room1) [latent] {$R^N_1$}; \& \&
+\node (room2) [latent] {$R_2$}; \\
+\& \& \& \\
+\nofactor {shape1f}{}{$U$} {right=0pt}; \&
+\nofactor {appearance1f}{} {$U$} {right=0pt}; \&
+\nofactor {object1f}{} {$U$} {right=0pt}; \&
+\node (factor2) [factor] {}; \\
+\node (shape1l) [obs] {$S_p$}; \&
+\node (appearance1l) [obs] {$A_p$}; \&
+\node (object1l) [obs] {$O_p$}; \&
+\node (prop2) [obs] {$X_p$}; \\
+};
+
+\draw [-] (room1) -- (shape1f) -- (shape1l);
+\draw [-] (room1) -- (appearance1f) -- (appearance1l);
+\draw [-] (room1) -- (object1f) -- (object1l);
+\draw [-] (room2) -- (factor2) -- (prop2);
+
+\draw [-] (room1) -- (room2) node (r12f) [midway,factor] {};
+\draw [-] (room1) -- (room3) node (r13f) [midway,factor] {};
+\draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+\node (captr12f) [above=0pt of r12f] {\footnotesize{$U$}};
+\node (captr13f) [above=0pt of r13f] {\footnotesize{$U$}};
+
+\plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+\plate{places2}{(factor2)(prop2)}{$\dots$}{};
+
+\end{tikzpicture} %
+}
 
 \caption{\label{fig:nd-single-variable}Graphs used to model novelty detection on
-         a class of a single variable $a$, assuming all the other variables
+         a class of a single variable $R_1$, assuming all the other variables
          classes and graph structure are correctly modelled by the agent
          knowledge.}
 \end{figure}

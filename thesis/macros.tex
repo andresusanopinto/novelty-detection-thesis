@@ -19,3 +19,180 @@
 % There seems to exist some kind of standard on using CHapter with capital.
 \def\chapterautorefname{Chapter}
 
+
+% Based on: http://lists.cs.princeton.edu/pipermail/topic-models/2010-December/001081.html
+% http://www.mpi-inf.mpg.de/~dietz/probabilistic-models-tikz.zip
+% by Laura Dietz (dietz at mpi-inf.mpg.de)
+%
+\usepackage{color}
+\usepackage{array}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{esint}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+\floatstyle{ruled}
+\newfloat{algorithm}{tbp}{loa}[chapter]
+\floatname{algorithm}{Algorithm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\usepackage{float}
+\floatstyle{ruled}
+\newfloat{algorithm}{tbp}{loa}
+\floatname{algorithm}{Algorithm}
+\newfloat{genmodel}{h}{loa}
+\floatname{genmodel}{Generative Process}
+\usepackage[noend]{algorithmic}
+\newcommand{\forbody}[1]{ #1 \ENDFOR}
+\newcommand{\ifbody}[1]{ #1  \ENDIF}
+\newcommand{\whilebody}[1]{ #1  \ENDWHILE}
+\renewcommand{\algorithmicprint}{\textbf{draw}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+
+
+\usepackage{euscript}
+
+\DeclareSymbolFont{rsfscript}{OMS}{rsfs}{m}{n}
+\DeclareSymbolFontAlphabet{\mathrsfs}{rsfscript}
+
+
+% PDF formatting instructions for A4
+\pdfpagewidth=210mm % for pdflatex
+\pdfpageheight=296mm % for pdflatex
+
+
+%%%%%%%% begin tikz %%%%%%
+\usepackage{tikz,tkz-base}
+\usetikzlibrary{shapes,decorations,shadows}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.shapes}
+\usetikzlibrary{fadings}
+\usetikzlibrary{patterns}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.text}
+\usetikzlibrary{decorations.footprints}
+\usetikzlibrary{decorations.fractals}
+\usetikzlibrary{shapes.gates.logic.IEC}
+\usetikzlibrary{shapes.gates.logic.US}
+\usetikzlibrary{fit,chains}
+\usetikzlibrary{positioning}
+\usepgflibrary{shapes}
+\usetikzlibrary{scopes}
+\usetikzlibrary{arrows}
+\usetikzlibrary{backgrounds}
+
+\tikzset{latent/.style={circle,fill=white,draw=black,inner sep=1pt, 
+minimum size=20pt, font=\fontsize{10}{10}\selectfont},
+obs/.style={latent,fill=gray!25},
+const/.style={rectangle, inner sep=0pt},
+factor/.style={rectangle, fill=black,minimum size=5pt, inner sep=0pt},
+>={triangle 45}}
+
+
+
+
+% shapename, fitlist, caption, pos
+\newcommand{\plate}[4]{
+\node (invis#1) [draw, transparent, inner sep=1pt,rectangle,fit=#2] {};
+\node (capt#1) [ below left=0 pt of invis#1.south east, xshift=2pt,yshift=1pt] {\footnotesize{#3}};
+\node (#1) [draw,inner sep=1pt, rectangle,fit=(invis#1) (capt#1),#4] {};
+}
+
+
+\newcommand{\shiftedplate}[5]{
+\node (invis#1) [draw, transparent, inner sep=0 pt,rectangle,fit=#2] {};
+\node (capt#1) [#5, xshift=2pt] {\footnotesize{#3}};
+\node (#1) [draw,inner sep=2pt, rectangle,fit=(invis#1) (capt#1),#4] {};
+}
+
+%shapename, pos, caption, in1, in2, out, captpos
+\newcommand{\twofactor}[7]{
+\node (#1) [factor] at #2 {};
+\node (capt#1) [#7 of #1]{\footnotesize{#3}};
+\draw [-] (#4) -- (#1) ;
+\draw [-] (#5) -- (#1) ;
+\draw [->,thick] (#1) -- (#6);
+}
+
+%shapename, pos, caption, in, out, captpos
+\newcommand{\factor}[6]{
+\node (#1) [factor] at #2 {};
+\node (capt#1) [#6 of #1]{\footnotesize{#3}};
+\draw [-] (#4) -- (#1) ;
+\draw [->,thick] (#1) -- (#5);
+}
+
+% name, --, caption, pos
+\newcommand{\nofactor}[4]{
+\node (#1) [factor, #2]  {};
+\node (capt#1) [#4 of #1]{\footnotesize{#3}};
+}
+
+%shapename,  fitlist, caption
+\newcommand{\namedgate}[3]{
+\node (invisgate#1) [rectangle, draw, transparent,  fit=#2] {};
+\node (gatecapt#1) [ above right=0 pt of invisgate#1.north west, xshift=-1pt ] {\footnotesize{#3}};
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgate#1)(gatecapt#1)]{};
+
+}
+
+%shapename,  fitlist, caption
+\newcommand{\gate}[3]{
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=#2]{};
+}
+
+%shapename,  fitlist1, fitlist2, caption1, caption2
+\newcommand{\vertgate}[5]{
+\node (invisgateleft#1) [rectangle, draw, transparent,  fit=#2] {};
+\node (gatecaptleft#1) [ above left=0 pt of invisgateleft#1.north east, xshift=1pt ]{\footnotesize{#3}};
+\node (invisgateright#1) [rectangle, draw, transparent,  fit=#4] {};
+\node (gatecaptright#1) [ above right=0 pt of invisgateright#1.north west, xshift=-1pt ] {\footnotesize{#5}};
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{};
+\draw [-, dashed] (#1.north) -- (#1.south);
+}
+
+
+\newcommand{\vertgateSpec}[5]{
+\node (invisgateleft#1) [rectangle, draw, transparent,  fit=#2] {};
+\node (gatecaptleft#1) [ above left=0 pt of invisgateleft#1.north east, xshift=1pt ]{\footnotesize{#3}};
+\node (invisgateright#1) [rectangle, draw, transparent,  fit=#4] {};
+\node (gatecaptright#1) [ above right=0 pt of invisgateright#1.north west, xshift=-1pt ] {\footnotesize{#5}};
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{};
+\draw [-, dashed] (#1.70) -- (#1.290);
+}
+
+\newcommand{\horgate}[5]{
+\node (invisgateleft#1) [rectangle, draw, transparent,  fit=#2] {};
+\node (gatecaptleft#1) [ above right=0 pt of invisgateleft#1.south west, xshift=1pt ]{\footnotesize{#3}};
+\node (invisgateright#1) [rectangle, draw, transparent,  fit=#4] {};
+\node (gatecaptright#1) [ below right=0 pt of invisgateright#1.north west, xshift=-1pt ] {\footnotesize{#5}};
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgateleft#1)(gatecaptleft#1)(invisgateright#1)(gatecaptright#1)]{};
+\draw [-, dashed] (#1.west) -- (#1.east);
+}
+
+\newcommand{\horogate}[5]{
+\node (invisgateleft#1) [rectangle, draw, transparent,  fit=#2] {};
+\node (invisgateright#1) [rectangle, draw, transparent,  fit=#4] {};
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgateleft#1)(invisgateright#1)]{};
+\node (gatecaptleft#1) [ above right=0 pt of #1.west, xshift=0pt ]{\footnotesize{#3}};
+\node (gatecaptright#1) [ below right=0 pt of #1.west, xshift=0pt ] {\footnotesize{#5}};
+
+\draw [-, dashed] (#1.west) -- (#1.east);
+}
+
+
+\newcommand{\vertogate}[5]{
+\node (invisgateleft#1) [rectangle, draw, transparent,  fit=#2] {};
+\node (invisgateright#1) [rectangle, draw, transparent,  fit=#4] {};
+\node (#1) [rectangle,draw,dashed, inner sep=2pt, fit=(invisgateleft#1)(invisgateright#1)]{};
+\node (gatecaptleft#1) [ below left=0 pt of #1.north, xshift=0pt ]{\footnotesize{#3}};
+\node (gatecaptright#1) [ below right=0 pt of #1.north, xshift=0pt ] {\footnotesize{#5}};
+
+\draw [-, dashed] (#1.north) -- (#1.south);
+}
+
