@@ -87,8 +87,10 @@ unconditional factors using the principle of maximum entropy as seen on
 \draw [-] (room1) -- (room3) node (r13f) [midway,factor] {};
 \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
 
+\begin{pgfonlayer}{background}
 \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
 \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+\end{pgfonlayer}
 
 \end{tikzpicture} %
           }
@@ -127,8 +129,10 @@ unconditional factors using the principle of maximum entropy as seen on
 \node (captr12f) [above=0pt of r12f] {\footnotesize{$U$}};
 \node (captr13f) [above=0pt of r13f] {\footnotesize{$U$}};
 
+\begin{pgfonlayer}{background}
 \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
 \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+\end{pgfonlayer}
 
 \end{tikzpicture} %
 }

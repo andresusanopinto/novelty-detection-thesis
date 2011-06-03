@@ -86,11 +86,17 @@
 \usetikzlibrary{arrows}
 \usetikzlibrary{backgrounds}
 
-\tikzset{latent/.style={circle,fill=white,draw=black,inner sep=1pt, 
+
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+\tikzset{latent/.style={circle,fill=white,draw=red,thick,inner sep=1pt, 
 minimum size=20pt, font=\fontsize{10}{10}\selectfont},
 obs/.style={latent,fill=gray!25},
 const/.style={rectangle, inner sep=0pt},
-factor/.style={rectangle, fill=black,minimum size=5pt, inner sep=0pt},
+factor/.style={rectangle, fill=red,minimum size=7pt, inner sep=0pt},
+-/.style={color=red, thick},
 >={triangle 45}}
 
 
@@ -99,8 +105,8 @@ factor/.style={rectangle, fill=black,minimum size=5pt, inner sep=0pt},
 % shapename, fitlist, caption, pos
 \newcommand{\plate}[4]{
 \node (invis#1) [draw, transparent, inner sep=1pt,rectangle,fit=#2] {};
-\node (capt#1) [ below left=0 pt of invis#1.south east, xshift=2pt,yshift=1pt] {\footnotesize{#3}};
-\node (#1) [draw,inner sep=1pt, rectangle,fit=(invis#1) (capt#1),#4] {};
+\node (capt#1) [ below left=0 pt of invis#1.south east, xshift=0pt,yshift=-9pt] {\raisebox{0pt}[0pt]{\footnotesize{#3}}};
+\node (#1) [draw=black!50,thick,inner sep=3pt,rectangle,rounded corners,fit=(invis#1) (capt#1),#4] {};
 }
 
 
