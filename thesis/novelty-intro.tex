@@ -99,7 +99,6 @@ structures, the work of \gls{PLISS}~\cite{ranganathan2010pliss}.\dots
 
 
 \section{Novelty Detection as a Threshold}
-
 % Explain threshold approach to novelty detection
 Due to the desire of robustness, a novelty detection system is often given the option
 to classify non-novel samples as novel. This is implemented as a threshold that describes a trade
@@ -353,23 +352,20 @@ factor that is able to correlate all the sensed variables as seen on
 \end{figure}
 
 Nonetheless such an approach suffers from
-the \emph{curse of dimensionality} as the number of sensed features and feature
-types increases.
+the \emph{curse of dimensionality}: as the number of sensed features and feature
+types increases exponential ammounts of data are needed to describe it.
+Having interest in avoiding the issues associated with an high-connected factor
+an assumption on independent features can be done and then the unconditional
+probability can be modelled with a fully disconnected variables, but with
+factors that account for existent bias on each single feature (as visible on
+graph in \autoref{fig:simple-independent-graph}).
 
-A relaxed solution can be obtained by assuming in that the sensed features are
-independent conditional 
-Although the sensed variables are considered independent given the room category
-$r$, when $r$ is not able to model  hidden
-variable $r$. The approach should then be to 
-In order to correctly approach the unconditional probability the unlabelled
-data should be used 
-Without the assumption of the room category being known it is no longer easy
-to model the distribution between all sensed variables.
-Under the assumption 
-
-Note that although sensed variables are independent, they are only so when $r$
-is given. Requiring a factor to be connect between all variables to model their
-dependence.
+Note than in the case there is only one sensed feature, the distribution
+probability modelled by an assumption of independent features correctly models
+unconditional probability. And it deviates from it as more features are sensed.
+Though the individual factors associated with each variable try to unwrapped any
+possible existent bias on each dimension and therefore it is expected to be a
+better estimate than assuming a uniform distribution.
 
 \begin{figure}[h]
 \centering
@@ -407,17 +403,20 @@ $U$ on \autoref{fig:simple-uniform-graph} and
 $I$ on \autoref{fig:simple-independent-graph}.
 
 \begin{description}
-\item[exact]
-$P(x|\overline{novel})/P(x)$
-Since the distribution is synthetic there is access to $P(x)$ and $P(x|concept)$
-and a perfect threshold function could also be created to test how far the
-presented thresholds are from optimal.
+\item[exact] 
+- since the distribution is synthetic there is access to $P(x)$ and $P(x|concept)$
+and the ordering function $P(x|\overline{novel})/P(x)$ could be created
+to test how far the other presented thresholds are from optimal.
+
 
 \item[uniform]
-$P_G(x)/P_U(x)$ assuming a uniform unconditional distribution
+- by assuming a uniform unconditional distribution the ordering function is
+  given by $P_G(x)/P_U(x)$.
 
 \item[independent]
-$P_G(x)/P_I(x)$ assuming an independent unconditional distribution.
+- using the unlabelled data the unconditional distribution can be approximated.
+  In this case, it was approximated with an independent distribution of the
+  sensed features. The independent threshold was implemented with $P_G(x)/P_I(x)$.
 \end{description}
 
 
