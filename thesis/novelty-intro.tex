@@ -34,35 +34,35 @@ others.
 % TODO: list usage of novelty detection together with references to papers
 % with them.
 
-It is on the nature of unknown environments and/or in the infeasibility of
+It is on the nature of unknown environments and in the infeasibility of
 training the system on all possible object classes that lies the complexity of
 novelty detection: it is only possible to obtain samples representing positives
 examples of known cases and the lack of negative examples renders normal
 classification methods unusable.
 
-In order to be usable in real world applications, novelty detection methods
-have to overcome a series of obstacles:
+In order to become practical in real world applications, novelty detection
+methods have to overcome a series of obstacles:
 be able to generalize while still detecting novelty,
 be resistant to noisy features,
 ability to scale in feature dimension,
-deal with multiple classes and performing detection efficiently (i.e. many
-autonomous systems require real-time or close to real-time performance).
+deal with multiple classes and performing detection efficiently as many
+autonomous systems require real-time or close to real-time performance.
 
 \subsection{Review}
 Many approaches have been made based on statistical methods. Those often model
-the training data with statistic distributions and then perform hypothesis tests
-For example performing checking whether two distributions are the same,
-distance to mean expected value or quartiles, etc\dots
+the training data with statistic distributions and then perform hypothesis tests.
+For example: testing whether two distributions are the same or using distance to
+mean value or quartiles.
 In some sense all they define a distance measure to normality and employ a
 threshold on that.
 
 A common approach is to use density estimation and use the expected probability
 of a sample to trigger the sample as novel. Examples are usage of
 Gaussian Mixture Models and Parzen-window estimators. In order to be effective
-those use data as close as possible to the input features.
-And dimension-reduction techniques such as \gls{PCA} are used to make density
-estimation more feasible. Note that as dimension increases an exponential number
-of data samples are required to approach the density with a given quality.
+those use data as close as possible to the input features and use
+dimension-reduction techniques such as \gls{PCA} to make density
+estimation feasible. Note that as dimension increases an exponential number
+of data samples would be required to approach the density with the same quality.
 
 \cite{bishop1994novelty} uses that approach by employing a Parzen-window to
 estimate the density of the training data on a given input feed into a
@@ -72,9 +72,9 @@ to be unreliable as the samples are distinct from what the network was trained
 with.
 
 A slightly different approach is done by one-class \gls{SVM} approaches that
-try to distinguish the class by separating the traing set from all the other
+try to distinguish novelty by separating the training set from all the other
 points in the input space. They try to achieve that by enclosing the training
-set by some structure (i.e. an hyper-sphere)~\cite{bennett2000support}.
+set by some structure (e.g.\ an hyper-sphere)~\cite{bennett2000support}.
 Those approaches have been made in line with Vapnik principle of not solving
 something hard. As although having access to a perfect probability distribution
 of the input would solve the problem, creating such a function is harder than
@@ -83,7 +83,7 @@ simply creating a boundary between known data and novel data
 
 Error reconstruction methods have also been used for novelty detection.
 They use the assumption that the class to be defined lies on a manifold embedded
-on the input space of higher dimensions. By using dimensional reduction
+on an input space of higher dimensions. By using dimensional reduction
 techniques, they try to defined that manifold and calculate how far a new sample
 is from it.
 One of the most common methods used for that is
@@ -102,12 +102,12 @@ structures, the work of \gls{PLISS}~\cite{ranganathan2010pliss}.\dots
 % Explain threshold approach to novelty detection
 Due to the desire of robustness, a novelty detection system is often given the option
 to classify non-novel samples as novel. This is implemented as a threshold that describes a trade
-between error and rejection: the more the system tries to reduce rejection, the more
+between error and detection: the more the system tries to increase detection, the more
 prone to produce errors it becomes.
 
 When dealing with a statistic point of view, noisy data or unstable features,
-a decision to classify a sample $x$ as novel reduces rejection rate by
-$P(novel|x)P(x)$ by introducing an associated error probability of $P(\overline{novel}|x)P(x)$.
+a decision to classify a sample $x$ as novel increases detection rate by
+$P(novel|x)P(x)$ and introduces an associated error rate of $P(\overline{novel}|x)P(x)$.
 Generalizing to a system that classifies a set of inputs $N$ as novel, the
 true positive and false negative rates arise:
 
@@ -127,16 +127,16 @@ interest in detecting as much as possible the novel cases;
 and the false-positive rate (\autoref{eq:false-positive}) the interest in
 having the smallest error possible.
 As a given sample $x$ is included in $N$ both the true-positive and
-false-positive rates increase or stay equal\footnote{
-Note that both are described as summations of products of probabilities
-(non-negative functions).} describing the trade-of any detection system
-has to consider: by increasing it detection rate it also has to increase
-the error rate.
+false-positive rates never-decrease~\footnote{Note that both are described as
+summations of products of probabilities (non-negative functions).} describing an
+\emph{error and rejection tradeoff}~\cite{chow1970optimum} that any detection
+system has to consider.
 
 An optimal novelty detector can then be formulated as selecting a subset $N$
 that achieves a given true-positive rate with the minimal false-positive
 rate possible. This is equivalent to the \emph{continuous knapsack problem}
-which allows a greedy solution by sorting the items by value per weight.
+which allows a greedy solution by sorting the items with a value per weight
+function.
 Therefore a novelty system before classifying a sample $a$ as novel should
 classify any sample $b$ satisfying \autoref{eq:knapsack} as that would achieve
 a lower false-positive rate given a fixed true-positive rate.
@@ -177,8 +177,8 @@ form can be attained:
 
 Since there is only interest in maintaining the same order-relation as
 $P(\overline{novel}|x)$ any constant factor can be dropped.
-Leaving a ratio, between a \emph{conditional} and
-\emph{unconditional probability}, suitable for implementing novelty detection
+Leaving a ratio between a \emph{conditional} and
+\emph{unconditional probability} suitable for implementing novelty detection
 via thresholding.
 
 
@@ -191,8 +191,7 @@ for modelling the conditional probability.
 
 Note that it is important for the labelled data to come from that same
 distribution, otherwise it will contain some bias and lead to an incorrect
-ordering. The bias, for example, can be introduced by an incorrect filtering or
-data balancing.
+ordering. The bias, for example, can be introduced by an incorrect filtering.
 
 \subsection{Unconditional Probability}
 The unconditional probability $P(x)$ plays an important role on obtaining a
@@ -205,9 +204,8 @@ the known concept or from the likelihood of being sampled.
 On lack of any information about the unconditional probability and conforming to
 the principle of maximum entropy (\autoref{sec:max-entropy}) a uniform
 distribution must be chosen.
-Though, as discussed in \autoref{sec:unlabelled-data}, by using unlabelled data
-it becomes possible to obtain prior-information and achieve a better
-approximation.
+Though by using unlabelled data it becomes possible to obtain extra information
+and achieve a better approximation.
 
 
 %\subsection{Novelty Detection on a Variable Set of Features}
@@ -222,6 +220,7 @@ such that a threshold can be implemented.
 
 
 
+\clearpage
 \section{A Practical Example}
 \label{sec:unlabelled-data}
 In order to sum up the presented concepts on novelty detection with a threshold
@@ -233,18 +232,18 @@ connectivity and extra hidden variables.
 
 In this dataset a room $r$ is seen as an hidden-variable generator of a set of
 features $X$ that are directly sensed by the agent.
-All the sensed features $x$ are all independent given the room category.
+All the sensed features $x$ are independent given the room category.
 In whole there was 11 different room categories and 7 different feature types.
-Each feature can be sensed more than once (i.e. room shape is extracted from 2D
+Each feature can be sensed more than once (e.g.\ room shape is extracted from 2D
 laser scans in more than one position in the room), but all those sensed
 instances are considered independent given the room category.
 
 The room categories were chosen to mimic as close as possible the real features
-and categories existing in reality (i.e. 1 person office, 2 person office,
+and categories existing in reality (i.e.\ 1 person office, 2 person office,
 hallway, robot lab, etc\dots). A table describing the used synthetic
 distribution is given in \autoref{extra:synthetic-distribution}.
 
-The objective then was to draw a system that, although only trained with
+The objective then was to design a system that, although only trained with
 labelled data from 5 of the 11 room categories, was able to detect novel
 room categories.
 For that 100 labelled samples for the 5 known categories were drawn and 1000 
@@ -257,13 +256,17 @@ Using the labelled samples, 7 factors $\phi_X(r,x)$ were created, one for each
 feature type, to represent the potential of sensing features $x$ of type $X$ on
 a room of category $r$.
 
+% TODO: discuss this with Andrzej
 \begin{equation}
-\phi_X(r,x) = number of samples + C
+\phi_X(r,x) = \frac{\#(r,x)+C}{\sum_{i \in X}{\#(r,i)+C}}
 \end{equation}
 
-With those the probability of sensing a set of features $x$ on a room knowing
-room category is known to the agent can be modelled with a factor graph as
-illustrated on \autoref{fig:simple-cond-graph}.
+Where $\#(r,x)$ denotes the number of times a feature $x$ was sensed inside a
+room category $r$ and $C$ is a smoothing parameter that accounts for fixing
+the probabilities in case a given sample is never seen.
+With those the probability of sensing a set of features $x$ on a room category
+$r$ known for the agent can be modelled with a factor graph as illustrated on
+\autoref{fig:simple-cond-graph}.
 
 \begin{figure}[h]
 \centering
@@ -294,11 +297,12 @@ illustrated on \autoref{fig:simple-cond-graph}.
   \node (captfn) [right=2pt of fn] {\footnotesize{$\phi_{X_n}$}};
 \end{tikzpicture}
 \caption{\label{fig:simple-cond-graph}A factor graph modelling the conditional
-probability of sensing a set of features $x$ known that the room category $r$ is
+probability of sensing a set of features $x$ given that the room category $r$ is
 one of the known classes.}
 \end{figure}
 
 \subsection{Unconditional Probability}
+\label{sec:sample-uncond-prob}
 With no knowledge on the unconditional probability the correct approach is to
 assume a uniform distribution.
 That is represented in factor graphs by a graph without any factors.
@@ -321,7 +325,7 @@ That is represented in factor graphs by a graph without any factors.
 Very often there is extra knowledge that can be obtained about the distribution
 of the variable that helps to model the unconditional distribution.
 In this practical example the access to unlabelled data is explored as access to
-it is very common on applications in robotics.
+it is common on applications in robotics.
 
 Note that the sensed variables are dependent between each other when the room
 category $r$ is not known. With that the correct approach would be to train a
@@ -353,18 +357,19 @@ factor that is able to correlate all the sensed variables as seen on
 
 Nonetheless such an approach suffers from
 the \emph{curse of dimensionality}: as the number of sensed features and feature
-types increases exponential ammounts of data are needed to describe it.
+types increases exponential amounts of data are needed to describe it.
 Having interest in avoiding the issues associated with an high-connected factor
 an assumption on independent features can be done and then the unconditional
 probability can be modelled with a fully disconnected variables, but with
 factors that account for existent bias on each single feature (as visible on
 graph in \autoref{fig:simple-independent-graph}).
 
-Note than in the case there is only one sensed feature, the distribution
-probability modelled by an assumption of independent features correctly models
-unconditional probability. And it deviates from it as more features are sensed.
-Though the individual factors associated with each variable try to unwrapped any
-possible existent bias on each dimension and therefore it is expected to be a
+In the case there is only one sensed feature the distribution generated by an
+assumption of independent features correctly models the unconditional
+probability. And it deviates from it as more features are sensed.
+The individual factors associated with each variable can be seen as a scaling of
+each feature that tries to account for a possible existent bias on each
+of them. Therefore, although far from the desired factor, it is expected to be a
 better estimate than assuming a uniform distribution.
 
 \begin{figure}[h]
@@ -440,7 +445,7 @@ the dynamic properties expected to see when implemented on a robot.
 The convex shape for the optimal threshold shows that the ratio between conditional
 and unconditional probability is indeed an optimal detector and is suitable for
 implementing a threshold when the samples are taken from dynamic
-distributions (e.g.: some samples where there is only access to room size versus
+distributions (e.g.\ some samples where there is only access to room size versus
 samples where there is a lot of information about the room properties).
 
 % Discuss importance on approximating unconditional probability.
@@ -483,13 +488,11 @@ several existing classes to become more easily distinguished.
 The performance of the independent threshold decreases as the number of sensed
 features increases. This is easily explained by the fact that the graph $I$ is not
 able to model the existent dependence between the features. This becomes obvious
-as the number of features increases (e.g.: graph $I$ perfectly models $P(x)$ in the
+as the number of features increases (e.g.\ graph $I$ perfectly models $P(x)$ in the
 case where only 1 feature is sensed).
 
 The uniform threshold shows a poor performance specially on small size samples
 where its performs almost no better than random.
 It performance increases as the size of sensed features increases but nonetheless
 its very small when compared to how optimal a threshold could be.
-
-
 
