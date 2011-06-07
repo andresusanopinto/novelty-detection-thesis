@@ -93,10 +93,35 @@ This technique has been successfully used in novelty detection by
 \cite{Hoffmann2007863}.
 
 \subsection{Related Work}
-More in line with novelty detection in scene categorization and semantic
-structures, the work of \gls{PLISS}~\cite{ranganathan2010pliss}.\dots 
+\cite{ranganathan2010pliss} presents a system able to perform place recognition
+and classification from visual clues. It is able to perform segmentation by
+exploiting time-coherency on video information. The approach is particularly
+interesting by its ability of keeping a fully probabilistic distribution of
+the place classification and segmentation. This is, the system never performs
+a deterministic decision that impacts any future , allowing it to adjust all
+the segmentations and place classification as more data becomes available.
+The system is also able to detect novel instances and methods how to adapt it
+to run on a constant amount of memory and computation are presented.
 
 
+\cite{boutell2006factor} presents a method to perform scene-classification
+from low-level region detectors using factor graphs. Those low-level detectors
+provide semantic (high-level) cues on the higher level scene-classification
+task. Due to the nature of the low-level detectors, they ought to be treated
+in a probabilistic way. For that their method uses factor graphs. The method
+also exploits spatial relation information between regions to improve the
+classification performance. A presented scheme using only pairwise relations
+between regions is show to have better performance than try to approach the
+correct scheme with a big single-factor. I.e.\ the pairwise relations can be
+approximated with the modest amounts of training data, where the single-factor
+demands an impractical amount of training data.
+No approach is made on it at novelty detection either of regions or scene
+categories. 
+
+\cite{bishop1994novelty} works shows that assuming a uniform unconditional
+distribution novelty detection can be performed by triggering on the
+density probability of the training data. The system is employed to detect novel
+inputs for a neural-network.
 
 \section{Novelty Detection as a Threshold}
 % Explain threshold approach to novelty detection
