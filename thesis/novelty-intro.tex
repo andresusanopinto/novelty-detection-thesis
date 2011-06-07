@@ -30,7 +30,9 @@ system the ability to detect something is not conforming to it knowledge and
 therefore should proceed with caution.
 It has several applications such as fault detection~\cite{tarassenko1999novelty},
 intrusion detection~\cite{fan2001using},
-detection of masses in mammograms~\cite{tarassenko1995novelty}.
+detection of masses in mammograms~\cite{tarassenko1995novelty} or detection of
+novel and useful documents~\cite{zhang2002novelty}.
+
 Any normal classification application is also a good candidate for extending
 with novelty detection, as it allows to detect samples the system has not been
 trained on and therefore the classification is considered
@@ -135,6 +137,11 @@ the segmentation and place classification as more data becomes available.
 The system is also able to detect novel instances and methods how to adapt it
 to run on a constant amount of memory and computation are presented.
 
+% TODO: wuld be nice to have this one starting on a new page.. but still make
+% sure it looks good and not a forced break.
+% Reason to have this on a diferent page is to make it really clear novelty
+% content (and not only chit-chat) starts now.
+\clearpage
 \section{Novelty Detection as a Threshold}
 % Explain threshold approach to novelty detection
 Due to the desire of robustness, a novelty detection system is often given the option
@@ -256,8 +263,6 @@ probabilities on different sets of variables into the same measure units
 such that a threshold can be implemented.
 
 
-
-\clearpage
 \section{A Practical Example}
 \label{sec:unlabelled-data}
 In order to sum up the presented concepts on novelty detection with a threshold
