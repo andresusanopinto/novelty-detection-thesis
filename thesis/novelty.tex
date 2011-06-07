@@ -35,122 +35,161 @@ known structure and the known classes of all variables hold in the sample.
 The correct approach is then to use $P_G(x)$ as an approximation for
 $P(x|\overline{novel})$.
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \& \& \node (room3) [latent] {$c$}; \& \\
+    \& \& \& \\
+    \&
+    \node (room1) [latent] {$a$}; \& \&
+    \node (room2) [latent] {$b$}; \\
+    \& \& \& \\
+    \node (shape1f) [factor] {}; \&
+    \node (appearance1f) [factor] {}; \&
+    \node (object1f) [factor] {}; \&
+    \node (factor2) [factor] {}; \\
+    \node (shape1l) [obs] {$S_p$}; \&
+    \node (appearance1l) [obs] {$A_p$}; \&
+    \node (object1l) [obs] {$O_p$}; \&
+    \node (prop2) [obs] {$X_p$}; \\
+  };
+
+  \draw [-] (room1) -- (shape1f) -- (shape1l);
+  \draw [-] (room1) -- (appearance1f) -- (appearance1l);
+  \draw [-] (room1) -- (object1f) -- (object1l);
+  \draw [-] (room2) -- (factor2) -- (prop2);
+
+  \draw [-] (room1) -- (room2) node (r12f) [midway,factor] {};
+  \draw [-] (room1) -- (room3) node (r13f) [midway,factor] {};
+  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+
+  \begin{pgfonlayer}{background}
+    \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+    \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+  \end{pgfonlayer}
+\end{tikzpicture}
+
+\caption{Factor graph modelling the probability distribution in the case both
+          the variables types and graph structure hold true.}
+\end{figure}
+
+
 Assume now that everything the conceptual layer knows holds true except the
-class of a single variable $a$, which the system possess no information on. 
+class of a single variable $a$, which the system has no information on. 
 In that case, the correct approach is to replace the factors associated with
-$a$ with factors representing the prior-information the system has on
-the unconditional distribution of those.
-Let this new graph with unconditional factors on the variable
-$a$ be $U_a$. $P(x)$ is then approximated by $P_{U_a}(x)$.
+$a$ with a single factor connecting all the variables dependent on it as seen
+on Figure~\ref{fig:novel-a-correct}.
 
-Note that in case no prior-information is available on the unconditional
-factors this means replacing them by a uniform factor\footnote{In case the
-unconditional factors are uniform, this is the same as omitting the factors
-from the graph structure.}. In case some information is known
-(i.e. unlabelled data) the correct approach is to incorporate it into the
-unconditional factors using the principle of maximum entropy as seen on
-\autoref{sec:unlabelled-data}.
+Such an highly connected factor is hard to model. Though assuming the structure
+holds true, it is possible to approximate that highly connected factor with a
+variable $a^*$ with $K$ states.\footnote{Ideally those $K$ states would be all
+the classes of $a$.}
+Assuming no information is known on the unconditional distribution, the factors
+dependent on $a^*$ should be modelled with uniform factors and $K$ can be set to
+$1$.
 
-
-
+Let $U_a$ be this new graph based on $G$ with variable $a$ replaced by $a^*$.
+$P_{U_a}(x)$ models then the unconditional distribution of the feature set $x$
+without the assumption that $a$ is one of the known classes and so is used as
+an approximation for $P(x)$.
 
 \begin{figure}[h]
 \centering
-\subfloat[Factor graph modelling the probability distribution in the case both
-          the variables types and graph structure hold true.]{
+\subfloat[\label{fig:novel-a-correct}Graphical model able to correctly represent
+          the unconditional probability when variable $a$ can be novel.]{
 \begin{tikzpicture}
-\node [matrix,matrix anchor=mid, column sep=20pt, row sep=10pt,ampersand replacement=\&] {
-\&
-\&
-\node (room3) [latent] {$R_3$}; \& \\
-\& \& \& \\
-\&
-\node (room1) [latent] {$R_1$}; \& \&
-\node (room2) [latent] {$R_2$}; \\
-\& \& \& \\
-\node (shape1f) [factor] {}; \&
-\node (appearance1f) [factor] {}; \&
-\node (object1f) [factor] {}; \&
-\node (factor2) [factor] {}; \\
-\node (shape1l) [obs] {$S_p$}; \&
-\node (appearance1l) [obs] {$A_p$}; \&
-\node (object1l) [obs] {$O_p$}; \&
-\node (prop2) [obs] {$X_p$}; \\
-};
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \& \& \node (room3) [latent] {$c$}; \& \\
+    \& \& \& \\
+    \&
+    \node (room1) [factor] {}; \& \&
+    \node (room2) [latent] {$b$}; \\
+    \& \& \& \\
+    \&
+    \&
+    \&
+    \node (factor2) [factor] {}; \\
+    \node (shape1l) [obs] {$S_p$}; \&
+    \node (appearance1l) [obs] {$A_p$}; \&
+    \node (object1l) [obs] {$O_p$}; \&
+    \node (prop2) [obs] {$X_p$}; \\
+  };
 
-\draw [-] (room1) -- (shape1f) -- (shape1l);
-\draw [-] (room1) -- (appearance1f) -- (appearance1l);
-\draw [-] (room1) -- (object1f) -- (object1l);
-\draw [-] (room2) -- (factor2) -- (prop2);
+  \draw [-] (room1) -- (shape1l);
+  \draw [-] (room1) -- (appearance1l);
+  \draw [-] (room1) -- (object1l);
+  \draw [-] (room2) -- (prop2);
 
-\draw [-] (room1) -- (room2) node (r12f) [midway,factor] {};
-\draw [-] (room1) -- (room3) node (r13f) [midway,factor] {};
-\draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+  \draw [-] (room1) -- (room2);
+  \draw [-] (room1) -- (room3);
+  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
 
-\begin{pgfonlayer}{background}
-\plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
-\plate{places2}{(factor2)(prop2)}{$\dots$}{};
-\end{pgfonlayer}
-
-\end{tikzpicture} %
-          }
-\qquad\qquad
-\subfloat[Factor graph modelling the probability distribution in the case
-          where only variable $a$ does not conforms to any class the system
-          has learned before.]{
-\begin{tikzpicture}
-\node [matrix,matrix anchor=mid, column sep=20pt, row sep=10pt,ampersand replacement=\&] {
-\&
-\&
-\node (room3) [latent] {$R_3$}; \& \\
-\& \& \& \\
-\&
-\node (room1) [latent] {$R^N_1$}; \& \&
-\node (room2) [latent] {$R_2$}; \\
-\& \& \& \\
-\nofactor {shape1f}{}{$U$} {right=0pt}; \&
-\nofactor {appearance1f}{} {$U$} {right=0pt}; \&
-\nofactor {object1f}{} {$U$} {right=0pt}; \&
-\node (factor2) [factor] {}; \\
-\node (shape1l) [obs] {$S_p$}; \&
-\node (appearance1l) [obs] {$A_p$}; \&
-\node (object1l) [obs] {$O_p$}; \&
-\node (prop2) [obs] {$X_p$}; \\
-};
-
-\draw [-] (room1) -- (shape1f) -- (shape1l);
-\draw [-] (room1) -- (appearance1f) -- (appearance1l);
-\draw [-] (room1) -- (object1f) -- (object1l);
-\draw [-] (room2) -- (factor2) -- (prop2);
-
-\draw [-] (room1) -- (room2) node (r12f) [midway,factor] {};
-\draw [-] (room1) -- (room3) node (r13f) [midway,factor] {};
-\draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
-\node (captr12f) [above=0pt of r12f] {\footnotesize{$U$}};
-\node (captr13f) [above=0pt of r13f] {\footnotesize{$U$}};
-
-\begin{pgfonlayer}{background}
-\plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
-\plate{places2}{(factor2)(prop2)}{$\dots$}{};
-\end{pgfonlayer}
-
-\end{tikzpicture} %
+  \begin{pgfonlayer}{background}
+    \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+    \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+  \end{pgfonlayer}
+\end{tikzpicture}
 }
+\qquad
+\subfloat[By using independent features for modelling the unconditional
+          distribution an highly simplified graph is obtained.]{
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \&
+    \&
+    \node (room3) [latent] {$c$}; \& \\
+    \& \& \& \\
+    \&
+    \node (room1) [latent,dashed] {$a^*$}; \& \&
+    \node (room2) [latent] {$b$}; \\
+    \& \& \& \\
+    \nofactor {shape1f}{}{$U$} {right=0pt}; \&
+    \nofactor {appearance1f}{} {$U$} {right=0pt}; \&
+    \nofactor {object1f}{} {$U$} {right=0pt}; \&
+    \node (factor2) [factor] {}; \\
+    \node (shape1l) [obs] {$S_p$}; \&
+    \node (appearance1l) [obs] {$A_p$}; \&
+    \node (object1l) [obs] {$O_p$}; \&
+    \node (prop2) [obs] {$X_p$}; \\
+  };
+  \draw [-] (shape1f) -- (shape1l);
+  \draw [-] (appearance1f) -- (appearance1l);
+  \draw [-] (object1f) -- (object1l);
+  \draw [-] (room2) -- (factor2) -- (prop2);
+  \draw [-,draw=none] (room1) -- (room2) node (r12f) [midway,factor] {};
+  \draw [-,draw=none] (room1) -- (room3) node (r13f) [midway,factor] {};
+  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+  \draw [-] (room2) -- (r12f);
+  \draw [-] (room3) -- (r13f);
+  \node (captr12f) [above=0pt of r12f] {\footnotesize{$U$}};
+  \node (captr13f) [above=0pt of r13f] {\footnotesize{$U$}};
 
-\caption{\label{fig:nd-single-variable}Graphs used to model novelty detection on
-         a class of a single variable $R_1$, assuming all the other variables
-         classes and graph structure are correctly modelled by the agent
-         knowledge.}
+  \draw [-,dashed] (room1) -- (shape1f);
+  \draw [-,dashed] (room1) -- (appearance1f);
+  \draw [-,dashed] (room1) -- (object1f);
+  \draw [-,dashed] (room1) -- (r12f);
+  \draw [-,dashed] (room1) -- (r13f);
+
+  \begin{pgfonlayer}{background}
+    \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+    \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+  \end{pgfonlayer}
+\end{tikzpicture}
+}
+\caption{Factor graph modelling the probability distribution in the case
+         where only variable $a$ is not necessarily a class the system has
+         learned before.}
 \end{figure}
 
-Having now defined $P_G(x)$ and $P_{U_a}$ as models models for
-$P(x|\overline{novel})$ and $P(x)$ (\autoref{fig:nd-single-variable}),
-$P_G(x)/P_{U_a}(x)$ is used to define an order-relation on the novelty of $a$.
+Having now defined $P_G$ and $P_{U_a}$ as models models for
+$P(x|\overline{novel})$ and $P(x)$, the ratio $P_G(x)/P_{U_a}(x)$ is used to
+define an order-relation for the novelty of $a$.
 Now all that is missing is a threshold $t_A$ to trigger on.
 Such a threshold can be obtained by calculating which value of $t_A$
 triggers a desired amount of the labelled data.
 Also, since there is no reason to distinguish between different instances of
-a variable type, only one threshold by variable type needs to be trained.
+a variable type, only one threshold per variable type needs to be trained.
 
 Concluding: novelty on a variable $a$ of type $A$ should be detected when:
 
@@ -161,7 +200,26 @@ Concluding: novelty on a variable $a$ of type $A$ should be detected when:
 where $t_A$ is a threshold for variables of type $A$, $P_G(x)$ denotes the
 probability of the sensed variables $x$ being generated by a distribution
 where $a$ is known, and $P_{Ua}$ denotes the probability of $x$ being generated
-by a distribution where only $a$ is novel.
+by a distribution where only $a$ is not necessarily a class the system has
+learned before.
+
+
+\subsection{Novelty Detection as a MAP Operation}
+Having interest in integrating the presented method to detect novelty of a
+variable $a$ on a single graphical model some more steps can be taken.
+
+Let the known states of $a$ be $\{A_1,\dotsc, A_{n}\}$ and the unconditional variable
+$a^*$ be modelled with states $\{A^*_1,\dotsc, A^*_{k}\}$. I.e. if $k=1$ then the
+unconditional variable is being modelled with an assumption on features that do
+not dependent on the class.
+
+First, extend variable $a$ with new states $A_{n+k}$
+
+
+By incorporating novelty information back into the graphical model the presented
+method allows 
+
+
 
 \section{Copping with Multiple Novel Variables}
 On the previous section it was shown how to detect a novel class on a variable
