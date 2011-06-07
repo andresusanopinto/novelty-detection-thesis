@@ -28,11 +28,15 @@ The ability to identify novel cases is crucial in any autonomous system
 that is deployed to unknown or to uncontrolled environments, as it gives the
 system the ability to detect something is not conforming to it knowledge and
 therefore should proceed with caution.
-It has several applications such as fault detection, intrusion detection,
-detection of masses in mammograms, hand written digit recognition and many
-others.
-% TODO: list usage of novelty detection together with references to papers
-% with them.
+It has several applications such as fault detection~\cite{tarassenko1999novelty},
+intrusion detection~\cite{fan2001using},
+detection of masses in mammograms~\cite{tarassenko1995novelty}.
+Any normal classification application is also a good candidate for extending
+with novelty detection, as it allows to detect samples the system has not been
+trained on and therefore the classification is considered
+instable~\cite{devarakota2008reliability}.
+E.g.\ applied to digit-recognition~\cite{tax1998outlier}
+or to detection of novel inputs on a neural network~\cite{bishop1994novelty}.
 
 It is on the nature of unknown environments and in the infeasibility of
 training the system on all possible object classes that lies the complexity of
@@ -93,16 +97,14 @@ This technique has been successfully used in novelty detection by
 \cite{Hoffmann2007863}.
 
 \subsection{Related Work}
-\cite{ranganathan2010pliss} presents a system able to perform place recognition
-and classification from visual clues. It is able to perform segmentation by
-exploiting time-coherency on video information. The approach is particularly
-interesting by its ability of keeping a fully probabilistic distribution of
-the place classification and segmentation. This is, the system never performs
-a deterministic decision that impacts any future , allowing it to adjust all
-the segmentations and place classification as more data becomes available.
-The system is also able to detect novel instances and methods how to adapt it
-to run on a constant amount of memory and computation are presented.
-
+\cite{zhang2005probabilistic} present a probabilistic semantic approach to image
+annotation and retrieval with a multi-modal information. They introduce an
+hidden variable modelling a concept present on a scene that connects together
+information coming from both a bag of words and visual features extracted. By
+training that hidden-variable their system becomes aware of possible existent
+semantic categories and their relation between both textual and visual features.
+Although not able to perform novelty detection, their approach is interesting by
+the use of an hidden variable to probabilistic model the multi-modal sensors.
 
 \cite{boutell2006factor} presents a method to perform scene-classification
 from low-level region detectors using factor graphs. Those low-level detectors
@@ -122,6 +124,16 @@ categories.
 distribution novelty detection can be performed by triggering on the
 density probability of the training data. The system is employed to detect novel
 inputs for a neural-network.
+
+\cite{ranganathan2010pliss} presents a system able to perform place recognition
+and classification from visual clues. It is able to perform segmentation by
+exploiting time-coherency on video information. The approach is particularly
+interesting by its ability of keeping a fully probabilistic distribution of
+the place classification and segmentation. This is, the system never performs
+a deterministic decision that impacts any future result, allowing it to adjust
+the segmentation and place classification as more data becomes available.
+The system is also able to detect novel instances and methods how to adapt it
+to run on a constant amount of memory and computation are presented.
 
 \section{Novelty Detection as a Threshold}
 % Explain threshold approach to novelty detection
