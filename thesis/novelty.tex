@@ -287,20 +287,55 @@ lalla
          MAP probability of a variable on a merged graph.}
 \end{figure}
 
+\subsection{Graph Structure Influences $P(novel)$}
 Analysing the reason for the normalization factors playing a role on the
 threshold can be tracked down to the assumption that $P(novel)$ is
 considered constant over any set or structure of $x$.
-
 This requirement forces the threshold function to use the normalization factors
 to compensate for a bigger likelihood of certain structure being naturally more
-disposed to generate novel categories.
+disposed to generate novel categories (an example of such structure is given on
+\autoref{fig:structure-influences-novelty}).
 
-This relation between graph structure and $P(novel)$ is discussed in more detail
-in the next section where also the novelty detection method is made to work
-without normalization factors, allowing probabilistic sensing, and extended to
-detect novelty on multiple variables.
+A method to generate samples that match this \emph{criterium} of
+having a constant $P(novel)$ can be:
+
+\begin{algorithm}[Draw samples with equal $P(novel)$]
+\begin{enumerate}
+\item Sample a graph structure $G$ (where variable $a$ can be any of the known or unknown classes)
+\item Decide novelty of $a$.
+\item Sample the remaining variables according to distribution $P_G(x|a)$.
+\end{enumerate}
+\end{algorithm}
+
+
+According to this sampling algorithm, given any structure the probability of
+variable $a$ being novel is constant. This is somehow unexpected as it means
+the sampling method is biased to adjust the real distribution $G$ such that
+exactly a constant percentage of drawn samples are novel.
+
+Alternative, the sampling method described below is considered more correct as
+it introduces no bias on the distribution $G$ describing the real distribution
+and classes of $a$:
+\begin{algorithm}[Draw samples with equal $P(novel)$]
+\begin{enumerate}
+\item Sample a graph structure $G$ (where variable $a$ can be any of the known or unknown classes)
+\item Sample variables $x$ according to distribution $P_G(x)$.
+\end{enumerate}
+\end{algorithm}
+
+The next section shows how to generate a novelty detection method based on this
+unbiased sampling method where samples are drawn directly from an assumed real
+distribution aware of all the classes of $a$.
+
+\begin{figure}[h]
+\caption{\label{fig:structure-influences-novelty}Example showing how
+         structure can influence $P(novel)$}
+\end{figure}
+
 
 \section{Detecting and Copping with Novelty on Multiple Variable}
+
+
 On the previous section it was shown how to detect a novel class on a variable
 assuming that the rest of the graph variables and structure is correctly modeled
 by the agent knowledge.
