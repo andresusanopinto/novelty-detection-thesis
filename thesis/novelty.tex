@@ -328,8 +328,83 @@ unbiased sampling method where samples are drawn directly from an assumed real
 distribution aware of all the classes of $a$.
 
 \begin{figure}[h]
-\caption{\label{fig:structure-influences-novelty}Example showing how
-         structure can influence $P(novel)$}
+
+\centering
+
+\subfloat[Training Data]{
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \node (a) [blue] {}; \& \node (e) [yellow] {}; \\
+    \node (b) [yellow] {}; \& \node (f) [blue] {}; \\
+    \node (c) [blue] {}; \& \node (d) [yellow] {}; \\
+  };
+  \draw [-] (a) -- (e) -- (f) -- (d) -- (c) -- (b) -- (f);
+\end{tikzpicture}
+\quad
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \node (a) [yellow] {}; \& \node (e) [blue] {}; \\
+    \node (empty) [blue,fill=none,draw=none] {}; \& \\
+    \node (c) [blue] {}; \& \node (d) [yellow] {}; \\
+  };
+  \draw [-] (c) -- (a) -- (d) -- (e);
+\end{tikzpicture}
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \node (a) [yellow] {}; \& \node (e) [blue] {}; \\
+    \node (b) [blue] {}; \& \node (f) [yellow] {}; \\
+    \node (c) [yellow] {}; \& \node (d) [blue] {}; \\
+  };
+  \draw [-] (a) -- (e) -- (f) -- (d) -- (c) -- (b) -- (a);
+\end{tikzpicture}
+\quad
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \node (a) [blue] {}; \& \node (e) [yellow] {}; \\
+    \node (b) [yellow] {}; \& \node (f) [blue] {}; \\
+    \node (c) [blue] {}; \& \node (d) [blue] {}; \\
+  };
+  \draw [-] (c) -- (b) -- (a) -- (e) -- (f) -- (b);
+  \draw [-] (b) -- (d);
+\end{tikzpicture}
+\quad
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \node (a) [yellow] {}; \& \node (e) [blue] {}; \\
+    \node (b) [blue] {}; \& \node (f) [yellow] {}; \\
+    \node (c) [yellow] {}; \& \node (d) [blue] {}; \\
+  };
+  \draw [-] (e) -- (a) -- (b) -- (c) -- (d);
+  \draw [-] (b) -- (f);
+\end{tikzpicture}
+
+}
+
+\subfloat[Sample A\label{fig:sample-a}]{
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \node (a) [latent] {$a$}; \& \node (b) [latent] {}; \\
+    \node (c) [latent] {};    \& \node (d) [latent] {}; \\
+  };
+  \draw [-] (a) -- (b) -- (d) -- (c) -- (a);
+\end{tikzpicture}
+}
+\qquad
+\subfloat[Sample B\label{fig:sample-b}]{
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \node (a) [latent] {$a$}; \& \node (b) [latent] {}; \\
+    \node (c) [latent] {};    \& \\
+  };
+  \draw [-] (a) -- (b) -- (c) -- (a);
+\end{tikzpicture}
+}
+
+\caption{\label{fig:structure-influences-novelty}Given that the only known
+         classes are yellow and blue, and that two nodes of the same class
+         were never found connected together, it is reasonable to assume
+         that on sample B the probability of node $a$
+         be a novel class is greater than on sample A.}
 \end{figure}
 
 
