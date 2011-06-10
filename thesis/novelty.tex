@@ -20,7 +20,7 @@ and new environments. It is an important milestone on developing of high-level
 knowledge and active learning.
 
 
-\section{Detecting Novelty on a Single Variable}
+\section{Detecting Novelty with Ratio Between Two Graphs}
 This section focus on detecting a novel class on single variable of the
 conceptual map. As seen before on \autoref{chap:novelty-intro},
 assuming that $P(\overline{novel})$ is constant, novelty detection can be
@@ -38,11 +38,11 @@ $P(x|\overline{novel})$.
 \centering
 \begin{tikzpicture}
   \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
-    \& \& \node (room3) [latent] {$c$}; \& \\
+    \& \& \node (room3) [latent] {}; \& \\
     \& \& \& \\
     \&
     \node (room1) [latent] {$a$}; \& \&
-    \node (room2) [latent] {$b$}; \\
+    \node (room2) [latent] {}; \\
     \& \& \& \\
     \node (shape1f) [factor] {}; \&
     \node (appearance1f) [factor] {}; \&
@@ -99,11 +99,11 @@ as an approximation for $P(x)$.
           the unconditional probability when variable $a$ can be novel.]{
 \begin{tikzpicture}
   \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
-    \& \& \node (room3) [latent] {$c$}; \& \\
+    \& \& \node (room3) [latent] {}; \& \\
     \& \& \& \\
     \&
     \node (room1) [factor] {}; \& \&
-    \node (room2) [latent] {$b$}; \\
+    \node (room2) [latent] {}; \\
     \& \& \& \\
     \&
     \&
@@ -137,11 +137,11 @@ as an approximation for $P(x)$.
   \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
     \&
     \&
-    \node (room3) [latent] {$c$}; \& \\
+    \node (room3) [latent] {}; \& \\
     \& \& \& \\
     \&
     \node (room1) [latent,dashed] {$a^*$}; \& \&
-    \node (room2) [latent] {$b$}; \\
+    \node (room2) [latent] {}; \\
     \& \& \& \\
     \nofactor {shape1f}{}{$U$} {right=0pt}; \&
     \nofactor {appearance1f}{} {$U$} {right=0pt}; \&
@@ -263,6 +263,7 @@ described in \autoref{eq:threshold-with-ta} can be test by performing a
 \gls{MAP} operation on variable $c$ of graph $B$ when the threshold factor
 $\phi_t$ is proportional to:
 \begin{equation}
+\label{eq:structure-ratio}
 \phi_t(c) \propto \left\{
   \begin{array}{l l}
     1, & \qquad \text{if } c = 0 \\
@@ -281,7 +282,56 @@ allow to do probabilistic inference on the novelty of multiple variables at once
  
 \begin{figure}[h]
 \centering
-lalla
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \node (thresholdguide) [latent,draw=none] {}; \&
+    \&
+    \node (room3) [latent] {}; \& \\
+    \& \& \& \\
+    \node (control) [latent,dashed] {$c$}; \&
+    \node (room1) [latent,dashed] {$b$}; \& \&
+    \node (room2) [latent] {}; \\
+    \& \& \& \\
+    \nofactor {shape1f}{}{$\phi_b$} {right=0pt}; \&
+    \nofactor {appearance1f}{} {$\phi_b$} {right=0pt}; \&
+    \nofactor {object1f}{} {$\phi_b$} {right=0pt}; \&
+    \node (factor2) [factor] {}; \\
+    \node (shape1l) [obs] {$S_p$}; \&
+    \node (appearance1l) [obs] {$A_p$}; \&
+    \node (object1l) [obs] {$O_p$}; \&
+    \node (prop2) [obs] {$X_p$}; \\
+  };
+  \draw [-] (shape1f) -- (shape1l);
+  \draw [-] (appearance1f) -- (appearance1l);
+  \draw [-] (object1f) -- (object1l);
+  \draw [-] (room2) -- (factor2) -- (prop2);
+  \draw [-,draw=none] (room1) -- (room2) node (r12f) [midway,factor] {};
+  \draw [-,draw=none] (room1) -- (room3) node (r13f) [midway,factor] {};
+  \draw [-,draw=none] (room1) -- (control) node (controlf) [midway,factor] {};
+  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+  \draw [-] (room2) -- (r12f);
+  \draw [-] (room3) -- (r13f);
+  \node (captr12f) [above=0pt of r12f] {\footnotesize{$\phi_b$}};
+  \node (captr13f) [above=0pt of r13f] {\footnotesize{$\phi_b$}};
+
+  \draw [-,dashed] (room1) -- (shape1f);
+  \draw [-,dashed] (room1) -- (appearance1f);
+  \draw [-,dashed] (room1) -- (object1f);
+  \draw [-,dashed] (room1) -- (r12f);
+  \draw [-,dashed] (room1) -- (r13f);
+
+  \draw [-,draw=none] (room1) -- (control) node (controlf) [midway,factor] {};
+  \draw [-,draw=none] (control) -- (thresholdguide) node (thresholdf) [midway,factor] {};
+  \node (captcontrolf) [above=0pt of controlf] {\footnotesize{$\phi_c$}};
+  \node (captthresholdf) [above=0pt of thresholdf] {\footnotesize{$\phi_t$}};
+  \draw [-,dashed] (room1) -- (controlf) -- (control) -- (thresholdf);
+
+  \begin{pgfonlayer}{background}
+    \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+    \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+  \end{pgfonlayer}
+\end{tikzpicture}
+
 \caption{\label{fig:merging-graphs}A condition based on the ratio between 2
          factor graphs that share some structure can be performed by testing the
          MAP probability of a variable on a merged graph.}
@@ -408,7 +458,175 @@ distribution aware of all the classes of $a$.
 \end{figure}
 
 
-\section{Detecting and Copping with Novelty on Multiple Variable}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Detecting Novel Classes on a Graph Variable}
+On the previous section it was shown how to detect novelty on a variable
+by assuming $P(novel)$ is constant across any structure. It was shown that
+considering that \emph{criterium} a need to compensate the likelihood of
+certain graph structures for generating novel classes arises and it requires
+calculating normalization factors between the structures.
+That \emph{criterium} is not only a nuisance but also represents
+a different problem. It can be seen as an attempt to recognize that a sample
+was drawn from a novel method instead of detecting whether a given variable on
+a graph is a class that the system is not aware.
+
+This section focus on the last one. It assumes there is a distribution modelled
+by a graph $G$ that is used to drawn samples. On that graph $G$ there is a
+variable $a \in \{A_1,\dotsc, A_K, A^*_{K+1},\dotsc, A^*_N\}$. The system is considered
+to known only the states $\{A_1,\dotsc, A_K\}$. The goal is then: given a sample subset
+$x$ of variables drawn from the graph, detect whether variable
+$a \in \{A_1,\dotsc, A_K\}$.
+
+That decision can be optimally modelled by the following condition:
+
+\begin{eqnarray*}
+P_G(a \in \{A_1,\dotsc, A_K\}|x) &<& P_G(a \in \{A^*_{K+1},\dotsc,A^*_N\}|x) \\
+P_G(a \in \{A_1,\dotsc, A_K\} \land x) &<& P_G(a \in \{A^*_{K+1},\dotsc,A^*_N\} \land x) \\
+2 P_G(a \in \{A_1,\dotsc, A_K\} \land x) &<& P_G(x)
+\end{eqnarray*}
+
+Similarly to the previous approach a graph $G'$ can be created based on $G$ such
+that conditioning on a variable $c$ allows to obtain either the conditional or
+unconditional probability of a given set of variables $x$.
+For that variable $a$ is extended into $a'$ by duplicating the known states $A_i$
+into $A^*_i$ and extending the factors associated with it.
+Additionally a control factor $\phi_c(c, a)$ is added to make $c$ enforce the
+desired constraints:
+
+\begin{eqnarray*}
+a' &\in& \{A_1, \dotsc, A_K,\quad A^*_1, \dots, A^*_K,\quad A^*_{K+1}, \dots, A^*_N\} \\
+c &\in& \{0, 1\}
+\end{eqnarray*}
+\begin{eqnarray*}
+\phi_c(c, a') &=& \left\{
+  \begin{array}{l l}
+    1, & \qquad \text{if } c = 0 \text{ and } a' \in \{A_1,\dotsc,A_K\} \\
+    1, & \qquad \text{if } c = 1 \text{ and } a' \in \{A^*_1,\dotsc,A^*_N\}\\
+    0, & \qquad \text{otherwise}
+  \end{array} \right. \\
+\end{eqnarray*}
+
+Note that with this transformation, the following potential equivalences hold:
+\begin{eqnarray*}
+\Phi_{G'}(x, c=0) &=& \Phi_{G}(x | a \in \{A_1, \dots, A_K\})\\
+\Phi_{G'}(x, c=1) &=& \Phi_{G}(x) 
+\end{eqnarray*}
+
+
+Although those potentials allow to determine novelty of $a$, they require
+knowledge of all the possible classes, which is not available.
+Nonetheless access to unlabelled data or other informations or assumptions on
+the unconditional distribution allow to model or approximate unconditional
+distributions of $a$. For that there is interest in trying to model the set
+of states $\{A^*_1, \dots, A^*_N\}$ with a set of states $\{A^{\dag}_1, \dotsc, A^{\dag}_M\}$.
+
+Moreover assuming that the set of states $A^\dag$ is able to perfectly
+characterize the distribution over any graph $G$,
+for a specific graph the potentials with states $A^\dag$ are a scale-factor
+away from the potentials with states $A$. And that scale-factor is dependent on
+the graph structure and factors of both $G$ and $G^\dag$:
+
+\begin{eqnarray}
+P_G(x) &=& P^\dag_G(x) \\
+\Phi_G(x) &=& \frac{Z_G}{Z^\dag_G} \Phi^\dag_G(x)
+\end{eqnarray}
+
+Note that this ratio, although seems similar to the one obtained in
+\autoref{eq:structure-ratio} it has a special property. Here both $G$ and
+$G^\dag$ model the same probability, so it is expected that both scale they
+normalization factor according to some relation on how a given factor differs
+from $G$ to $G^\dag$.\footnote{On \autoref{eq:structure-ratio} the ratio is
+between two different distributions: a conditional and an unconditional distribution.}
+
+If on any graph structure the marginal probabilities of all variables except $a$
+is the same either by using $A$ with $\phi$, or by using $A^\dag$ with $\phi^\dag$)
+then $\sum_{A^\dag}\phi^\dag_i(a^\dag, \cdot) = s_i \sum_A \phi_i(a, \cdot)$.
+It can be proved that since the distribution over any graph structure has to be
+equal, then the same holds for a graph structure $P_{G_i}$ composed by a single
+factor $\phi_i$:
+
+\begin{eqnarray*}
+P^\dag_{G_i}(x) &=& P_{G_i}(x) \\
+\frac{\phi_i(x)}{Z^\dag_{G_i}}  &=& \frac{s_i \phi_i(x)}{Z_{G_i}} \\
+s_i &=& \frac{Z_{G_i}}{Z^\dag_{G_i}}
+\end{eqnarray*}
+
+With this, the scale-factor that distinguish the potential on a graph
+$G$ from the potential on $G^\dag$ is given by:
+
+\begin{eqnarray}
+s &=& \frac{\Phi_G(x)}{\Phi^\dag_G(x)} \\
+  &=& \frac{\sum_{a \in A}\prod \phi(a, x_\phi)}
+           {\sum_{a \in A^\dag}\prod \phi^\dag(a^\dag, x_\phi)} \\
+  &=& \frac{\sum_{a \in A}\prod \phi(a, x_\phi)}
+           {\sum_{a \in A}\prod \phi(a, x_\phi) s_i} \\
+  &=& \frac{1}{\prod s_i}
+\end{eqnarray}
+
+
+
+By adding a condition variable $c \in \{0, 1\}$, a condition factorthat is added result can be converted into a graph $G$is particularly interesting as it allows to detect novelty of $a$ by
+having models to approach 
+
+Similar to the procedure followed before, a decision variable $c \in \{0, 1\}$
+and a factor $\phi_c(c,a)$ will be added to $G$, creating graph $G'$.
+If $\phi_c$ is defined as:
+
+
+This is variable $c$ detects whether $a$ is a known or unknown class.
+Note also that by adding this condition variable and factor any marginal
+potential on $G$ is the same as the potential on $G'$. Since marginal potentials
+can be seen as sum of potentials on all variables it can be proved by showing
+the potential on any instance of all variables $X$ in $G$ is the same as the
+marginal potential of the same variables in $G'$:
+
+\begin{eqnarray*}
+\Phi_{G'}(x) &=& \sum_{c}\prod_{\phi \in G'}{\phi(x_\phi)} \\
+             &=& \left(\prod_{\phi \in G}{\phi(x_\phi)}\right)\phi_c(0,a) 
+               + \left(\prod_{\phi \in G}{\phi(x_\phi)}\right)\phi_c(1,a)\\
+             &=& \Phi_G(x)\phi_c(0,a) + \Phi_G(x)\phi_c(1,a)\\
+             &=& \Phi_G(x)\\
+\end{eqnarray*}
+
+An optimal decision on whether variable $a$ of $G$ is $\in \{A_1,\dotsc,A_K\}$
+can be performed by a map \gls{MAP} operation on it. And that decision can be
+done solely based on potentials in $G'$:
+
+\begin{eqnarray*}
+P_G(a \in \{A_1,\dotsc,A_K\}|x) &<& P_G(a \in \{A_{K+1},\dotsc,A_N\}|x) \\
+\Phi_{G'}(c = 0 \land x) &<& \Phi_{G'}(c = 1 \land x) \\
+2 \Phi_{G'}(c = 0 \land x) &<& \Phi_{G'}(c=0 \land x) + \phi_{G'}(c = 1 \land x)\\
+\end{eqnarray*}
+
+
+By extending $a$ with duplicated states $\{A_1, \dotsc, A_K\}$, extending
+the respective factors and adding a factor $\phi_f$ on the decision
+variable $c$, it is possible to create a graph $G^{''}$ where a MAP decision on
+$c$ will yield the same result. This graph $G^{''}$ is particullary 
+the respective factors and , it is possible
+to transform the previous condition on a map operation 
+
+And therefore the same happens to marginal potentials as marginal potentials
+are the sum of potentials.
+
+to detect whether a given sample from the graph has variable
+$a$considered known to the system
+The system only knowns $k$ of those $N$ states.
+All the remaining ones are novel.
+
+Just like in previous sections it was assumed that: it is possible to estimate
+all the factors on the graph not dependent on $a$, using labelled data it is
+possible to estimate the factors dependent on $a$ given that
+$a \in \{A_1,\dotsc,A_K\}$. And using unlabelled data it is possible to estimate
+the factors on the graph $P(x)$ for $a \in \{A_1,\dotsc,A_N\}$.
+
+
+On this section it will be presented how to perform novelty detection of a
+given variable class assuming samples are drawn from a distribution described
+by the graph.
+
 
 
 On the previous section it was shown how to detect a novel class on a variable
