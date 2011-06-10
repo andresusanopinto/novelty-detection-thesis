@@ -541,7 +541,7 @@ from $G$ to $G^\dag$.\footnote{On \autoref{eq:structure-ratio} the ratio is
 between two different distributions: a conditional and an unconditional distribution.}
 
 If on any graph structure the marginal probabilities of all variables except $a$
-is the same either by using $A$ with $\phi$, or by using $A^\dag$ with $\phi^\dag$)
+is the same either by using $A$ with $\phi$, or by using $A^\dag$ with $\phi^\dag$
 then $\sum_{A^\dag}\phi^\dag_i(a^\dag, \cdot) = s_i \sum_A \phi_i(a, \cdot)$.
 It can be proved that since the distribution over any graph structure has to be
 equal, then the same holds for a graph structure $P_{G_i}$ composed by a single
@@ -550,78 +550,69 @@ factor $\phi_i$:
 \begin{eqnarray*}
 P^\dag_{G_i}(x) &=& P_{G_i}(x) \\
 \frac{\phi_i(x)}{Z^\dag_{G_i}}  &=& \frac{s_i \phi_i(x)}{Z_{G_i}} \\
-s_i &=& \frac{Z_{G_i}}{Z^\dag_{G_i}}
+s_i &=& \frac{Z_{G_i}}{Z^\dag_{G_i}} \quad \text{(constant)}
 \end{eqnarray*}
 
 With this, the scale-factor that distinguish the potential on a graph
 $G$ from the potential on $G^\dag$ is given by:
 
-\begin{eqnarray}
+\begin{eqnarray*}
 s &=& \frac{\Phi_G(x)}{\Phi^\dag_G(x)} \\
   &=& \frac{\sum_{a \in A}\prod \phi(a, x_\phi)}
            {\sum_{a \in A^\dag}\prod \phi^\dag(a^\dag, x_\phi)} \\
   &=& \frac{\sum_{a \in A}\prod \phi(a, x_\phi)}
            {\sum_{a \in A}\prod \phi(a, x_\phi) s_i} \\
   &=& \frac{1}{\prod s_i}
+\end{eqnarray*}
+
+If factor $\phi_i$ appears $k_i$ times on a graph structure then:
+\begin{eqnarray}
+\Phi^\dag_G(x) \prod {s_i}^{k_i} = \Phi_G(x)
 \end{eqnarray}
 
+Alternative, if factors $\phi^\ddag_i(a^\dag,x) = \phi^\dag_i(a^\dag,x)/s_i$ are
+introduced then:
+\begin{eqnarray}
+\Phi^\ddag_G(x) = \Phi_G(x)
+\end{eqnarray}
 
-
-By adding a condition variable $c \in \{0, 1\}$, a condition factorthat is added result can be converted into a graph $G$is particularly interesting as it allows to detect novelty of $a$ by
-having models to approach 
-
-Similar to the procedure followed before, a decision variable $c \in \{0, 1\}$
-and a factor $\phi_c(c,a)$ will be added to $G$, creating graph $G'$.
-If $\phi_c$ is defined as:
-
-
-This is variable $c$ detects whether $a$ is a known or unknown class.
-Note also that by adding this condition variable and factor any marginal
-potential on $G$ is the same as the potential on $G'$. Since marginal potentials
-can be seen as sum of potentials on all variables it can be proved by showing
-the potential on any instance of all variables $X$ in $G$ is the same as the
-marginal potential of the same variables in $G'$:
+Having shown how to replace a variable $a$ for an equivalent $a^\dag$, and
+respectively change the factors dependent on $a$ from $\phi_i(a,\cdot)$ to
+$\phi^\ddag_i(a^\dag,\cdot)$ such that the potentials on the original
+graph are kept constant it becomes possible to go back to the graph $G'$ and
+replace the states $\{A^*_1,\dotsc,A^*_N\}$ for the equivalents $A^\ddag$
+and change the factors associated with $a'$ for:
 
 \begin{eqnarray*}
-\Phi_{G'}(x) &=& \sum_{c}\prod_{\phi \in G'}{\phi(x_\phi)} \\
-             &=& \left(\prod_{\phi \in G}{\phi(x_\phi)}\right)\phi_c(0,a) 
-               + \left(\prod_{\phi \in G}{\phi(x_\phi)}\right)\phi_c(1,a)\\
-             &=& \Phi_G(x)\phi_c(0,a) + \Phi_G(x)\phi_c(1,a)\\
-             &=& \Phi_G(x)\\
+\phi_i(a', \cdot) &=& \left\{
+  \begin{array}{l l}
+    \phi_i(a',\cdot), & \qquad \text{if } a' \in \{A_1,\dotsc,A_K\} \\
+    \phi^\ddag_i(a', \cdot), & \qquad \text{if } a' \in A^\ddag
+  \end{array} \right. \\
 \end{eqnarray*}
 
-An optimal decision on whether variable $a$ of $G$ is $\in \{A_1,\dotsc,A_K\}$
-can be performed by a map \gls{MAP} operation on it. And that decision can be
-done solely based on potentials in $G'$:
+It is now possible to perform a decision on the novelty of $a$ with the condition:
+\begin{equation}
+2 \Phi_{G'}(x | c = 0) < \Phi_{G'}(x | c= 1)
+\end{equation}
 
-\begin{eqnarray*}
-P_G(a \in \{A_1,\dotsc,A_K\}|x) &<& P_G(a \in \{A_{K+1},\dotsc,A_N\}|x) \\
-\Phi_{G'}(c = 0 \land x) &<& \Phi_{G'}(c = 1 \land x) \\
-2 \Phi_{G'}(c = 0 \land x) &<& \Phi_{G'}(c=0 \land x) + \phi_{G'}(c = 1 \land x)\\
-\end{eqnarray*}
+This condition is particularly useful since it does not depends on the normalization
+factors of $G'$. This allows to use \emph{intractable models} for some factors,
+e.g.\ using an \gls{SVM} for factors associated with sensed variables. 
 
 
-By extending $a$ with duplicated states $\{A_1, \dotsc, A_K\}$, extending
-the respective factors and adding a factor $\phi_f$ on the decision
-variable $c$, it is possible to create a graph $G^{''}$ where a MAP decision on
-$c$ will yield the same result. This graph $G^{''}$ is particullary 
-the respective factors and , it is possible
-to transform the previous condition on a map operation 
+\subsection{Estimating the Factor Scaling-factors $s_i$}
+On the previous section it was shown how to detect novelty on a variable $a$ by
+approximating the unconditional distribution factors with factors $\phi^\dag_i$
+that are a scalar $s_i$ away from the ones used on the real distribution.
 
-And therefore the same happens to marginal potentials as marginal potentials
-are the sum of potentials.
+This section address the problem of estimating those parameters.
 
-to detect whether a given sample from the graph has variable
-$a$considered known to the system
-The system only knowns $k$ of those $N$ states.
-All the remaining ones are novel.
 
-Just like in previous sections it was assumed that: it is possible to estimate
-all the factors on the graph not dependent on $a$, using labelled data it is
-possible to estimate the factors dependent on $a$ given that
-$a \in \{A_1,\dotsc,A_K\}$. And using unlabelled data it is possible to estimate
-the factors on the graph $P(x)$ for $a \in \{A_1,\dotsc,A_N\}$.
 
+
+
+\subsection{Old content}
 
 On this section it will be presented how to perform novelty detection of a
 given variable class assuming samples are drawn from a distribution described
