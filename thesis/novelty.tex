@@ -238,7 +238,7 @@ and factor $\phi_{c}$:
 \phi_{c}(b, c) = \left\{
   \begin{array}{l l}
     1, & \qquad \text{if } c = 0 \text{ and } b \in \{A_1,\dotsc,A_n\} \\
-    1, & \qquad \text{if } c = 1 \text{ and } b \in \{A^*_1,\dotsc,A^*_n\}\\
+    1, & \qquad \text{if } c = 1 \text{ and } b \in \{A^*_1,\dotsc,A^*_k\}\\
     0, & \qquad \text{otherwise}
   \end{array} \right.
 \]
@@ -255,7 +255,7 @@ on the $c$ variable decides on the novelty of $a$ with a desired threshold:
 \Phi_B(c=0 \land x)   &<& \Phi_B(x=1 \land x) \\
 \Phi_G(x) \phi_t(c=0) &<& \Phi_{U_a}(x) \phi_t(c=1) \\
 P_G(x) Z_G \phi_t(c=0) &<& P_{U_a}(x) Z_{U_a} \phi_t(c=1) \\
-\frac{P_G(x)}{P_{U_a}(x)} &<& \frac{\phi_t(c=1)}{\phi_t(c=0)}\frac{Z_{U_a}}{Z_G}
+\frac{P_G(x)}{P_{U_a}(x)} &<& \frac{Z_{U_a}}{Z_G}
 \end{eqnarray*}
 
 Concluding, after merging graph $G$ and $U_a$ into graph $B$, the condition

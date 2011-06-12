@@ -1,21 +1,33 @@
 \chapter{Semantic Mapping}\label{chap:semantic-mapping}
 
-% Reasoning on why to use semantic mapping
-% High-level processing
-Also due to uncertainity and complexity 
-% Advantages of Multi-modal approaches
-% 
+There has been several efforts in the areas of artificial intelligence and robotics
+in creating robots that are able to interact with humans and their environments.
+One of the important aspects is to endow those robots with a deeper understanding
+of human environments, not just for the purpose of navigation and obstacle avoidance, 
+but also in terms of human semantics and functionality.
 
-It is therefore not only for efficiency reasons but also desirable to handle
-the information on an high-level probabilistic fashion.
+In that sense the need for semantic mapping arises, and it can be described as the
+relation between spatial areas and a set of existent concepts used by humans to
+describe them.
+Humans associate concepts to areas that relate to the functionality of those. That
+association is either useful by explaining where to find certain objects as well to
+understand the types of activities to perform on it.
+By being able to reason over those semantics an agent can be expected to better
+understand human environments and increase its efficiency when performing tasks on them.
 
+It is therefore clear that the need to handle information on an high-level semantic and
+probabilistic fashion arises not only for efficiency reasons but also from the desire
+of being able to communicate and reason on those aspects.
+In order to fully explore the semantic properties and their relations it is necessary to
+detect and classify semantic aspects as well to understand the relationships between them.
+That conceptual knowledge is important and any limitations on it will limit the capacities
+of an agent to reason. 
 
-
-\section{Dora Architecture Overview}
 This thesis motivation lies on developing methods for detecting knowledge gaps
 on the semantic knowledge of a mobile agent. For that the semantic mapping system
 proposed by \cite{pronobis2011phd} was used as a base.
 
+\section{Dora Architecture Overview}
 Pronobis presents a system architecture working on indoor environments using
 non\hyp{}omnidirectional lasers and visual sensors, that by integrating cues such as geometry,
 object presence and appearances is able to perform inference across any semantic property,
