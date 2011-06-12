@@ -18,10 +18,12 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 #include "Graph.h"
+#include "Graph-internal.h"
 #include "Query.h"
 #include "util.h"
 
 #include <cassert>
+#include <cstdio>
 #include <set>
 #include <algorithm>
 using namespace std;
@@ -162,6 +164,37 @@ public:
     }
   }
 
+  void print(const vector<const Variable*> &obs_vars, const vector<string> &obs_vals) {
+     map<const Variable*, string> id;
+     BOOST_FOREACH(const Variable* var, vars)
+       id[var] = "n" + to_string(id.size());
+
+	 vector<const ::Factor*> factors;
+     ListFactors(&factors);
+     BOOST_FOREACH(const ::Factor* fac, factors)
+       BOOST_FOREACH(const Variable* var, fac->variables_)
+         if (id.count(var) == 0)
+           id[var] = "n" + to_string(id.size());
+
+     printf("graph sample {\n");
+     printf(" node [shape=circle];\n");
+     BOOST_FOREACH(const Variable* var, vars)
+       printf("  %s;\n", id[var].c_str());
+
+     for (size_t i = 0; i < obs_vars.size(); ++i)
+       printf("  %s[label=%s];\n", id[obs_vars[i]].c_str(), obs_vals[i].c_str());
+
+     int nf = 1;
+     printf(" node [shape=square];\n");
+     BOOST_FOREACH(const ::Factor* fac, factors) {
+       string fid = "f" + to_string(nf++);
+       printf("  %s;\n", fid.c_str());
+       BOOST_FOREACH(const Variable* var, fac->variables_)
+         printf("  %s -- %s;\n", fid.c_str(), id[var].c_str());
+     }
+     printf("}\n");
+  }
+
 };
 
 
@@ -172,15 +205,13 @@ int main() {
   assert(gi.CheckConsistency());
 
   GraphStructure s;
-  s.createRandom(4, 4, 1);
+  s.createRandom(3, 10, 1);
   MGraph g(s, roomType, senseType, room_room, room_sense);
 
   Query q(&g);
   vector<string> output;
   q.Sample(g.vars, &output);
-
-  BOOST_FOREACH(const string &s, output)
-    cout << s << endl;
+  g.print(g.vars, output);
 
   return 0;
 }
