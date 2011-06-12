@@ -35,4 +35,7 @@ Command('results/synthetic-3features.pdf', '../semantic-nd/results/synthetic-3fe
 Command('results/synthetic-5features.pdf', '../semantic-nd/results/synthetic-5features.pdf', 'cp $SOURCE $TARGET')
 Command('results/synthetic-10features.pdf', '../semantic-nd/results/synthetic-10features.pdf', 'cp $SOURCE $TARGET')
 Command('results/synthetic-50features.pdf', '../semantic-nd/results/synthetic-50features.pdf', 'cp $SOURCE $TARGET')
+Command('figures/processes.pdf', '../semantic-nd/figures/processes.pdf', 'cp $SOURCE $TARGET')
+Command('figures/chaingraph.pdf', '../semantic-nd/figures/chaingraph.pdf', 'cp $SOURCE $TARGET')
+Command('figures/dora-architecture.pdf', '../pdis/techreport/figures/system-representation/structure.pdf', 'cp $SOURCE $TARGET')
 
