@@ -611,98 +611,7 @@ This section address the problem of estimating those parameters.
 
 
 
-
 \subsection{Old content}
-
-On this section it will be presented how to perform novelty detection of a
-given variable class assuming samples are drawn from a distribution described
-by the graph.
-
-
-
-On the previous section it was shown how to detect a novel class on a variable
-assuming that the rest of the graph variables and structure is correctly modeled
-by the agent knowledge.
-In this section methods are presented that not only allow to extended this to
-detection on multiple variables but also allow the system to incorporate
-novelty information back in the graphical model in order to continue its
-probabilistic and uncertain reasoning.
-
-When trying to extend the method to deal with multiple novel variables it may
-be tempting to follow a deterministic approach such as:
-when the agent determines a variable $a$ to have a novel class, it marks it as
-novel and proceeds from that moment by using a graphical model where the factors
-associated with the $a$ replaced by unconditional factors.
-But such an approach would not be able to optimally detect novel variables
-as later decisions are dependent on former ones.
-It would also not be able to adapt itself and reconsider previously decisions
-when more data becomes available for the agent.
-
-To handle those issues a fully probabilistic approach should be taken
-instead of a deterministic.
-That can be done by extending all the variables on the factor graph representing
-the semantic map with an additional state \emph{novel} and extending all the
-factors with information on the unconditional distribution.
-
-Such a factor graph would be able to handle novel variables and incorporate
-prior-information on the unconditional distributions since it is able to
-represent any state of the $X$ variables present on the graph where any
-subset of them is novel. But in order to add the ability to control the
-novelty thresholds a normalization factor $\phi_N$ needs to be introduced.
-
-\begin{figure}[h]
-\centering
-Yeah get a figure for here.
-\caption{\label{fig:multiple-big-threshold}Factor graph extended to be able to
-         represent novelty on any subset of variables. Note the added factor
-         $\phi_N$ that servers as a normalization factor such that probability
-         with any subset of $Y$ variables considered novel can be scaled with
-         any value such that any thresholding decision mechanism can be
-         implemented.}
-\end{figure}
-
-In order to give full control on the threshold on which any subset of
-variables is considered novel the factor $\phi_N$ needs to be dependent on all
-the $X$ variables and act as a weighting function that correctly scales the
-likelihood of a given instance of the $X$ variables.
-If the criterium for defining the threshold is the likelihood of all variables
-$X$ being non-novel has the max likelihood if and only if
-\autoref{eq:multiple-threshold} holds for all the non-empty subsets $Y$ of $X$.
-The weight for $\phi_N$ when the set $Y$ is classified as novel
-can be set for $t_Y$ and $\phi_N$ for the empty subset of novel variables is set
-to $1$.
-
-\begin{equation}
-\label{eq:multiple-threshold}
-\frac{P_G(x)}{P_{U_Y}(x)} > t_Y
-\end{equation}
-
-Still without further assumptions a threshold $t_Y$ would need to be defined for
-all the $2^N-1$ non-empty subsets.
-By taking a simple approach of considering the novelty on a variable independent
-from the novelty on any other variable $t_Y$ can be factorized:
-
-\begin{equation}
-t_Y = \prod_{i \in Y}{t_i}
-\end{equation}
-
-This factorization yields then the interesting property to allow to split the
-threshold factor $\phi_N$ into $N$ different $\phi_{N_i}$ associated with each
-variable of the graph. A graph able to handle novelty detection on several
-variables with the described factorization is illustrated on
-\autoref{fig:multi-factorized-threshold}.
-
-\begin{figure}[h]
-\centering
-Yeah get a figure for here.
-\caption{\label{fig:multi-factorized-threshold}Factor graph extended to be able
-         to represent novelty on any subset of variables. Note the added factor
-         $\phi_N$ has been split into a $\phi_{N_i}$ still it is able to perform
-         detection on multiple variables according to the factorization
-         described in the text.}
-\end{figure}
-
-
 To sum up, the method described above allows to integrate novelty detection
 into the graph, providing the agent with tools to describe its belief on the
 novelty of variables on the system and to continue working with such a
@@ -724,6 +633,5 @@ signals coming from the low-level classifiers.
 TODO: maybe describe how those novelty signals could be generated from the
 low-level classifiers\dots decision boundary distance, kernel pca, etc\dots
 
-
 \section{Detecting New Structure}
-
+I do not belive there is any time left for this.
