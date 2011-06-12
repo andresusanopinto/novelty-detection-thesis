@@ -1,0 +1,5 @@
+
+Program('synthetic',
+        ['main.cc', 'Graph.cc', 'Query.cc'],
+        LIBS='libdai',
+        CPPPATH='libdai/include/', LIBPATH='libdai/lib')
