@@ -141,6 +141,7 @@ public:
 
 void example_single_factor(int room_types, int property_types,
                            int n_known_rooms) {
+  int C = 1;
   GraphInformation gi;
   set<string> known_rooms;
 
@@ -148,35 +149,32 @@ void example_single_factor(int room_types, int property_types,
     known_rooms.insert(room(i));
 
   // Real room variable.
-  const VariableType *type_real_room = NULL;
+  VariableType *type_real_room = gi.Add("real_room", VariableType());
   {
-    VariableType type;
+    VariableType &type = *type_real_room;
     for (int i = 0; i < room_types; ++i)
       type.values.push_back(room(i));
     sort(type.values.begin(), type.values.end());
-    type_real_room = gi.Add("real_room", type);
   }
 
   // Real property variable.
-  const VariableType *type_real_prop = NULL;
+  VariableType *type_real_prop = gi.Add("real_prop", VariableType());
   {
-    VariableType type;
+    VariableType &type = *type_real_prop;
     for (int i = 0; i < room_types; ++i)
       type.values.push_back(prop(i));
     sort(type.values.begin(), type.values.end());
-    type_real_prop = gi.Add("real_prop", type);
   }
   
   // Real factor(room, property).
-  const FactorData *factor_rroom_rprop = NULL;
+  FactorData *factor_rroom_rprop = gi.Add("f(room, property)", FactorData());
   {
-    FactorData factor;
+    FactorData &factor = *factor_rroom_rprop;
     factor.variables.push_back(make_pair("room", "real_room"));
     factor.variables.push_back(make_pair("prop", "real_prop"));
     BOOST_FOREACH(const string &room, type_real_room->values)
     BOOST_FOREACH(const string &prop, type_real_prop->values)
       factor.potential[vector_of(room, prop)] = drand48();
-    factor_rroom_rprop = gi.Add("f(real_room, real_prop)", factor);
   }
 
   assert(type_real_room);
@@ -198,31 +196,18 @@ void example_single_factor(int room_types, int property_types,
     else conditional_samples[i].clear();
   }
 
-  // Generate unconditional samples.
-  vector< vector<string> > unconditional_samples(1000);
-  BOOST_FOREACH(vector<string> &sample, unconditional_samples) {
-    GraphStructure s;
-    int n_properties = 1 + (random() % 15);
-    s.createRandom(1, n_properties, 0);
-    MGraph g(s, type_real_room, type_real_prop, NULL, factor_rroom_rprop);
-   
-    Query q(&g);
-    q.Sample(g.vars, &sample);
-  }
-
   // Create variable type for known room states.
-  const VariableType *type_known_room = NULL;
+  VariableType *type_known_room = gi.Add("known_room", VariableType());
   {
-    VariableType type;
+    VariableType &type = *type_known_room;
     type.values.insert(type.values.end(), known_rooms.begin(), known_rooms.end());
     sort(type.values.begin(), type.values.end());
-    type_known_room = gi.Add("known_room", type);
   }
 
   // Learn factor(room, property | room in known_rooms) from labelled data.
-  const FactorData *factor_kroom_kprop;
+  FactorData *factor_kroom_kprop = gi.Add("f(room, prop|room in known rooms)", FactorData());
   {
-    FactorData factor;
+    FactorData &factor = *factor_kroom_kprop;
     factor.variables.push_back(make_pair("room", "known_room"));
     factor.variables.push_back(make_pair("prop", "real_prop"));
     BOOST_FOREACH(const vector<string> &sample, conditional_samples) {
@@ -241,18 +226,26 @@ void example_single_factor(int room_types, int property_types,
     factor_kroom_kprop = gi.Add("f(room, prop|room in known_rooms)", factor);
   }
   
-  // Create variable type for any room states.
-  const VariableType *type_any_room = NULL;
-  {
-    VariableType type;
-    type.values.push_back("any");
-    type_any_room = gi.Add("any_room", type);
+  // Generate unconditional samples.
+  vector< vector<string> > unconditional_samples(1000);
+  BOOST_FOREACH(vector<string> &sample, unconditional_samples) {
+    GraphStructure s;
+    int n_properties = 1 + (random() % 15);
+    s.createRandom(1, n_properties, 0);
+    MGraph g(s, type_real_room, type_real_prop, NULL, factor_rroom_rprop);
+   
+    Query q(&g);
+    q.Sample(g.vars, &sample);
   }
 
+  // Create variable type for any room states.
+  VariableType *type_any_room = gi.Add("any_room", VariableType());
+  type_any_room->values.push_back("any");
+
   // Learn factor(room, property | room is any room) form unlabelled data.
-  const FactorData *factor_aroom_kprop;
+  FactorData *factor_aroom_kprop = gi.Add("f(room, prop|room is any room)", FactorData());
   {
-    FactorData factor;
+    FactorData &factor = *factor_aroom_kprop;
     factor.variables.push_back(make_pair("room", "any_room"));
     factor.variables.push_back(make_pair("prop", "real_prop"));
     BOOST_FOREACH(vector<string> &sample, unconditional_samples)
@@ -260,11 +253,9 @@ void example_single_factor(int room_types, int property_types,
         factor.potential[vector_of("any", sample[f])]++;
 
     BOOST_FOREACH(const string &prop, type_real_prop->values)
-      factor.potential[vector_of("any", prop)]++;
-
-    factor_aroom_kprop = gi.Add("f(room, prop|room is any room)", factor);
+      factor.potential[vector_of("any", prop)] += C;
   }
-
+  gi.CheckConsistency();
 }
   
 /*
