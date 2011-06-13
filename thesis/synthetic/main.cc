@@ -37,8 +37,7 @@ using namespace boost;
 #include <dai/properties.h>
 using namespace dai;
 
-void example_single_factor(int room_types = 10, int property_types = 15,
-                           int known_rooms = 5);
+void example_single_factor();
 
 int main() {
   example_single_factor();
