@@ -5,17 +5,14 @@
 
 \section{Constant $P(novel)$}
 
-\begin{tikzpicture}[only marks,y=.1cm, x=.7cm]
+\begin{tikzpicture}[only marks,y=.05cm, x=.7cm]
  	%axis
 	\draw (0,0) -- coordinate (x axis mid) (20,0);
-    	\draw (0,0) -- coordinate (y axis mid) (0,30);
-    	%ticks
-    	\foreach \x in {0,...,20}
-     		\draw (\x,1pt) -- (\x,-3pt)
-			node[anchor=north] {\x};
-    	\foreach \y in {0,5,...,30}
-     		\draw (1pt,\y) -- (-3pt,\y) 
-     			node[anchor=east] {\y}; 
+    \draw (0,0) -- coordinate (y axis mid) (0,30);
+    %ticks
+    \foreach \x in {0,...,20}
+    	\draw (\x,1pt) -- (\x,-3pt)
+		node[anchor=north] {\x};
 	%labels      
 	\node[below=0.8cm] at (x axis mid) {Graph Size};
 	\node[rotate=90, above=0.8cm] at (y axis mid) {Threshold function};
@@ -31,26 +28,22 @@
 \clearpage
 \section{Dynamic $P(novel)$}
 
-\begin{tikzpicture}[only marks,y=.1cm, x=.7cm]
+\begin{tikzpicture}[only marks,y=10cm, x=.7cm]
  	%axis
 	\draw (0,0) -- coordinate (x axis mid) (20,0);
-    	\draw (0,0) -- coordinate (y axis mid) (0,30);
-    	%ticks
-    	\foreach \x in {0,...,20}
-     		\draw (\x,1pt) -- (\x,-3pt)
-			node[anchor=north] {\x};
-    	\foreach \y in {0,5,...,30}
-     		\draw (1pt,\y) -- (-3pt,\y) 
-     			node[anchor=east] {\y}; 
+    \draw (0,0) -- coordinate (y axis mid) (0,1);
+    %ticks
+    \foreach \x in {0,...,20}
+    	\draw (\x,1pt) -- (\x,-3pt)
+		node[anchor=north] {\x};
+
 	%labels      
 	\node[below=0.8cm] at (x axis mid) {Graph Size};
 	\node[rotate=90, above=0.8cm] at (y axis mid) {Threshold function};
 
 	%plots
-	\draw plot[mark=*, mark options={fill=white}] 
-		file {result_dyn_threshold_known.data};
-	\draw plot[mark=triangle*, mark options={fill=black}] 
-		file {result_dyn_threshold_novel.data};
+    \draw plot[mark=*, mark options={fill=white}] file {result_dyn_threshold_known.data};
+	\draw plot[mark=triangle*, mark options={fill=black}] file {result_dyn_threshold_novel.data};
     
 \end{tikzpicture}
 

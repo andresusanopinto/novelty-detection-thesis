@@ -150,7 +150,7 @@ class QueryInternal {
 
             dai::PropertySet gibbsProps;
             gibbsProps.set("maxiter", size_t(100));   // number of Gibbs sampler iterations
-            gibbsProps.set("burnin", size_t(100));
+            gibbsProps.set("burnin", size_t(0));
             gibbsProps.set("verbose", size_t(0));
 	
             //rocsDebug3("Creating GibbsSampler...");

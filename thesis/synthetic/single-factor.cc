@@ -142,7 +142,7 @@ public:
 }
 
 size_t room_types = 10;
-size_t n_known_rooms = 5;
+size_t n_known_rooms = 3;
 size_t property_types = 15;
 int C = 1;
 
@@ -237,7 +237,7 @@ void learn_known_room_distribution(const vector<vector<string> > samples) {
 void generate_unconditional_samples(vector<vector<string> > *output) {
   BOOST_FOREACH(vector<string> &sample, *output) {
     GraphStructure s;
-    int n_properties = 1 + (random() % 15);
+    int n_properties = 1 + (random() % 17);
     s.createRandom(1, n_properties, 0);
     MGraph g(s, type_real_room, type_real_prop, NULL, factor_rroom_rprop);
    
@@ -265,8 +265,8 @@ void learn_any_room_distribution(const vector<vector<string> > &samples) {
     
     map<vector<string>,double>::iterator iter;
     for (iter = factor.potential.begin(); iter != factor.potential.end(); ++iter) {
-      iter->second *= exp(-4.86222);
-      iter->second *= exp(0.399);
+//      iter->second *= exp(-4.86222);
+//      iter->second *= exp(0.399);
     }
   }
 
@@ -295,6 +295,8 @@ void compare_real_normalization_factors() {
   }
 }
 
+double junk() { return (drand48()-0.5)/3; }
+
 void compare_performance(const vector<vector<string> > &samples) {
   vector<pair<pair<int,double>,bool> > result_fix;
   vector<pair<pair<int,double>,bool> > result_dyn;
@@ -319,7 +321,7 @@ void compare_performance(const vector<vector<string> > &samples) {
     
     // log(2) + log(\phi_k(x)) < k_i log(s_i) + log(\phi_a(x))
     // log(s_i) > (log(2) + log(\phi_k(x)) - log(\phi_a(x))) / k_i
-    double dyn_threshold = (alogZ - klogZ);
+    double dyn_threshold = (klogZ - alogZ)/n_properties;
     result_dyn.push_back(make_pair(make_pair(n_properties, 10*exp(dyn_threshold)), known_rooms.count(sample[0]) == 1));
 
     // Assuming a constant probability of drawing a novel sample.
@@ -329,6 +331,7 @@ void compare_performance(const vector<vector<string> > &samples) {
     double t_alogZ = aq.LogZ(no_prop, no_clamp);
     double fix_threshold = (klogZ - t_klogZ) - (alogZ - t_alogZ);
     result_fix.push_back(make_pair(make_pair(n_properties, 10*exp(fix_threshold)), known_rooms.count(sample[0]) == 1));
+    //result_dyn.push_back(make_pair(make_pair(n_properties, 10*exp(fix_threshold/n_properties)), known_rooms.count(sample[0]) == 1));
   }
   sort(result_dyn.begin(), result_dyn.end());
   sort(result_fix.begin(), result_fix.end());
@@ -338,9 +341,9 @@ void compare_performance(const vector<vector<string> > &samples) {
     ofstream os_novel("result_dyn_threshold_novel.data");
     for (size_t i = 0; i < result_dyn.size(); ++i)
       if (result_dyn[i].second)
-        os_known << result_dyn[i].first.first << " " << fixed << result_dyn[i].first.second << endl;
+        os_known << fixed << junk() + result_dyn[i].first.first << " " << fixed << result_dyn[i].first.second << endl;
       else
-        os_novel << result_dyn[i].first.first << " " << fixed << result_dyn[i].first.second << endl;
+        os_novel << fixed << junk() + result_dyn[i].first.first << " " << fixed << result_dyn[i].first.second << endl;
   }
 
   {
@@ -348,9 +351,9 @@ void compare_performance(const vector<vector<string> > &samples) {
     ofstream os_novel("result_fix_threshold_novel.data");
     for (size_t i = 0; i < result_fix.size(); ++i)
       if (result_fix[i].second)
-        os_known << result_fix[i].first.first << " " << fixed << result_fix[i].first.second << endl;
+        os_known << fixed << junk() + result_fix[i].first.first << " " << fixed << result_fix[i].first.second << endl;
       else
-        os_novel << result_fix[i].first.first << " " << fixed << result_fix[i].first.second << endl;
+        os_novel << fixed << junk() + result_fix[i].first.first << " " << fixed << result_fix[i].first.second << endl;
   }
 }
 
@@ -367,7 +370,7 @@ void example_single_factor() {
 
   assert(gi.CheckConsistency());
 
-  compare_real_normalization_factors();
+//  compare_real_normalization_factors();
 
   vector<vector<string> > test_data(1000);
   generate_unconditional_samples(&test_data);
