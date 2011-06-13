@@ -27,6 +27,7 @@
 #include <set>
 #include <iostream>
 #include <algorithm>
+#include <cmath>
 using namespace std;
 
 #include <boost/foreach.hpp>
@@ -139,9 +140,9 @@ public:
 
 }
 
-int room_types = 10;
-int n_known_rooms = 5;
-int property_types = 8;
+size_t room_types = 10;
+size_t n_known_rooms = 5;
+size_t property_types = 15;
 int C = 1;
 
 set<string> known_rooms;
@@ -246,6 +247,7 @@ void generate_unconditional_samples(vector<vector<string> > *output) {
 
 void learn_any_room_distribution(const vector<vector<string> > &samples) {
   // Create variable type for any room states.
+  type_any_room = gi.Add("any_room", VariableType());
   type_any_room->values.push_back("any");
 
   // Learn factor(room, property | room is any room) form unlabelled data.
@@ -259,20 +261,99 @@ void learn_any_room_distribution(const vector<vector<string> > &samples) {
 
     BOOST_FOREACH(const string &prop, type_real_prop->values)
       factor.potential[vector_of("any", prop)] += C;
+    
+    map<vector<string>,double>::iterator iter;
+    for (iter = factor.potential.begin(); iter != factor.potential.end(); ++iter) {
+      iter->second *= exp(-4.86222);
+      iter->second *= exp(0.399);
+    }
   }
+
 }
 
 void compare_real_normalization_factors() {
-  int n = 100;
-  while (n--) {
+  for (size_t i = 1; i < 100; ++i) {
     GraphStructure s;
-    int n_properties = 1 + (random() % 15);
+    int n_properties = i; //1 + (random() % 15);
     s.createRandom(1, n_properties, 0);
     
     MGraph real_g(s, type_real_room, type_real_prop, NULL, factor_rroom_rprop);
     MGraph any_g (s, type_any_room,  type_real_prop, NULL, factor_aroom_kprop);
-   
+
+    Query rq(&real_g);
+    Query aq(&any_g);
+
+    // Absolute difference:
+    vector<const Variable*> var;
+    vector<string> var_clamp;
+
+    double abs_rlogz = rq.LogZ(var, var_clamp);
+    double abs_alogz = aq.LogZ(var, var_clamp);
+    cout << n_properties << ": total_abs_diff = " << exp(abs_rlogz - abs_alogz) << endl;
+    cout << n_properties << ": total_rel_diff = " << (abs_rlogz - abs_alogz)/n_properties << endl;
+
+    // Sensed difference:
+    vector<double> log_diff;
+    for (int i = 0; i < 0; ++i) {
+      vector<const Variable*> r_prop(real_g.vars.begin()+1, real_g.vars.end());
+      vector<const Variable*> a_prop(any_g.vars.begin()+1,  any_g.vars.end());
+
+      vector<string> fsample;
+      rq.Sample(real_g.vars, &fsample);
+      vector<string> sample(fsample.begin()+1, fsample.end());
+
+      double rlogz = rq.LogZ(r_prop, sample);
+      double alogz = aq.LogZ(a_prop, sample);
+      log_diff.push_back(rlogz - alogz);
+      // cout << n_properties << ": sense: " << fsample[0] << endl;
+      // cout << n_properties << ": sense_abs_diff = " << (rlogz - alogz) << endl;
+      // cout << n_properties << ": sense_rel_diff = " << (rlogz - alogz)/n_properties << endl;
+    }
+    sort(log_diff.begin(), log_diff.end());
+    cout << n_properties << ":";
+    BOOST_FOREACH(const double a, log_diff) cout << " " << a;
+    cout << endl;
   }
+}
+
+void compare_performance(const vector<vector<string> > &samples) {
+  vector<pair<pair<int,double>,bool> > result_fix;
+  vector<pair<pair<int,double>,bool> > result_dyn;
+
+  BOOST_FOREACH(const vector<string> &sample, samples) {
+    int n_properties = sample.size()-1;
+    
+    GraphStructure s;
+    s.createRandom(1, n_properties, 0);
+    MGraph known_g(s, type_known_room, type_real_prop, NULL, factor_kroom_kprop);
+    MGraph any_g (s,  type_any_room,  type_real_prop, NULL, factor_aroom_kprop);
+
+    Query kq(&known_g);
+    Query aq(&any_g);
+
+    vector<const Variable*> k_prop(known_g.vars.begin()+1, known_g.vars.end());
+    vector<const Variable*> a_prop(any_g.vars.begin()+1,  any_g.vars.end());
+    vector<string> clamp(sample.begin()+1, sample.end());
+
+    double klogZ = kq.LogZ(k_prop, clamp);
+    double alogZ = aq.LogZ(a_prop, clamp);
+    
+    // log(2) + log(\phi_k(x)) < k_i log(s_i) + log(\phi_a(x))
+    // log(s_i) > (log(2) + log(\phi_k(x)) - log(\phi_a(x))) / k_i
+    double dyn_threshold = (log(2) + klogZ - alogZ)/n_properties;
+    result_dyn.push_back(make_pair(make_pair(n_properties, dyn_threshold), known_rooms.count(sample[0]) == 1));
+
+    // Assuming a constant probability of drawing a novel sample.
+    vector<const Variable*> no_prop;
+    vector<string> no_clamp;
+    double t_klogZ = kq.LogZ(no_prop, no_clamp);
+    double t_alogZ = aq.LogZ(no_prop, no_clamp);
+    double fix_threshold = (klogZ - t_klogZ) - (alogZ - t_alogZ);
+    result_dyn.push_back(make_pair(make_pair(n_properties, fix_threshold), known_rooms.count(sample[0]) == 1));
+  }
+  sort(result_dyn.begin(), result_dyn.end());
+  for (size_t i = 0; i < result_dyn.size(); ++i)
+    cout << result_dyn[i].first.first << ": " << result_dyn[i].first.second << " | " << result_dyn[i].second << endl;
 }
 
 void example_single_factor() {
@@ -288,7 +369,11 @@ void example_single_factor() {
 
   assert(gi.CheckConsistency());
 
-  compare_real_normalization_factors();
+  //compare_real_normalization_factors();
+
+  vector<vector<string> > test_data(1000);
+  generate_unconditional_samples(&test_data);
+  compare_performance(test_data);
 }
   
 

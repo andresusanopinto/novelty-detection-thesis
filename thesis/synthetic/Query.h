@@ -55,6 +55,9 @@ class Query {
     
     void Sample(const std::vector<const Variable*> &variables,
                 std::vector<std::string> *output);
+
+    double LogZ(const std::vector<const Variable*> &clamp_vars,
+                const std::vector<std::string> &clamp_state);
  protected:
 	const Graph *graph_;
 	boost::scoped_ptr<QueryInternal> internal_;

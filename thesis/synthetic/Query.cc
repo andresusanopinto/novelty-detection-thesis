@@ -172,6 +172,33 @@ class QueryInternal {
 	    BOOST_FOREACH(const Variable *v, vars)
           output->push_back(v->type_->values[state[ConvertToDai(v).label()]]);
     }
+    
+    double LogZ(const vector<const Variable*> &clamp_vars,
+                const vector<string> &clamp_state) {
+	    if (factorGraph_.get() == NULL)
+		    MakeFactorGraph();
+
+		vector<dai::Var> dai_vars = ConvertToDai(clamp_vars);
+		dai::VarSet dai_varset(
+			dai::SmallSet<dai::Var>(dai_vars.begin(), dai_vars.end(),
+			                        dai_vars.size()));
+
+
+		bp_.reset(new dai::BP(*factorGraph_,
+				daiOptions_("updates", string("SEQRND"))
+				           ("logdomain", false)));
+		bp_->init();
+        for (size_t i = 0; i < clamp_vars.size(); ++i) {
+            const VariableType *type = clamp_vars[i]->type_;
+            size_t index = lower_bound(type->values.begin(), type->values.end(),
+                                       clamp_state[i]) - type->values.begin();
+            assert(index < type->values.size());
+            assert(type->values[index] == clamp_state[i]);
+            bp_->clamp(dai_vars[i].label(), index);
+        }
+		bp_->run();
+        return bp_->logZ();
+    }
 
  protected:
 	dai::Var ConvertToDai(const Variable *var)
@@ -233,6 +260,14 @@ void Query::Marginalize(const vector<const Variable*> &variables,
 		BuildInternal();
 
 	return internal_->CalcMarginal(variables, output);
+}
+
+double Query::LogZ(const vector<const Variable*> &clamp_vars,
+                   const vector<string> &clamp_state)
+{
+    if (!internal_.get())
+        BuildInternal();
+    return internal_->LogZ(clamp_vars, clamp_state);
 }
 
 void Query::Sample(const vector<const Variable*> &variables,
