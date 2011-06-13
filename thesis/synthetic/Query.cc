@@ -100,19 +100,19 @@ class QueryInternal {
 			if (factorGraph_.get() == NULL)
 				MakeFactorGraph();
 
-			rocsDebug3("Running Loopy Belief Propagation...");
+			//rocsDebug3("Running Loopy Belief Propagation...");
 			bp_.reset(new dai::BP(*factorGraph_,
 					daiOptions_("updates", string("SEQRND"))
 					           ("logdomain", false)));
 			bp_->init();
 			bp_->run();
-			rocsDebug3("Finished Loopy Belief Propagation...");
+			//rocsDebug3("Finished Loopy Belief Propagation...");
 		}
 	}
 
 	void MakeFactorGraph()
 	{
-		rocsDebug3("Creating DAI FactorGraph...");
+		//rocsDebug3("Creating DAI FactorGraph...");
 		factorGraph_.reset(new dai::FactorGraph(factors_));
 
 		// Invalidate BP
@@ -128,7 +128,7 @@ class QueryInternal {
 			dai::SmallSet<dai::Var>(dai_vars.begin(), dai_vars.end(),
 			                        dai_vars.size()));
 
-		rocsDebug3("Asking belief on set of %ld variables.", dai_varset.size());
+		//rocsDebug3("Asking belief on set of %ld variables.", dai_varset.size());
         dai::Factor marginal = bp_->belief(dai_varset);
 
 		// Convert output to original variable order.
@@ -153,12 +153,12 @@ class QueryInternal {
             gibbsProps.set("burnin", size_t(100));
             gibbsProps.set("verbose", size_t(0));
 	
-            rocsDebug3("Creating GibbsSampler...");
+            //rocsDebug3("Creating GibbsSampler...");
 			gibbs_.reset(new dai::Gibbs(*factorGraph_, gibbsProps));
             
 			gibbs_->init();
 			gibbs_->run();
-			rocsDebug3("Finished Loopy Belief Propagation...");
+			//rocsDebug3("Finished Loopy Belief Propagation...");
 		}
 	}
     void Sample(const vector<const Variable*> &vars,

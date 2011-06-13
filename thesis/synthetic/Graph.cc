@@ -190,7 +190,6 @@ const Variable* Graph::CreateVariable(const VariableType *type)
 const Factor* Graph::CreateFactor(const FactorData *data,
                            const vector<const Variable*> &variables)
 {
-    rocsDebug2("Creating a factor of type %x", data);
 	Factor* factor = new Factor(data, variables);
 	factors_.push_back(factor);
 	return factor;

@@ -1,5 +1,5 @@
 
 Program('synthetic',
-        ['main.cc', 'Graph.cc', 'Query.cc'],
+        ['main.cc', 'single-factor.cc', 'Graph.cc', 'Query.cc'],
         LIBS='libdai',
         CPPPATH='libdai/include/', LIBPATH='libdai/lib')
