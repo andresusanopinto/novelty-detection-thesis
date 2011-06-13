@@ -26,6 +26,7 @@
 #include <cstdio>
 #include <set>
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 #include <cmath>
 using namespace std;
@@ -291,28 +292,6 @@ void compare_real_normalization_factors() {
     double abs_alogz = aq.LogZ(var, var_clamp);
     cout << n_properties << ": total_abs_diff = " << exp(abs_rlogz - abs_alogz) << endl;
     cout << n_properties << ": total_rel_diff = " << (abs_rlogz - abs_alogz)/n_properties << endl;
-
-    // Sensed difference:
-    vector<double> log_diff;
-    for (int i = 0; i < 0; ++i) {
-      vector<const Variable*> r_prop(real_g.vars.begin()+1, real_g.vars.end());
-      vector<const Variable*> a_prop(any_g.vars.begin()+1,  any_g.vars.end());
-
-      vector<string> fsample;
-      rq.Sample(real_g.vars, &fsample);
-      vector<string> sample(fsample.begin()+1, fsample.end());
-
-      double rlogz = rq.LogZ(r_prop, sample);
-      double alogz = aq.LogZ(a_prop, sample);
-      log_diff.push_back(rlogz - alogz);
-      // cout << n_properties << ": sense: " << fsample[0] << endl;
-      // cout << n_properties << ": sense_abs_diff = " << (rlogz - alogz) << endl;
-      // cout << n_properties << ": sense_rel_diff = " << (rlogz - alogz)/n_properties << endl;
-    }
-    sort(log_diff.begin(), log_diff.end());
-    cout << n_properties << ":";
-    BOOST_FOREACH(const double a, log_diff) cout << " " << a;
-    cout << endl;
   }
 }
 
@@ -340,8 +319,8 @@ void compare_performance(const vector<vector<string> > &samples) {
     
     // log(2) + log(\phi_k(x)) < k_i log(s_i) + log(\phi_a(x))
     // log(s_i) > (log(2) + log(\phi_k(x)) - log(\phi_a(x))) / k_i
-    double dyn_threshold = (log(2) + klogZ - alogZ)/n_properties;
-    result_dyn.push_back(make_pair(make_pair(n_properties, dyn_threshold), known_rooms.count(sample[0]) == 1));
+    double dyn_threshold = (alogZ - klogZ);
+    result_dyn.push_back(make_pair(make_pair(n_properties, 10*exp(dyn_threshold)), known_rooms.count(sample[0]) == 1));
 
     // Assuming a constant probability of drawing a novel sample.
     vector<const Variable*> no_prop;
@@ -349,11 +328,30 @@ void compare_performance(const vector<vector<string> > &samples) {
     double t_klogZ = kq.LogZ(no_prop, no_clamp);
     double t_alogZ = aq.LogZ(no_prop, no_clamp);
     double fix_threshold = (klogZ - t_klogZ) - (alogZ - t_alogZ);
-    result_dyn.push_back(make_pair(make_pair(n_properties, fix_threshold), known_rooms.count(sample[0]) == 1));
+    result_fix.push_back(make_pair(make_pair(n_properties, 10*exp(fix_threshold)), known_rooms.count(sample[0]) == 1));
   }
   sort(result_dyn.begin(), result_dyn.end());
-  for (size_t i = 0; i < result_dyn.size(); ++i)
-    cout << result_dyn[i].first.first << ": " << result_dyn[i].first.second << " | " << result_dyn[i].second << endl;
+  sort(result_fix.begin(), result_fix.end());
+
+  {
+    ofstream os_known("result_dyn_threshold_known.data");
+    ofstream os_novel("result_dyn_threshold_novel.data");
+    for (size_t i = 0; i < result_dyn.size(); ++i)
+      if (result_dyn[i].second)
+        os_known << result_dyn[i].first.first << " " << fixed << result_dyn[i].first.second << endl;
+      else
+        os_novel << result_dyn[i].first.first << " " << fixed << result_dyn[i].first.second << endl;
+  }
+
+  {
+    ofstream os_known("result_fix_threshold_known.data");
+    ofstream os_novel("result_fix_threshold_novel.data");
+    for (size_t i = 0; i < result_fix.size(); ++i)
+      if (result_fix[i].second)
+        os_known << result_fix[i].first.first << " " << fixed << result_fix[i].first.second << endl;
+      else
+        os_novel << result_fix[i].first.first << " " << fixed << result_fix[i].first.second << endl;
+  }
 }
 
 void example_single_factor() {
@@ -363,13 +361,13 @@ void example_single_factor() {
   generate_conditional_samples(&conditional_samples);
   learn_known_room_distribution(conditional_samples);
  
-  vector<vector<string> > unconditional_samples(100);
+  vector<vector<string> > unconditional_samples(1000);
   generate_unconditional_samples(&unconditional_samples);
   learn_any_room_distribution(unconditional_samples);
 
   assert(gi.CheckConsistency());
 
-  //compare_real_normalization_factors();
+  compare_real_normalization_factors();
 
   vector<vector<string> > test_data(1000);
   generate_unconditional_samples(&test_data);
