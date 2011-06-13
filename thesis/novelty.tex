@@ -251,11 +251,9 @@ potential of the distribution described by $B$ such that a \gls{MAP} operation
 on the $c$ variable decides on the novelty of $a$ with a desired threshold:
 
 \begin{eqnarray*}
- P_B(c=0 | x)         &<& P_B(c=1 | x) \\
-\Phi_B(c=0 \land x)   &<& \Phi_B(x=1 \land x) \\
-\Phi_G(x) \phi_t(c=0) &<& \Phi_{U_a}(x) \phi_t(c=1) \\
-P_G(x) Z_G \phi_t(c=0) &<& P_{U_a}(x) Z_{U_a} \phi_t(c=1) \\
-\frac{P_G(x)}{P_{U_a}(x)} &<& \frac{Z_{U_a}}{Z_G}
+ \frac{P_G(x)}{P_{U_a}(x)}&<& t_A \\
+ \frac{\Phi_G(x)}{\Phi_{U_a}(x)}    &<& t_A \frac{Z_G}{Z_{U_a}} \\
+ \frac{\Phi_B(x, c=0)}{\Phi_{B}(x, c=1)}    &<& t_A \frac{Z_G}{Z_{U_a}} \\
 \end{eqnarray*}
 
 Concluding, after merging graph $G$ and $U_a$ into graph $B$, the condition
@@ -275,10 +273,7 @@ This equation is not very practical due to the need of calculation of
 normalization factors $Z_G$ and $Z_{U_a}$. The presence of this factors
 not only turns computation more expensive, but also requires that a full model
 is known for all the factors disabling the ability to incorporate probabilistic
-sensing output from complex detectors such as \glspl{SVM}. Ultimately, it also
-removes capability to mix complex thresholds on several variables that would
-allow to do probabilistic inference on the novelty of multiple variables at once.
-
+sensing output from complex detectors such as \glspl{SVM}.
  
 \begin{figure}[h]
 \centering
@@ -390,7 +385,7 @@ distribution aware of all the classes of $a$.
   };
   \draw [-] (a) -- (e) -- (f) -- (d) -- (c) -- (b) -- (f);
 \end{tikzpicture}
-\quad
+\qquad
 \begin{tikzpicture}
   \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
     \node (a) [yellow] {}; \& \node (e) [blue] {}; \\
@@ -399,6 +394,7 @@ distribution aware of all the classes of $a$.
   };
   \draw [-] (c) -- (a) -- (d) -- (e);
 \end{tikzpicture}
+\qquad
 \begin{tikzpicture}
   \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
     \node (a) [yellow] {}; \& \node (e) [blue] {}; \\
@@ -407,7 +403,7 @@ distribution aware of all the classes of $a$.
   };
   \draw [-] (a) -- (e) -- (f) -- (d) -- (c) -- (b) -- (a);
 \end{tikzpicture}
-\quad
+\qquad
 \begin{tikzpicture}
   \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
     \node (a) [blue] {}; \& \node (e) [yellow] {}; \\
@@ -417,7 +413,7 @@ distribution aware of all the classes of $a$.
   \draw [-] (c) -- (b) -- (a) -- (e) -- (f) -- (b);
   \draw [-] (b) -- (d);
 \end{tikzpicture}
-\quad
+\qquad
 \begin{tikzpicture}
   \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
     \node (a) [yellow] {}; \& \node (e) [blue] {}; \\
@@ -510,23 +506,26 @@ c &\in& \{0, 1\}
 
 Note that with this transformation, the following potential equivalences hold:
 \begin{eqnarray*}
-\Phi_{G'}(x, c=0) &=& \Phi_{G}(x | a \in \{A_1, \dots, A_K\})\\
+\Phi_{G'}(x, c=0) &=& \Phi_{G}(a \in \{A_1, \dots, A_K\}, x)\\
 \Phi_{G'}(x, c=1) &=& \Phi_{G}(x) 
 \end{eqnarray*}
 
 
 Although those potentials allow to determine novelty of $a$, they require
 knowledge of all the possible classes, which is not available.
-Nonetheless access to unlabelled data or other informations or assumptions on
-the unconditional distribution allow to model or approximate unconditional
-distributions of $a$. For that there is interest in trying to model the set
-of states $\{A^*_1, \dots, A^*_N\}$ with a set of states $\{A^{\dag}_1, \dotsc, A^{\dag}_M\}$.
+But by having access to unlabelled data, other informations or assumptions on
+the unconditional distribution it is possible to model the unconditional
+distributions of $x$. For that there is interest in trying to model the real set
+of states $\{A^*_1, \dots, A^*_N\}$ with a set of states $\{A^{\dag}_1, \dotsc, A^{\dag}_M\}$
+learned or assumed from information on the unconditional distribution.
 
-Moreover assuming that the set of states $A^\dag$ is able to perfectly
-characterize the distribution over any graph $G$,
-for a specific graph the potentials with states $A^\dag$ are a scale-factor
-away from the potentials with states $A$. And that scale-factor is dependent on
-the graph structure and factors of both $G$ and $G^\dag$:
+When changing a variable states from $A^*$ into $A^\dag$ it also becomes necessary to redefine
+the factors dependent on $a$ to accommodate the new states $A^\dag$.
+Moreover assuming that the change of variable states $A^\dag$ is able to perfectly
+characterize the distribution over any graph structure,
+for a specific graph $G$ the potentials $\Phi^\dag_G(x)$ with states $A^\dag$ are a
+scale\hyp{}factor away from the potentials $\Phi_G(x)$ with states $A$.
+And that scale-factor is dependent on the graph structure and factors of both $G$ and $G^\dag$:
 
 \begin{eqnarray}
 P_G(x) &=& P^\dag_G(x) \\
@@ -535,21 +534,23 @@ P_G(x) &=& P^\dag_G(x) \\
 
 Note that this ratio, although seems similar to the one obtained in
 \autoref{eq:structure-ratio} it has a special property. Here both $G$ and
-$G^\dag$ model the same probability, so it is expected that both scale they
+$G^\dag$ model the same distribution, so it is expected that both scale they
 normalization factor according to some relation on how a given factor differs
 from $G$ to $G^\dag$.\footnote{On \autoref{eq:structure-ratio} the ratio is
 between two different distributions: a conditional and an unconditional distribution.}
 
 If on any graph structure the marginal probabilities of all variables except $a$
 is the same either by using $A$ with $\phi$, or by using $A^\dag$ with $\phi^\dag$
-then $\sum_{A^\dag}\phi^\dag_i(a^\dag, \cdot) = s_i \sum_A \phi_i(a, \cdot)$.
-It can be proved that since the distribution over any graph structure has to be
+then it is possible to scale each individual factor $\phi_i^\dag$ with a constant $1/s_i$
+such that the potentials with $A$ will be equal to the potentials with $A^\dag$.
+
+Since the distribution over any graph structure has to be
 equal, then the same holds for a graph structure $P_{G_i}$ composed by a single
 factor $\phi_i$:
 
 \begin{eqnarray*}
 P^\dag_{G_i}(x) &=& P_{G_i}(x) \\
-\frac{\phi_i(x)}{Z^\dag_{G_i}}  &=& \frac{s_i \phi_i(x)}{Z_{G_i}} \\
+\frac{\sum_{a^\dag \in A^\dag}\phi^\dag_i(a^\dag, x)}{Z^\dag_{G_i}}  &=& \frac{\sum_{a \in A}\phi_i(x)}{Z_{G_i}} \\
 s_i &=& \frac{Z_{G_i}}{Z^\dag_{G_i}} \quad \text{(constant)}
 \end{eqnarray*}
 
@@ -567,10 +568,10 @@ s &=& \frac{\Phi_G(x)}{\Phi^\dag_G(x)} \\
 
 If factor $\phi_i$ appears $k_i$ times on a graph structure then:
 \begin{eqnarray}
-\Phi^\dag_G(x) \prod {s_i}^{k_i} = \Phi_G(x)
+\frac{\Phi^\dag_G(x)}{\Phi_G(x)} =  \prod {s_i}^{k_i}
 \end{eqnarray}
 
-Alternative, if factors $\phi^\ddag_i(a^\dag,x) = \phi^\dag_i(a^\dag,x)/s_i$ are
+Alternative, if factors $\phi^\ddag_i(a^\dag,x) = \phi^\dag_i(a^\dag,x) s_i$ are
 introduced then:
 \begin{eqnarray}
 \Phi^\ddag_G(x) = \Phi_G(x)
@@ -578,8 +579,8 @@ introduced then:
 
 Having shown how to replace a variable $a$ for an equivalent $a^\dag$, and
 respectively change the factors dependent on $a$ from $\phi_i(a,\cdot)$ to
-$\phi^\ddag_i(a^\dag,\cdot)$ such that the potentials on the original
-graph are kept constant it becomes possible to go back to the graph $G'$ and
+$\phi^\ddag_i(a^\dag,\cdot)$ such that the potentials are kept equal equal
+it becomes possible to go back to the graph $G'$ and
 replace the states $\{A^*_1,\dotsc,A^*_N\}$ for the equivalents $A^\ddag$
 and change the factors associated with $a'$ for:
 
@@ -593,7 +594,7 @@ and change the factors associated with $a'$ for:
 
 It is now possible to perform a decision on the novelty of $a$ with the condition:
 \begin{equation}
-2 \Phi_{G'}(x | c = 0) < \Phi_{G'}(x | c= 1)
+2 \Phi_{G'}(x, c = 0) < \Phi_{G'}(x, c= 1)
 \end{equation}
 
 This condition is particularly useful since it does not depends on the normalization
