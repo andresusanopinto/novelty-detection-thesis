@@ -1,3 +1,5 @@
+SConscript('synthetic/SConscript')
+
 thesis = PDF('thesis.pdf', 'thesis.tex')
 
 Depends(thesis, ['feupteses.sty', 'mieicpatch.sty', 'tkz-base.sty', 'tkz-arith.sty', 'figures/feup-logo.pdf']
