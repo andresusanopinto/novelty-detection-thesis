@@ -82,13 +82,11 @@ associates concepts to areas such as rooms (see \autoref{fig:spatial-knowledge})
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.7\textwidth]{figures/dora-architecture.pdf}
-\caption{\label{fig:spatial-knowledge}Layered structure of the spatial representation.
-         The conceptual layer illustrates part of the ontology representing both instance
-         and pre-defined world knowledge.}
+\includegraphics[width=0.7\textwidth]{figures/spatial-knowledge-representation.pdf}
+\caption{\label{fig:spatial-knowledge}Layered structure of the spatial representation.}
 \end{figure}
 
-\subsubsection*{Sensory Layer}
+\subsection{Sensory Layer}
 The sensory layer keeps a detailed representation of the immediate surrounds of the agent.
 That representation is based on directly sensed inputs as well on data-fusion for short
 time\hyp{}intervals.
@@ -100,7 +98,7 @@ is forgotten.
 By tracking the surrounds for short amount of times it provides an accurate representation
 that can be used to locate and guide the agent on low\hyp{}level movements.
 
-\subsubsection*{Place Layer}
+\subsection{Place Layer}
 The place layer is responsible for maintaining a bottom\hyp{}up discretization of the
 continuous space. On it the world is represented as a collection of discrete spatial
 entities, called places, together with connectivity information.
@@ -114,7 +112,7 @@ The places are also considered stable on long\hyp{}term and can be used to help 
 performing localization and planning longer distance motion planning. This higher level
 representation although uncertain allows to model connectivity and relaxed spatial relations.
 
-\subsubsection*{Categorical Layer}
+\subsection{Categorical Layer}
 The categorical layer holds the generic long-term, low-level representations of categorical models
 of the agent's sensory information.
 The knowledge represented by this layer is not instance specific. It is the knowledge
@@ -130,7 +128,7 @@ and not to the internal concepts of the agent.
 The type of properties handled by this layer may require incredible complex models and for
 that they might be trained on a supervised fashion.
 
-\subsubsection*{Conceptual Layer}
+\subsection{Conceptual Layer}
 The conceptual layer provides an ontology that represents a taxonomy of the spatial concepts
 and their relations with the properties represented on the categorical layer.
 This associates semantic meaning to those properties that is useful for human-agent iteration
@@ -150,13 +148,61 @@ periods of time or even life\hyp{}long.
 
 \section{System Structure}
 The \Gls{Dora} system~\cite{hanheide2011ijcai} consists of several co-operating
-sub-systems, all of which actively use or maintain the spatial knowledge representation
-(see \autoref{fig:dora-architecture}).
+sub-systems~(see \autoref{fig:dora-architecture}),
+all of which actively use or maintain the \emph{spatial knowledge representation}.
+
+The layer structure of the spatial knowledge representation allow to implement
+data driven processes that control the flow of knowledge and information between the
+lower and higher\hyp{}levels layers. To reduce computation and make it feasible not
+all updates from lower\hyp{}levels are treated immediately. Instead the system waits
+until a substantial change has occurred.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/dora-architecture.pdf}
+\caption{\label{fig:dora-architecture}Dora the Explorer as well as the elements and the data flow inside
+         the semantic mapping system.}
+\end{figure}
+
+Initially the low-level topology and metric mapping systems use a \gls{SLAM} algorithm~\cite{Folkesson07a}
+that is used as representation on the sensory layer. Those two systems are also responsible
+for creating the place map on the place layer, as that is highly related with the \gls{SLAM} goals.
+By using the landmarks (doors) and other available information the system also tries to
+group places and understand the concept of rooms.
+
+At the same time the spatial property categorization system is responsible for detecting
+instances of the categorical knowledge by running classifiers previously trained to detect
+a set of features listed on \autoref{sec:dora-features}. For that it uses the data available
+from a laser range finder and a camera and besides classifying the features it estimates also
+its confidence on the information.
+The extracted features together with the estimates is then integrated over time and space
+in order to increase its robustness.
+
+Finally the conceptual map system utilizes the acquired instance knowledge together with
+the high\hyp{}level conceptual knowledge to create a probabilistic graphical model that allows
+to run inferences.
+Since this conceptual mapping processing is responsible for creating the probabilistic
+graphical model it is described in detail in \autoref{sec:conceptual-map}.
 
 
 \subsection{Features}
 \label{sec:dora-features}
-The \emph{categorical layer} requires classifiers with the ability to categorize 
+The \emph{categorical layer} requires classifiers with the ability to categorize the
+low\hyp{}level features into categories.
+For that \gls{Dora} performs detection on the following categorical entities:
+\begin{description}
+\item[Doorway Detection] by using the laser range finder the system tries to detect doors.
+\item[Geometric Shape] by using features extracted from the laser data and pre-trained classifiers
+the system tries to classify rooms according to their shapes (e.g.\ rectangular, square).
+\item[Geometric Size] is classified once again recurring to laser data. In this case the system
+\item[Object Detection] is performed by running traditional object recognition classifiers.
+Those are previously trained on a supervised fashion to later be able to detect objects
+based on their visual features, e.g.\ by using \gls{SIFT} as described in \autoref{sec:sift}.
+tries to categorize the room size according to a set of previously learned concepts (e.g. large, medium, small).
+\item[Visual Appearance] is extracted from the visual input. For that Dora uses a trained
+a set of classifiers on global visual features such as \gls{CRFH} to categorize the visual
+appearance of a room in categories such as corridor, office, library.
+\end{description}
 
 \section{Conceptual Map}
 \label{sec:conceptual-map}
@@ -169,7 +215,7 @@ general appearance and allows the robot to infer that the cornflakes box in fron
 robot makes it more likely that the current room is a kitchen. The conceptual layer is 
 described in terms of a probabilistic ontology defining spatial concepts and linking 
 those concepts to instances of spatial entities (see the example of the ontology in
-\autoref{fig:dora-architecture}).
+\autoref{fig:spatial-knowledge}).
 
 Based on this design, a \emph{chain graph} model is proposed as a 
 representation for performing inferences on the knowledge represented in the conceptual 
