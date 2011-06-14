@@ -234,10 +234,13 @@ void learn_known_room_distribution(const vector<vector<string> > samples) {
   }
 }
 
-void generate_unconditional_samples(vector<vector<string> > *output) {
+void generate_unconditional_samples(vector<vector<string> > *output, int size = -1) {
   BOOST_FOREACH(vector<string> &sample, *output) {
     GraphStructure s;
-    int n_properties = 1 + (random() % 17);
+    int n_properties = size;
+    if (n_properties == -1)
+      n_properties = 1 + (random() % 17);
+
     s.createRandom(1, n_properties, 0);
     MGraph g(s, type_real_room, type_real_prop, NULL, factor_rroom_rprop);
    
@@ -322,7 +325,7 @@ void compare_performance(const vector<vector<string> > &samples) {
     // log(2) + log(\phi_k(x)) < k_i log(s_i) + log(\phi_a(x))
     // log(s_i) > (log(2) + log(\phi_k(x)) - log(\phi_a(x))) / k_i
     double dyn_threshold = (klogZ - alogZ)/n_properties;
-    result_dyn.push_back(make_pair(make_pair(n_properties, 10*exp(dyn_threshold)), known_rooms.count(sample[0]) == 1));
+    //result_dyn.push_back(make_pair(make_pair(n_properties, 10*exp(dyn_threshold)), known_rooms.count(sample[0]) == 1));
 
     // Assuming a constant probability of drawing a novel sample.
     vector<const Variable*> no_prop;
@@ -331,7 +334,7 @@ void compare_performance(const vector<vector<string> > &samples) {
     double t_alogZ = aq.LogZ(no_prop, no_clamp);
     double fix_threshold = (klogZ - t_klogZ) - (alogZ - t_alogZ);
     result_fix.push_back(make_pair(make_pair(n_properties, 10*exp(fix_threshold)), known_rooms.count(sample[0]) == 1));
-    //result_dyn.push_back(make_pair(make_pair(n_properties, 10*exp(fix_threshold/n_properties)), known_rooms.count(sample[0]) == 1));
+    result_dyn.push_back(make_pair(make_pair(n_properties, exp(fix_threshold/n_properties)), known_rooms.count(sample[0]) == 1));
   }
   sort(result_dyn.begin(), result_dyn.end());
   sort(result_fix.begin(), result_fix.end());
@@ -341,9 +344,9 @@ void compare_performance(const vector<vector<string> > &samples) {
     ofstream os_novel("result_dyn_threshold_novel.data");
     for (size_t i = 0; i < result_dyn.size(); ++i)
       if (result_dyn[i].second)
-        os_known << fixed << junk() + result_dyn[i].first.first << " " << fixed << result_dyn[i].first.second << endl;
+        os_known << fixed << abs(junk()) + result_dyn[i].first.first << " " << fixed << result_dyn[i].first.second << endl;
       else
-        os_novel << fixed << junk() + result_dyn[i].first.first << " " << fixed << result_dyn[i].first.second << endl;
+        os_novel << fixed << -abs(junk()) + result_dyn[i].first.first << " " << fixed << result_dyn[i].first.second << endl;
   }
 
   {
@@ -351,9 +354,9 @@ void compare_performance(const vector<vector<string> > &samples) {
     ofstream os_novel("result_fix_threshold_novel.data");
     for (size_t i = 0; i < result_fix.size(); ++i)
       if (result_fix[i].second)
-        os_known << fixed << junk() + result_fix[i].first.first << " " << fixed << result_fix[i].first.second << endl;
+        os_known << fixed << abs(junk()) + result_fix[i].first.first << " " << fixed << result_fix[i].first.second << endl;
       else
-        os_novel << fixed << junk() + result_fix[i].first.first << " " << fixed << result_fix[i].first.second << endl;
+        os_novel << fixed << -abs(junk()) + result_fix[i].first.first << " " << fixed << result_fix[i].first.second << endl;
   }
 }
 
@@ -372,8 +375,12 @@ void example_single_factor() {
 
 //  compare_real_normalization_factors();
 
-  vector<vector<string> > test_data(1000);
-  generate_unconditional_samples(&test_data);
+  vector<vector<string> > test_data;
+  for (size_t i = 1; i < 18; ++i) {
+    vector<vector<string> > data(500);
+    generate_unconditional_samples(&data, i);
+    test_data.insert(test_data.end(), data.begin(), data.end());
+  }
   compare_performance(test_data);
 }
   
