@@ -3,48 +3,54 @@
 % motivation
 Humans associate concepts to areas that relate to the functionality of those. That
 association is either useful by explaining where to find certain objects as well to
-understand the types of activities to perform on it. In a 
-
+understand the types of activities to perform on it. 
 Those human-concepts are meant to be meaningful for humans and by incorporating conceptual
-knowledge about them it is expected to improve the agent 
+knowledge about them it is expected to improve the agent ability to interact and communicate
+with humans and the ability perform human-like tasks.
+
 % semantic mapping definition
 In this context semantic mapping is seen as the process of building a representation of
-the environment which associates spatial entities with a set of defined spatial concepts (i.e.\ human concepts).
-
-% importance of conceptual knowledge
-% application of conceptual knowledge
-It is expected that by being able to reason over those semantics an agent can better
-understand human environments and increase its efficiency when performing human-tasks on them.
-By handling this conceptual knowledge the agent becomes aware of 
+the environment which associates spatial entities with a set of defined spatial concepts (in this case the human concepts).
 
 
-% challenges and need for representing uncertainty
-The goal of a spatial representation is to provide the agent with a view about the environment
-that allows it to reason beyond its sensory horizon.
+Missing:
+\begin{itemize}
+\item importance of conceptual knowledge
+% In order to build such a mapping of the environment, it is important to define the knowledge that allows the agent to reason
+% about. 
 
- Such a representation is by its nature
-imperfect, incomplete, inaccurate and invalid.
+\item application of conceptual knowledge
+% It is expected that by being able to reason over those semantics an agent can better
+% understand human environments and increase its efficiency when performing human-tasks on them.
+% By handling this conceptual knowledge the agent becomes aware of 
 
-world that allows the agent to perform reasoning over it and efficiently perform tasks.
-It should also give the agent ability to reason about parts 
-Such a representation cannot be perfect since the methods and information are uncertain
+\item challenges and need for representing uncertainty
+% The goal of a spatial representation is to provide the agent with a view about the environment
+% that allows it to reason beyond its sensory horizon.
+
+% Such a representation is by its nature imperfect, incomplete, inaccurate and invalid.
+
+% world that allows the agent to perform reasoning over it and efficiently perform tasks.
+% It should also give the agent ability to reason about parts 
+% Such a representation cannot be perfect since the methods and information are uncertain
+
+% It is therefore clear that the need to handle information on an high-level semantic and
+% probabilistic fashion arises not only for efficiency reasons but also from the desire
+% of being able to communicate and reason on those aspects.
+% In order to fully explore the semantic properties and their relations it is necessary to
+% detect and classify semantic aspects as well to understand the relationships between them.
+% That conceptual knowledge is important and any limitations on it will limit the capacities
+% of an agent to reason. 
+\end{itemize}
 
 % here a here a method is used that does semantic mappping and representes conceptual knowledge
 % on a probabilistic fashion.
-
-
-
-It is therefore clear that the need to handle information on an high-level semantic and
-probabilistic fashion arises not only for efficiency reasons but also from the desire
-of being able to communicate and reason on those aspects.
-In order to fully explore the semantic properties and their relations it is necessary to
-detect and classify semantic aspects as well to understand the relationships between them.
-That conceptual knowledge is important and any limitations on it will limit the capacities
-of an agent to reason. 
-
-This thesis motivation lies on developing methods for detecting knowledge gaps
-on the semantic knowledge of a mobile agent. For that the semantic mapping system
-implemented on \gls{Dora} proposed by \cite{pronobis2011phd} was used as a base.
+This thesis motivation lies on developing methods for detecting knowledge gaps on the spatial
+semantic knowledge of a mobile agent. For that spatial knowledge needs to be defined, as well
+the methods used to perform the semantic mapping.
+In that context this chapter presents \gls{Dora}, a system that represents its spatial knowledge
+with the representation proposed by \cite{pronobis2010ias}, and performs semantic mapping using
+inference on a probabilistic graphical model.
 
 
 \section{Architecture Overview}
@@ -56,17 +62,15 @@ The introduced system is built around a spatial knowledge representation~\cite{p
 and performance tested across several conditions~\cite{pronobis2007iros} but also shown
 to be tailored to effectively solve tasks arising on mobile robotics~\cite{hanheide2011ijcai}.
 
-Besides that the spatial knowledge representation has been drawn with an high-focus on probabilistic
+The \emph{spatial knowledge representation} has been drawn with an high-focus on probabilistic
 and uncertain reasoning, human interaction and life-long learning capabilities.
 For that it was considered an excellent base defining not only the concepts and
 requirements of an high-level semantic representation but also the information flow
 between all the layers involved on the agent.
 
-Being able to perform probabilistic inference on all available information Such a representation is suitable to detect novel concepts.
-
-
-The system is implemented on \Gls{Dora} and a brief overview of its architecture is
-given in the following sections.
+\gls{Dora}, the system, utilizes its spatial knowledge to perform semantic mapping of the environment
+using probabilist inferences on top of a graphical model.
+Due to its nature, it was considered suitable for implementing novelty detection of semantic concepts.
 
 \section{Spatial Knowledge Representation}
 \cite{pronobis2010ias} proposes a spatial knowledge representation sub-divided into four layers.
