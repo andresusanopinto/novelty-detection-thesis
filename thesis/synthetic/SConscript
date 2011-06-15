@@ -7,11 +7,15 @@ Program('synthetic',
 Command(['result_dyn_threshold_known.data',
          'result_dyn_threshold_novel.data',
          'result_fix_threshold_known.data',
-         'result_fix_threshold_novel.data'], 'synthetic',
+         'result_fix_threshold_novel.data',
+         'result_opt_threshold_known.data',
+         'result_opt_threshold_novel.data'], 'synthetic',
          './synthetic', chdir=1)
 
 x = PDF('plot.pdf', 'plot.tex')
 Depends(x, ['result_dyn_threshold_known.data',
             'result_dyn_threshold_novel.data',
             'result_fix_threshold_known.data',
-            'result_fix_threshold_novel.data']);
+            'result_fix_threshold_novel.data',
+            'result_opt_threshold_known.data',
+            'result_opt_threshold_novel.data']);

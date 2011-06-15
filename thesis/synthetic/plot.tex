@@ -5,8 +5,20 @@
 
 \begin{document}
 
+\section{Optimal Decision}
+\begin{tikzpicture}[only marks,mark size=1.2pt]
+\begin{axis}[
+ xlabel={Threshold},
+ ylabel={Graph Size},
+ width=\textwidth,
+ height=1.5\textwidth]
+\addplot[mark=+,mark options={fill=white}] file {result_opt_threshold_known.data};
+\addplot[mark=-,mark options={fill=black}] file {result_opt_threshold_novel.data};
+\end{axis}
+\end{tikzpicture}
+
 \section{Constant $P(novel)$}
-\begin{tikzpicture}[only marks,mark size=0.5pt]
+\begin{tikzpicture}[only marks,mark size=1pt]
 \begin{axis}[
  xlabel={Threshold},
  ylabel={Graph Size},
@@ -18,7 +30,7 @@
 \end{tikzpicture}
 
 \section{Dynamic $P(novel)$}
-\begin{tikzpicture}[only marks,mark size=0.5pt]
+\begin{tikzpicture}[only marks,mark size=1pt]
 \begin{axis}[
  xlabel={Threshold},
  ylabel={Graph Size},

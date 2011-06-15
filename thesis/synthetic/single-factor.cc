@@ -141,9 +141,9 @@ public:
 
 }
 
-size_t room_types = 10;
-size_t n_known_rooms = 3;
-size_t property_types = 15;
+size_t room_types = 7;
+size_t n_known_rooms = 5;
+size_t property_types = 8;
 int C = 1;
 
 set<string> known_rooms;
@@ -175,7 +175,7 @@ void generate_real_distribution_vars_and_factors() {
   // Real property variable.
   {
     VariableType &type = *(type_real_prop = gi.Add("real_prop", VariableType()));
-    for (int i = 0; i < room_types; ++i)
+    for (int i = 0; i < property_types; ++i)
       type.values.push_back(prop(i));
     sort(type.values.begin(), type.values.end());
   }
@@ -187,7 +187,9 @@ void generate_real_distribution_vars_and_factors() {
     factor.variables.push_back(make_pair("prop", "real_prop"));
     BOOST_FOREACH(const string &room, type_real_room->values)
     BOOST_FOREACH(const string &prop, type_real_prop->values)
-      factor.potential[vector_of(room, prop)] = drand48();
+      factor.potential[vector_of(room, prop)] = 0.1;
+    BOOST_FOREACH(const string &room, type_real_room->values)
+      factor.potential[vector_of(room, type_real_prop->values[random()%property_types])] = 0.3 + drand48();
   }
 }
 
@@ -303,6 +305,7 @@ double junk() { return 0.1 + drand48()/5; }
 void compare_performance(const vector<vector<string> > &samples) {
   vector<pair<pair<int,double>,bool> > result_fix;
   vector<pair<pair<int,double>,bool> > result_dyn;
+  vector<pair<pair<int,double>,bool> > result_opt;
 
   BOOST_FOREACH(const vector<string> &sample, samples) {
     int n_properties = sample.size()-1;
@@ -310,13 +313,16 @@ void compare_performance(const vector<vector<string> > &samples) {
     GraphStructure s;
     s.createRandom(1, n_properties, 0);
     MGraph known_g(s, type_known_room, type_real_prop, NULL, factor_kroom_kprop);
-    MGraph any_g (s,  type_any_room,  type_real_prop, NULL, factor_aroom_kprop);
+    MGraph any_g  (s, type_any_room,   type_real_prop, NULL, factor_aroom_kprop);
+    MGraph real_g (s, type_real_room,  type_real_prop, NULL, factor_rroom_rprop);
 
     Query kq(&known_g);
     Query aq(&any_g);
+    Query rq(&real_g);
 
     vector<const Variable*> k_prop(known_g.vars.begin()+1, known_g.vars.end());
-    vector<const Variable*> a_prop(any_g.vars.begin()+1,  any_g.vars.end());
+    vector<const Variable*> a_prop(any_g.vars.begin()+1,   any_g.vars.end());
+    vector<const Variable*> r_prop(real_g.vars.begin()+1,  real_g.vars.end());
     vector<string> clamp(sample.begin()+1, sample.end());
 
     double klogZ = kq.LogZ(k_prop, clamp);
@@ -335,6 +341,20 @@ void compare_performance(const vector<vector<string> > &samples) {
     double fix_threshold = (klogZ - t_klogZ) - (alogZ - t_alogZ);
     result_fix.push_back(make_pair(make_pair(n_properties, exp(fix_threshold)), known_rooms.count(sample[0]) == 1));
     //result_dyn.push_back(make_pair(make_pair(n_properties, fix_threshold/n_properties), known_rooms.count(sample[0]) == 1));
+
+    // Real distribution
+    double notnovel_p = 0.0;
+    double novel_p    = 0.0;
+    double r_logZ = rq.LogZ(r_prop, clamp);
+    BOOST_FOREACH(const string room, type_real_room->values) {
+      vector<string> aclamp;
+      aclamp.push_back(room);
+      aclamp.insert(aclamp.end(), clamp.begin(), clamp.end());
+      double prob = exp( rq.LogZ(real_g.vars, aclamp) - r_logZ );
+      if (known_rooms.count(room)) notnovel_p += prob;
+      else novel_p += prob;
+    }
+    result_opt.push_back(make_pair(make_pair(n_properties,  notnovel_p), known_rooms.count(sample[0]) == 1));
   }
   sort(result_dyn.begin(), result_dyn.end());
   sort(result_fix.begin(), result_fix.end());
@@ -358,6 +378,17 @@ void compare_performance(const vector<vector<string> > &samples) {
       else
         os_novel << fixed << result_fix[i].first.first - junk() << " " << fixed << result_fix[i].first.second << endl;
   }
+
+  {
+    ofstream os_known("result_opt_threshold_known.data");
+    ofstream os_novel("result_opt_threshold_novel.data");
+    for (size_t i = 0; i < result_opt.size(); ++i)
+      if (result_opt[i].second)
+        os_known << fixed << result_opt[i].first.first + junk() << " " << fixed << result_opt[i].first.second << endl;
+      else
+        os_novel << fixed << result_opt[i].first.first - junk() << " " << fixed << result_opt[i].first.second << endl;
+  }
+
 }
 
 void example_single_factor() {
@@ -377,7 +408,7 @@ void example_single_factor() {
 
   vector<vector<string> > test_data;
   for (size_t i = 1; i < 18; ++i) {
-    vector<vector<string> > data(200);
+    vector<vector<string> > data(50);
     generate_unconditional_samples(&data, i);
     test_data.insert(test_data.end(), data.begin(), data.end());
   }
