@@ -20,21 +20,17 @@
 One of the interesting facts about high-level problems is that they often require a
 broad overview of the whole system and several concepts. For example in the case of
 this thesis approach to novelty detection on semantic knowledge it becomes first
-important to understand how classification of already known categories is performed
-and how is knowledge of lower\hyp{}levels represented. I.e.\ understand how can
+important to understand how classification of already known categories is performed.
+I.e.\ understand how can
 lower\hyp{}level classifiers be represented, how to obtain those representations from
 training data, and how to use those them to infer new classifications from those models.
 It is also important to know how to model several of those classifications with
 probabilistic relations in a unified model and how to infer information on those.
 
-
-This chapter tries to introduce the reader to those aspects. The presented material
-is not complete, as such an attempt would be naive. In that sense this chapter limits
-to present the base ideas and main concepts behind and where appropriate it refers to
-articles that present the introduced techniques.
-Special attention is given to the \emph{probabilistic graphical models} as they are used
-as base tool for modelling the semantic map where novelty detection is then implemented.
-
+This chapter tries to briefly introduce the reader to those aspects. The presented material
+is not complete, it serves only to give directions and cues to the reader on how the several
+subproblems of visual place classification can be solved. 
+Where appropriate it refers to articles or textbooks that present the introduced techniques.
 
 \section{Classification}
 Classification deals with the problem of identifying classes or groups that lie underneath
@@ -65,15 +61,13 @@ This background chapter does not aims at describing all the classification metho
 introducing the concept of classifier and to use them to extract information from low\hyp{}level
 features. In that sense only \glspl{SVM} will be generally described, for more information
 on others the reader is welcome to check the vast literature in pattern recognition and machine
-learning such as the reference cited above.
+learning such as the standard textbook cited above.
 
 \subsection{Supervised and Unsupervised Training}
-It is often impossible to manually specify the information need to correctly classify samples.
+It is often impossible to manually specify the information needed to correctly classify samples.
 There is also interest to make systems flexible and allow them to learn and adapt based solely
-on the available data.
-
-Methods to learn classifiers able to distinguish underlying classes on the data can be
-separated based on the model used to train it.
+on the available data. In that sense the option is to train classifiers from available data.
+The training methods are often separated as:
 
 \begin{description}
 \item[Supervised Methods] assume the existent of a supervisor that is able to give the
@@ -86,12 +80,12 @@ have to figure out how many and which classes seem more reasonable to be modelle
 \subsection{Discriminative and Generative Models}
 \label{sec:discriminative-vs-generative}
 After constructing a classifier from the information available either in form of
-available knowledge on the task in hand and from acquired data samples the agent
+available knowledge on the task in hand and from acquired data samples, the agent
 ends up with a model that represents the knowledge it believes to be suitable to
 solve the task.
 
 The produced model differs a lot based on the type of classifier but they can be
-distinguish in two different categories:
+distinguished in two different categories:
 \begin{description}
 \item[Discriminative models] are only able to classify samples in the known categories.
 \item[Generative models] model the full probability relation between sensed
@@ -215,9 +209,9 @@ Visual features can be seen as belonging to two categories:
 
 \subsection{Local Features}
 \label{sec:local-features}
-\emph{Local features} describe fine grain properties of a part of image.
+Local features describe fine grain properties of a part of image.
 For example the existence of specific corner or an edge. \Gls{SIFT}
-(\autoref{sec:sift}) is an example of such feature and it been proven useful
+is an example of such feature and it been proven useful
 for matching points between images and subsequence extension to object detection.
 
 \subsubsection*{Interesting Points and SIFT}
@@ -251,8 +245,7 @@ of local features by using \emph{Matching kernels} (\autoref{sec:kernel-trick}).
 
 
 \subsection{Global Features}
-\emph{Global features} such as \gls{CRFH} (\autoref{sec:crfh}) or
-{gist}~(\autoref{sec:gist}) try to describe the whole image. Either by
+Global features try to describe the whole image. E.g.\ either by
 statistical analysis of features over all the image or by a structured
 distribution of textures findable in the image.
 
@@ -313,9 +306,55 @@ to train classifiers based on this feature.
 % Important sections of this chapter begin here.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Probability Theory}
-\subsection{Bayes Theorem}
+An important aspect when making decisions with noisy or missing information is
+the uncertainty of the received information and of the final conclusion.
+Probability theory comes to help by providing a framework able to deal with those
+issues~\cite{bishop2006pattern}.
 
-\subsection{Categorical and Multinomial Distribution}
+The key concept on it is that of \emph{probability}, which can be seen as way of
+express the degree of belief that a certain event occurs.
+When combined with decision theory it allows to perform optimal decisions with the
+available information, even if it is ambiguous or incomplete.
+
+A probability $P(x)$ of a given event $x$ is a value between $0$ and $1$, where $0$ means
+the belief that $x$ will not occur and $1$ that it will certainly occur.
+In cases $x$ does not specifies all the variables states that define the sample space, $P(x)$
+is called a marginal probability. 
+
+Often it is impossible to exactly describe the probability of a given event, in such cases
+the concept of likelihood comes to help.
+The likelihood of an event only has meaning when compared to one of another event.
+In such case the ratio between both likelihoods will denote on how more likely an event is
+over another.
+When dealing with discrete and countable sample spaces any likelihood function can be converted
+to a probability function by calculating the normalization factor such that the sum over all
+the sample space is $1$.
+
+\subsection{Conditional Probability}
+It is also possible to denote the known information when calculating probabilities. For that
+the notion of conditional probability is used $P(a|b)$. It denotes the probability of $a$
+knowing that $b$ has occur. Often conditional probability is also represented by: $P_b(a)$.
+In this thesis both notations will be used: the former for representing the information on
+sensed variables and the second for representing information or assumptions on other generic
+information such as graph structures.
+
+Marginal probabilities can be related with conditional probabilities as described in the equation:
+\begin{equation}
+P(a|b) P(b)  = P(a, b)
+\end{equation}
+
+
+\section{Principle of Maximum Entropy}
+\label{sec:max-entropy}
+The principle of maximum entropy~\cite{shore1980axiomatic} states that when given
+a set of distributions that are coherent with the acquired knowledge, the one which
+maximizes entropy should be picked.
+
+This can be used to select a distributions that most correctly describes the obtained
+knowledge. For example, if all that is known from a distribution is the mean and deviation
+then the correct approach is to model it with a normal distribution with the known parameters.
+In case of having no information available, the uniform distribution shall be assumed.
+
 
 \section{Probabilistic Graphical Models}
 \label{sec:graphical-models}
@@ -331,9 +370,8 @@ dependence between variables (edges on the graph). Important to note that here
 unknown by the system and is conditioned by other variables/evidences.
 
 This type of graphs provide a generative model where the probability of any
-given scenario can be determined. As opposed to non-generative models where a
-given probability can only be calculated if certain data is given.
-This means when a graphical model is learned, it can be used to generate new
+given scenario can be determined.
+This means once a graphical model is learned, it can be used to generate new
 samples from the learned distribution.
 
 They have been successfully used in several machine-learning task such as:
@@ -342,7 +380,7 @@ They are also useful due to their ability to deal with semantic (high-level)
 features~\citep{boutell2006factor} and ability to represent properties of the
 reality they try to model.
 
-Two main types of graphical models have been used: Bayesian Networks which model
+Two main types of graphical models are widely used: Bayesian Networks which model
 directed edges between variables and Markov Random Fields where variables are
 connected by a potential but no special direction is given to edges.
 
@@ -353,7 +391,7 @@ rest of the graph~\citep{pearl1988probabilistic}.
 On non-directional graphs it is directly determined by the nodes connected to $a$.
 This allows the usage of graph algorithms such as \emph{min-cut} to quickly
 determine most likely scenarios. In the case of directed edges a node blanket is
-also influenced by the direction of the edges and a more complex schemes need to
+also influenced by the direction of the edges and more complex schemes need to
 be used.
 
 As \cite{lauritzen2002chain} points this two types of models can be represented
@@ -371,27 +409,23 @@ seeing a message-passing mechanism between nodes. Belief propagation is used to
 calculate marginal-probabilities.
 
 \begin{figure}[ht]
-    \begin{minipage}[b]{0.3\linewidth}
-        \centering
-        \includegraphics[width=0.8\textwidth]{figures/graphical-models/BayesNet.pdf}
-        \caption{Bayes Networks}
-    \end{minipage}
-    \hspace{0.5cm}
-    \begin{minipage}[b]{0.3\linewidth}
-        \centering
-        \includegraphics[width=0.8\textwidth]{figures/graphical-models/MarkovRandomField.pdf}
-        \caption{Markov Random Field}
-    \end{minipage}
-    \hspace{0.5cm}
-    \begin{minipage}[b]{0.3\linewidth}
-        \centering
-        \includegraphics[width=\textwidth]{figures/graphical-models/FactorGraph.pdf}
-        \caption{Factor Graph}
-    \end{minipage}
+\centering
+
+\subfloat[Bayes Networks] {
+  \includegraphics[width=0.2\textwidth]{figures/graphical-models/BayesNet.pdf}
+}
+\quad
+\subfloat[Markov Random Field] {
+  \includegraphics[width=0.2\textwidth]{figures/graphical-models/MarkovRandomField.pdf}
+}
+\quad
+\subfloat[Factor Graph] {
+  \includegraphics[width=0.3\textwidth]{figures/graphical-models/FactorGraph.pdf}
+}
 \end{figure}
 
 \subsection{Factor Graphs}
-A \emph{factor graph} is a bipartite graph connecting two sets of nodes $X_G$ and $F_G$
+A \emph{factor graph}~\cite{kschischang2001factor} is a bipartite graph connecting two sets of nodes $X_G$ and $F_G$
 representing random variables and factors.
 Each factor is described by function $\phi$ dependent only on the variables $x_\phi$
 to which the factor is connected.
@@ -404,24 +438,11 @@ P_G(x) = \frac{1}{Z}\prod_{\phi \in F_G}{\phi(x_{\phi})},\qquad
 Z = \sum_{X_G}\prod_{\phi \in F_G}{\phi(x_{\phi})}
 \end{equation}
 
+\subsection{Inference}
+The goal by obtaining a graphical model between all the variables of a system is the ability
+to efficiently infer the most likely scenarios based on the available information.
+The sensed information can be used to clamp variables and the model used to calculate probabilities
+or marginal probabilities.
 
-More often we are only interested in a marginal of the probability distribution.
-
-\begin{equation}
-M_G(x) = \frac{1}{Z}\sum_{X_G \backslash x}{\prod_{\phi \in F_G}{\phi(x_{\phi})}}
-\end{equation}
-
-\subsection{Inference Engines}
-Exact Inference and Approximate Inference methods
-
-\section{Principle of Maximum Entropy}
-\label{sec:max-entropy}
-The principle of maximum entropy states that given a set of distributions that
-are coherent with the acquired knowledge, the one which maximizes entropy should
-be picked.
-
-In the case of non-available information this is the uniform distributions.
-In cases where we only know the mean and standard deviation a normal
-distribution shall be picked, etc\dots
-
-
+In that sense a basic operation on a graph is the \gls{MAP} operation, which allows to calculate
+which configuration on a variable or subset of variables maximizes a given function.
