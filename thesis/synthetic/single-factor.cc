@@ -139,6 +139,25 @@ public:
 
 };
 
+void FilterVariable(const set<string> &allowed, VariableType *type) {
+  type->values.clear();
+  type->values.reserve(allowed.size());
+  type->values.insert(type->values.end(), allowed.begin(), allowed.end());
+}
+
+
+void FilterFactor(int varid, const string &vartype, const VariableType &var, FactorData *data) {
+  (*data).variables[varid].second = vartype;
+
+  map<vector<string>, double> potential;
+  typedef pair<vector<string>,double> iter;
+  BOOST_FOREACH(const iter &it, data->potential)
+    if (find(var.values.begin(), var.values.end(), it.first[varid]) != var.values.end())
+      potential.insert(it);
+  potential.swap(data->potential);
+}
+
+
 }
 
 size_t room_types = 7;
@@ -147,31 +166,42 @@ size_t property_types = 8;
 int C = 1;
 
 set<string> known_rooms;
+set<string> novel_rooms;
 
 
 GraphInformation gi;
+// Real World
 VariableType *type_real_room = NULL;
 VariableType *type_real_prop = NULL;
 FactorData *factor_rroom_rprop = NULL;
 
+// Filtered Real Worlds
+VariableType *type_real_kroom = NULL;
+VariableType *type_real_nroom = NULL;
+FactorData *factor_rkroom_rprop = NULL;
+FactorData *factor_rnroom_rprop = NULL;
+
+// Conditional Learning
 VariableType *type_known_room = NULL;
 FactorData *factor_kroom_kprop = NULL;
 
+// Unconditional Learning
 VariableType *type_any_room = NULL;
 FactorData *factor_aroom_kprop = NULL;
 
 void generate_real_distribution_vars_and_factors() {
   for (size_t i = 0; i < n_known_rooms; ++i)
     known_rooms.insert(room(i));
+  for (size_t i = n_known_rooms; i < room_types; ++i)
+    novel_rooms.insert(room(i));
 
   // Real room variable.
   {
     VariableType &type = *(type_real_room = gi.Add("real_room", VariableType()));
-    for (int i = 0; i < room_types; ++i)
-      type.values.push_back(room(i));
+    type.values.insert(type.values.end(), known_rooms.begin(), known_rooms.end());
+    type.values.insert(type.values.end(), novel_rooms.begin(), novel_rooms.end());
     sort(type.values.begin(), type.values.end());
   }
-
   // Real property variable.
   {
     VariableType &type = *(type_real_prop = gi.Add("real_prop", VariableType()));
@@ -191,52 +221,22 @@ void generate_real_distribution_vars_and_factors() {
     BOOST_FOREACH(const string &room, type_real_room->values)
       factor.potential[vector_of(room, type_real_prop->values[random()%property_types])] = 0.3 + drand48();
   }
+
+  // Make filtered versions of known and novel rooms to use to generate samples.
+  type_real_kroom = gi.Add("known_room", *type_real_room);
+  FilterVariable(known_rooms, type_real_kroom);
+
+  type_real_nroom = gi.Add("novel_room", *type_real_room);
+  FilterVariable(novel_rooms, type_real_nroom);
+
+  factor_rkroom_rprop = gi.Add("f_real(room, property|room in known rooms)", *factor_rroom_rprop);
+  FilterFactor(0, "known_room", *type_real_kroom, factor_rkroom_rprop);
+
+  factor_rnroom_rprop = gi.Add("f_real(room, property|room in novel rooms)", *factor_rroom_rprop);
+  FilterFactor(0, "novel_room", *type_real_nroom, factor_rnroom_rprop);
 }
 
-void generate_conditional_samples(vector<vector<string> > *output) {
-  for (size_t i = 0; i < output->size();) {
-    GraphStructure s;
-    int n_properties = 1 + (random() % 15);
-    s.createRandom(1, n_properties, 0);
-    MGraph g(s, type_real_room, type_real_prop, NULL, factor_rroom_rprop);
-   
-    Query q(&g);
-    vector<string> sample;
-    q.Sample(g.vars, &sample);
-    if (known_rooms.count(sample[0]))
-      (*output)[i++].swap(sample);
-  }
-}
-
-void learn_known_room_distribution(const vector<vector<string> > samples) {
-  // Create variable type for known room states.
-  {
-    VariableType &type = *(type_known_room = gi.Add("known_room", VariableType()));
-    type.values.insert(type.values.end(), known_rooms.begin(), known_rooms.end());
-    sort(type.values.begin(), type.values.end());
-  }
-
-  // Learn factor(room, property | room in known_rooms) from labelled data.
-  {
-    FactorData &factor = *(factor_kroom_kprop = gi.Add("f(room, prop|room in known rooms)", FactorData()));
-    factor.variables.push_back(make_pair("room", "known_room"));
-    factor.variables.push_back(make_pair("prop", "real_prop"));
-    BOOST_FOREACH(const vector<string> &sample, samples) {
-      const string room = sample[0];
-      for (size_t f = 1; f < sample.size(); ++f) {
-        const string prop = sample[f];
-        factor.potential[vector_of(room, prop)]++;
-      }
-    }
-   
-    // Added smoothing factor.
-    BOOST_FOREACH(const string &room, known_rooms)
-    BOOST_FOREACH(const string &prop, type_real_prop->values)
-      factor.potential[vector_of(room, prop)]++;
-  }
-}
-
-void generate_unconditional_samples(vector<vector<string> > *output, int size = -1) {
+void generate_samples(vector<vector<string> > *output, VariableType *room, FactorData *factor, int size) {
   BOOST_FOREACH(vector<string> &sample, *output) {
     GraphStructure s;
     int n_properties = size;
@@ -244,12 +244,45 @@ void generate_unconditional_samples(vector<vector<string> > *output, int size = 
       n_properties = 1 + (random() % 17);
 
     s.createRandom(1, n_properties, 0);
-    MGraph g(s, type_real_room, type_real_prop, NULL, factor_rroom_rprop);
+    MGraph g(s, room, type_real_prop, NULL, factor);
    
     Query q(&g);
     q.Sample(g.vars, &sample);
   }
 }
+
+void generate_unconditional_samples(vector<vector<string> > *output, int size = -1) {
+  generate_samples(output, type_real_room, factor_rroom_rprop, size);
+}
+void generate_conditional_ksamples(vector<vector<string> > *output, int size = -1) {
+  generate_samples(output, type_real_kroom, factor_rkroom_rprop, size);
+}
+void generate_conditional_nsamples(vector<vector<string> > *output, int size = -1) {
+  generate_samples(output, type_real_nroom, factor_rnroom_rprop, size);
+}
+
+
+void learn_known_room_distribution(const vector<vector<string> > samples) {
+  type_known_room = type_real_kroom;
+
+  // Learn factor(room, property | room in known_rooms) from labelled data.
+  FactorData &factor = *(factor_kroom_kprop = gi.Add("f(room, prop|room in known rooms)", FactorData()));
+  factor.variables.push_back(make_pair("room", "known_room"));
+  factor.variables.push_back(make_pair("prop", "real_prop"));
+  BOOST_FOREACH(const vector<string> &sample, samples) {
+    const string room = sample[0];
+    for (size_t f = 1; f < sample.size(); ++f) {
+      const string prop = sample[f];
+      factor.potential[vector_of(room, prop)]++;
+    }
+  }
+   
+  // Added smoothing factor.
+  BOOST_FOREACH(const string &room, known_rooms)
+  BOOST_FOREACH(const string &prop, type_real_prop->values)
+    factor.potential[vector_of(room, prop)]++;
+}
+
 
 void learn_any_room_distribution(const vector<vector<string> > &samples) {
   // Create variable type for any room states.
@@ -395,7 +428,7 @@ void example_single_factor() {
   generate_real_distribution_vars_and_factors();
 
   vector<vector<string> > conditional_samples(100);
-  generate_conditional_samples(&conditional_samples);
+  generate_conditional_ksamples(&conditional_samples);
   learn_known_room_distribution(conditional_samples);
  
   vector<vector<string> > unconditional_samples(1000);
@@ -408,9 +441,16 @@ void example_single_factor() {
 
   vector<vector<string> > test_data;
   for (size_t i = 1; i < 18; ++i) {
-    vector<vector<string> > data(50);
-    generate_unconditional_samples(&data, i);
-    test_data.insert(test_data.end(), data.begin(), data.end());
+    {
+      vector<vector<string> > data(50);
+      generate_conditional_ksamples(&data, i);
+      test_data.insert(test_data.end(), data.begin(), data.end());
+    }
+    {
+      vector<vector<string> > data(50);
+      generate_conditional_nsamples(&data, i);
+      test_data.insert(test_data.end(), data.begin(), data.end());
+    }
   }
   compare_performance(test_data);
 }
