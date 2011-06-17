@@ -363,7 +363,7 @@ void compare_performance(const vector<vector<string> > &samples) {
     
     // log(2) + log(\phi_k(x)) < k_i log(s_i) + log(\phi_a(x))
     // log(s_i) > (log(2) + log(\phi_k(x)) - log(\phi_a(x))) / k_i
-    double dyn_threshold = (klogZ - alogZ)/n_properties;
+    double dyn_threshold = (-1+klogZ - alogZ)/n_properties;
     result_dyn.push_back(make_pair(make_pair(n_properties, exp(dyn_threshold)), known_rooms.count(sample[0]) == 1));
 
     // Assuming a constant probability of drawing a novel sample.
@@ -371,8 +371,8 @@ void compare_performance(const vector<vector<string> > &samples) {
     vector<string> no_clamp;
     double t_klogZ = kq.LogZ(no_prop, no_clamp);
     double t_alogZ = aq.LogZ(no_prop, no_clamp);
-    double fix_threshold = (klogZ - t_klogZ) - (alogZ - t_alogZ);
-    result_fix.push_back(make_pair(make_pair(n_properties, exp(fix_threshold)), known_rooms.count(sample[0]) == 1));
+    double fix_threshold = exp((klogZ - t_klogZ) - (alogZ - t_alogZ));
+    result_fix.push_back(make_pair(make_pair(n_properties, fix_threshold), known_rooms.count(sample[0]) == 1));
     //result_dyn.push_back(make_pair(make_pair(n_properties, fix_threshold/n_properties), known_rooms.count(sample[0]) == 1));
 
     // Real distribution
@@ -427,11 +427,11 @@ void compare_performance(const vector<vector<string> > &samples) {
 void example_single_factor() {
   generate_real_distribution_vars_and_factors();
 
-  vector<vector<string> > conditional_samples(100);
+  vector<vector<string> > conditional_samples(20*n_known_rooms);
   generate_conditional_ksamples(&conditional_samples);
   learn_known_room_distribution(conditional_samples);
  
-  vector<vector<string> > unconditional_samples(1000);
+  vector<vector<string> > unconditional_samples(20*room_types);
   generate_unconditional_samples(&unconditional_samples);
   learn_any_room_distribution(unconditional_samples);
 

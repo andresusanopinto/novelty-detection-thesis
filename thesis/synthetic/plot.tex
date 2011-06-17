@@ -5,11 +5,11 @@
 
 \begin{document}
 
-\section{Optimal Decision}
+\section{Optimal Decision: $P(\overline{novel}|x)$}
 \begin{tikzpicture}[only marks,mark size=1.2pt]
 \begin{axis}[
- xlabel={Threshold},
- ylabel={Graph Size},
+ xlabel={Graph Size},
+ ylabel={Threshold},
  width=\textwidth,
  height=1.5\textwidth]
 \addplot[mark=+,mark options={fill=white}] file {result_opt_threshold_known.data};
@@ -17,11 +17,11 @@
 \end{axis}
 \end{tikzpicture}
 
-\section{Constant $P(novel)$}
+\section{Constant $P(novel)$: $P_C(x)/P_U(x)$}
 \begin{tikzpicture}[only marks,mark size=1pt]
 \begin{axis}[
- xlabel={Threshold},
- ylabel={Graph Size},
+ xlabel={Graph Size},
+ ylabel={Threshold},
  width=\textwidth,
  height=1.5\textwidth]
 \addplot[mark=+,mark options={fill=white}] file {result_fix_threshold_known.data};
@@ -32,8 +32,8 @@
 \section{Dynamic $P(novel)$}
 \begin{tikzpicture}[only marks,mark size=1pt]
 \begin{axis}[
- xlabel={Threshold},
- ylabel={Graph Size},
+ xlabel={Graph Size},
+ ylabel={Threshold},
  width=\textwidth,
  height=1.5\textwidth]
 \addplot[mark=+,mark options={fill=white}] file {result_dyn_threshold_known.data};
