@@ -199,10 +199,10 @@ For that \gls{Dora} performs detection on the following categorical entities:
 \item[Geometric Shape] by using features extracted from the laser data and pre-trained classifiers
 the system tries to classify rooms according to their shapes (e.g.\ rectangular, square).
 \item[Geometric Size] is classified once again recurring to laser data. In this case the system
+tries to categorize the room size according to a set of previously learned concepts (e.g. large, medium, small).
 \item[Object Detection] is performed by running traditional object recognition classifiers.
 Those are previously trained on a supervised fashion to later be able to detect objects
 based on their visual features, e.g.\ by using \gls{SIFT} as described in \autoref{sec:sift}.
-tries to categorize the room size according to a set of previously learned concepts (e.g. large, medium, small).
 \item[Visual Appearance] is extracted from the visual input. For that Dora uses a trained
 a set of classifiers on global visual features such as \gls{CRFH} to categorize the visual
 appearance of a room in categories such as corridor, office, library.
