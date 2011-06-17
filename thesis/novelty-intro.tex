@@ -51,7 +51,7 @@ ability to scale in feature dimension,
 deal with multiple classes and performing detection efficiently as many
 autonomous systems require real-time or close to real-time performance.
 
-\subsection{Review}
+\subsection{Review of Novelty Detection Methods}
 Many approaches have been made based on statistical methods. Those often model
 the training data with statistic distributions and then perform hypothesis tests.
 For example: testing whether two distributions are the same or using distance to
@@ -60,21 +60,21 @@ In some sense all they define a distance measure to normality and employ a
 threshold on that.
 
 A common approach is to use density estimation and use the expected probability
-of a sample to trigger the sample as novel. Examples are usage of
-Gaussian Mixture Models and Parzen-window estimators. In order to be effective
-those use data as close as possible to the input features and use
-dimension-reduction techniques such as \gls{PCA} to make density
+of a sample to classify the sample as novel. Examples of such techniques are
+Gaussian Mixture Models and Parzen-window estimators. In order to be effective,
+those rely on data as close as possible to the input features and use
+dimensionality\hyp{}reduction techniques such as \gls{PCA} to make density
 estimation feasible. Note that as dimension increases an exponential number
 of data samples would be required to approach the density with the same quality.
 
 \cite{bishop1994novelty} uses that approach by employing a Parzen-window to
-estimate the density of the training data on a given input feed into a
-neural-network. By triggering on the calculated density they detect samples
+estimate the density of the training data on a given input fed into a
+neural-network. Using the calculated density, they detect samples
 that differ from the training data and consider their neural-network output
 to be unreliable as the samples are distinct from what the network was trained
 with.
 
-A slightly different approach is done by one-class \gls{SVM} approaches that
+A slightly different approach is applied in case of by one-class \gls{SVM} approaches that
 try to distinguish novelty by separating the training set from all the other
 points in the input space. They try to achieve that by enclosing the training
 set by some structure (e.g.\ an hyper-sphere)~\cite{bennett2000support}.
@@ -86,43 +86,21 @@ simply creating a boundary between known data and novel data
 
 Error reconstruction methods have also been used for novelty detection.
 They use the assumption that the class to be defined lies on a manifold embedded
-on an input space of higher dimensions. By using dimensional reduction
-techniques, they try to defined that manifold and calculate how far a new sample
-is from it.
-One of the most common methods used for that is
+into a sample space of higher dimensionality. By using dimensionality\hyp{}reduction
+techniques, a manifold is defined and the distance between the manifold and the new sample
+is calculated. One of the most common methods used for that purpose is
 \gls{K-PCA}~\cite{scholkopf1997kernel}, which uses the kernel-trick to extend
-\gls{PCA} and perform a nonlinear dimensionality reduction on the input.
-This technique has been successfully used in novelty detection by
-\cite{Hoffmann2007863}.
+\gls{PCA} and perform a nonlinear dimensionality reduction of the input.
+This technique has been successfully used for novelty detection in \cite{Hoffmann2007863}.
 
-\subsection{Related Work}
-\cite{zhang2005probabilistic} present a probabilistic semantic approach to image
-annotation and retrieval with a multi-modal information. They introduce an
-hidden variable modelling a concept present on a scene that connects together
-information coming from both a bag of words and visual features extracted. By
-training that hidden-variable their system becomes aware of possible existent
-semantic categories and their relation between both textual and visual features.
-Although not able to perform novelty detection, their approach is interesting by
-the use of an hidden variable to probabilistic model the multi-modal sensors.
-
-\cite{boutell2006factor} presents a method to perform scene-classification
-from low-level region detectors using factor graphs. Those low-level detectors
-provide semantic (high-level) cues on the higher level scene-classification
-task. Due to the nature of the low-level detectors, they ought to be treated
-in a probabilistic way. For that their method uses factor graphs. The method
-also exploits spatial relation information between regions to improve the
-classification performance. A presented scheme using only pairwise relations
-between regions is show to have better performance than try to approach the
-correct scheme with a big single-factor. I.e.\ the pairwise relations can be
-approximated with the modest amounts of training data, where the single-factor
-demands an impractical amount of training data.
-No approach is made on it at novelty detection either of regions or scene
-categories. 
-
-\cite{bishop1994novelty} works shows that assuming a uniform unconditional
-distribution novelty detection can be performed by triggering on the
-density probability of the training data. The system is employed to detect novel
-inputs for a neural-network.
+\cite{japkowicz1995novelty} also follows a similar approach: \emph{Redundancy
+Compression and Non-Redundancy Differentiation} which is a process believed
+to happen in the hippocampus. They introduce an auto-encoder
+that learns to encode a sample on a considerable smaller description and later reconstructs
+the original sample from this smaller description. Their suggested system
+learns how to discard and compress redundant information while still be able to recover
+the original sample. By training it with samples from a given class, it
+is expected that it will badly reconstruct a sample from a different one.
 
 \cite{ranganathan2010pliss} presents a system able to perform place recognition
 and classification from visual clues. It is able to perform segmentation by
@@ -133,6 +111,19 @@ a deterministic decision that impacts any future result, allowing it to adjust
 the segmentation and place classification as more data becomes available.
 The system is also able to detect novel instances and methods how to adapt it
 to run on a constant amount of memory and computation are presented.
+
+\cite{boutell2006factor} presents a method to perform scene-classification
+from low-level region detectors using probabilistic graphical models.
+The information obtained by the region detectors is exploited together with the
+spatial relations between on the higher level scene-classification task.
+A presented scheme using only pairwise relations between regions is show to
+have better performance than the correct approach of modelling all regions connectivity
+with a large single-factor as the pairwise relations can be
+approximated with modest amounts of training data, where the single-factor
+demands an impractical amount of training data.
+No approach is made on it at novelty detection either of regions or scene
+categories. 
+
 
 \section{Novelty Detection by Thresholding}
 The objective of a novelty detection system is to classify a given sample $x$ as
