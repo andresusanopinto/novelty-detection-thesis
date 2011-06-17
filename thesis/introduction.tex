@@ -73,48 +73,40 @@ It presents then the specific problem it addresses and defines the goals to achi
 At last it presents the structure of the other chapters.
 
 \section{Context}
+% Spatial Representations
 % Spatial Semantics only!
-% Mobile Robotics
-% Room Categories
+% Room Categories actually.
 
-Being able to deal with any 
-in this sense this thesis will focus only on the semantic spatial mapping problem.
-
-Humans organize spaces as areas, they characterize them by the type of 
-
-% Yeah thats what you call dream :P
-In an extreme ideal case the agent should be able to go from zero-knowledge to
-understanding presence of certain objects (as generators of a set of sensed
-sensed properties grouped locally), understand areas within rooms (sink-area on
-on a kitchen), rooms as separated by doors, and understand environments such
-as office, home, warehouse, spaceship.
-
-% Semantic knowledge (spatial-knowledge)
-% It also holds an important role in long-term planning and stability as it
-% hides the space-time local details and allows to focus on high-level thinking.
-
-In that sense the need for semantic mapping arises, and it can be described as the
-relation between spatial areas and a set of existent concepts used by humans to
-describe them.
-
-, not just for the purpose of navigation and obstacle avoidance, 
-but also in terms of human semantics and functionality.
-
-An essential competence for cognitives robots is their ability to reason about space.
-Spatial knowledge plays an important role in navigation, reasoning, planning and episodic memory.
-% == Introduce the need of semantic representations ==
 %
-% There is a lot of low-level methods (or specific knowledge to robots)
-% But the creation of semantic representations allow to bridge that low-level
-% sensing with high-level concepts that facilitate several high-level Tasks.
+In mobile robotics the main need is on spatial information. Having a representation of all
+the spatial entities and relations between them allow the robot to navigate and interact
+with them. Maps are the default tool for representing those spaces, and computers excel at
+creating close to exact representations of spatial environments.
+But which concepts existent in the human spatial knowledge are needed in order to turn those
+representations a usable tool to represent human concepts?
 
+Different spatial knowledge types can be identified depending on the scale, abstraction level,
+and required generalization. For example geometric type aspects which robots are already very
+good at representing, object knowledge which is incredibly basic for humans, delineation
+of spatial areas and relations between instances of all those knowledge types. e.g.\ a specific
+object (book) is on top of another object (table) that is located inside an area (room-library)
+that is inside a another area (university).
+As seen on this example humans do not limit themselves at representing entities
+in space and spatially relate them but they also attribute semantic value to them.
 
+It is this semantic value attributed by humans to entities that is interesting for endowing
+robots with knowledge on how to interpret and reason over human environments.
+By understanding which objects are expected to be found on a room, what are the properties that
+distinguish room categories, which room types are likely to be connected together a robot can
+aim at increase its effectiveness on indoor environments.
 
-
-% Spatial knowledge representation
-% Semantic Mapping
-
-
+A basic concept on indoor environments is that of room. Rooms allow humans to segment areas
+in high\hyp{}level entities that can be categorized according to the properties and expected
+activities to be performed on them.
+e.g.\ kitchens are rooms where cornflakes are usually found, a library is identified by the presence
+of many books, a lecture hall is a place where lessons are given.
+Since room categories play an important role in understanding and reasoning about
+indoor human environments this thesis will focus on them.
 
 \section{Motivation}
 % Detect limitations and novel knowledge
@@ -152,6 +144,11 @@ make up our human-reality.
 
 Lack of methods that are able to detect gaps on their
 Study how structure changes novelty
+
+Being able to represent all this type of knowledge is an huge task on itself and this thesis
+focus mainly on how to detect novelty on semantic values  
+Pronobis~\cite{pronobis2011phd} has tackled this problem by proposing 
+
 
 \section{Proposal}
 
