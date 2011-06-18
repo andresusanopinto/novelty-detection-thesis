@@ -110,61 +110,29 @@ indoor human environments this thesis will focus on them.
 
 \section{Motivation}
 % Detect limitations and novel knowledge
+It is highly desirable that a robot can be deployed to new and unknown environments. Aiming at that,
+a robot has to perform its own semantic mapping of the environment instead of relying on a provision
+of already labelled maps.
+But the semantic mapping ability of a robot is restricted by its spatial and semantic knowledge.
+This poses a problem as its unrealistic to believe that on unknown environments the robot knowledge
+is complete. So it becomes important to detect gaps on the robot knowledge, such that the robot can
+be aware of limitations of its models and devise techniques to not fail victim of its limitations.
 
-Deploy to new environments, long-term and active learning,
-understand of limitations of the existent knowledge
-reliability
+Additionally the detection of knowledge gaps, will serve as base for several other problems in
+artificial intelligence such as active-learning and maintenance of long and life-long knowledge.
 
-Example of what kind of an high-level thinking on space and its semantics can
-provide: Get me a beer/milk concept.
+\section{Proposal and Goals}
+This thesis aims at developing methods that can be used to detect gaps on the semantic knowledge
+of an agent. For that the spatial knowledge representation proposed in \cite{pronobis2010ias} will
+be used as base defining the agent knowledge.
+Given an instance world, that knowledge, is used to perform semantic mapping~\cite{pronobis2011semmap}
+on indoor environments using a probabilistic graphical model. That model is instantiated from the
+environment using the spatial knowledge and captures both semantic and structural information of
+space. It allows the agent to map all the modelled variables in the presence of uncertainty and 
+therefore this thesis will focus on study and developing methods that can detect novel semantic room
+categories from it.
 
-
-% == Reasoning about need for Novelty Detection ==
-%
-% Dynamic environment (inability to know the environment or even to be possible
-% to map all semantic concepts to interact with humans).
-%
-% Knowledge-Awareness (knowing what we know... And detecting novel cases)
-% Identify gaps in the semantic knowledge.
-% Automatic detection and learning of novel concepts.
-%
-% Increase robustness
-% Self-Extending
-%
-
-\section{Problem}
-% Deal with uncertainty -> need for probabilistic models.
-% Deal with semantic    -> need of structured models such as graphical models.
-
-
-They need to possess ability to adapt to situations as its infeasible to rely
-on extensive man-work to tag objects, map space and code all the aspects that
-make up our human-reality.
-
-
-Lack of methods that are able to detect gaps on their
-Study how structure changes novelty
-
-Being able to represent all this type of knowledge is an huge task on itself and this thesis
-focus mainly on how to detect novelty on semantic values  
-Pronobis~\cite{pronobis2011phd} has tackled this problem by proposing 
-
-
-\section{Proposal}
-
-% Extend a probabilistic graphical modelling framework with capabilities to
-% detect novelty.
-% Both in terms of novel classes as of novel structure.
-%
-Given a probabilistic structure representing the sensed conceptual knowledge
-obtained by the agent develop methods able to detect novelty present
-either on new semantic concepts (new classes) or even on structure that was
-previously unknown.
-
-
-For that the probabilistic semantic representation presented by
-\cite{pronobis2011phd} is used.
-
+% Study how structure changes novelty.
 % If everything goes fine... 2 of the "Future Directions" proposed are 
 % Novelty Detection and Learning of Novel Concepts:
 %  Identify Gaps in Spatial and Semantic Knowledge -> Addressed
@@ -173,7 +141,6 @@ For that the probabilistic semantic representation presented by
 % Using Properties for Space Segmentation
 %  If we move on detecting novel structures on the graph we are addressing this
 %  issue.
-
 
 
 \section{Thesis Outline}
