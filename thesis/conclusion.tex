@@ -3,19 +3,19 @@
 % Summary of developed work
 This thesis studied the problem of detecting novel situations where a robot lacks knowledge to
 correctly describe them.
-It did so on the area of semantic mapping on indoor spaces, by detecting that none of known room
+It did so on the area of semantic mapping on indoor spaces, by detecting that none of the known room
 categories was able to correctly explain the sensed properties.
 
 For that it reviewed novelty detection and how an optimal detector can be implemented by
-thresholding. Showing after that, with the assumption of constant probability of seeing a
-novel case, an optimal ordering function for thresholding can be implemented based on
+thresholding. Showing after, that with the assumption of constant probability of seeing a
+novel case an optimal ordering function for thresholding can be implemented based on
 the factor between a conditional and unconditional probability.
 
 It studied the semantic mapping process proposed by \cite{pronobis2011semmap} and presented a method
 to detect novel room categories based on probabilistic graphical models.
 Using a synthetic dataset, respecting the assumptions, it showed that such a method would be optimal
 if unconditional probability could be optimally approximated.
-Since in realistic conditions unconditional probability cannot be implemented due to the lack of
+Since, in realistic conditions, unconditional probability cannot be implemented due to the lack of
 knowing all the classes, some approaches were performed to approximate it with either a uniform
 assumption or by approximating with simplified models using unlabelled data.
 
@@ -25,11 +25,11 @@ Additionally limitations of the presented method and directions for future work 
 
 \section{Results and Conclusions}
 
-After studying the used semantic mapping process and studying novelty detection methods, this
-thesis proposed modelling a conditional and an unconditional probability distribution of sensed
-data using graphical models. Under the presented assumptions and assuming both can be approximated
-with perfect accuracy a ratio between those both probabilities would yield an optimal ordering
-function for implementing a novelty detector.
+After studying the semantic mapping process and novelty detection methods, this
+thesis proposed modelling the conditional and unconditional probability distribution of sensed
+data using graphical models. Under the presented assumptions and assuming both can be exactly known
+a ratio between those probabilities would yield an optimal ordering function for implementing a
+novelty detector.
 
 This case, was showed to be optimal using a synthetic dataset that simulates a simplified
 environment of semantic categorization of room based on sense properties.
@@ -38,9 +38,9 @@ used by the semantic mapping process, this thesis moved forward with testing met
 the unconditional probability. It tested the usage of a uniform distribution and explored the usage
 of unlabelled data to produce better models.
 
-Additionally it was studied how the performance of the presented methods change as more data
+Additionally it has studied how the performance of the presented methods change as more data
 is sensed from the environment. As expected all the methods increase their performance, but they
-move further from what would optimally be expected.
+move further away from what could be obtained with exact information.
 Additionally the disadvantage between picking a uniform assumption and using an highly simplified
 model for the unlabelled data, starts reducing as more information is available.
 Nonetheless the model based on the usage of unlabelled data consistently lead to better detector
