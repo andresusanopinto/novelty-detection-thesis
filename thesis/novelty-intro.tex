@@ -260,6 +260,301 @@ probabilities on different sets of variables into the same measure units
 such that a threshold can be implemented.
 
 
+\section{Novelty Detection on the Conceptual Map}
+
+This section presents now how to use graphical models produced by the conceptual map and the
+novelty detection concepts introduced earlier on this chapter in order to detect room categories the
+system is not aware of.
+
+For that both models to approximate both the conditional and unconditional probability need to
+be defined and then the ratio between them used to define a function over which a threshold
+implements a novelty detection system.
+
+\subsection{Approximating the Conditional Probability}
+The actual semantic mapping of the environment happens using the \emph{conceptual map}
+introduced on \autoref{sec:conceptual-map}. During it the agent instantiates a
+\emph{chain graph} to model distribution of the sensed variables according to the known
+concepts and categories introduced as hidden variables on the graph. Using that graphical model
+the system is then able to propagate and find the most likely configuration of the represented
+variables, for instance the semantic category of a specific room is modelled as an hidden variable
+with states representing the semantic values, by calculating probabilities on that variable the
+system finds its belief on the room belonging to a specific category.
+
+Since the graphical model produced by the conceptual map tries to model the distribution of
+variables assuming the knowledge of the agent holds true, it represents the way to model
+$P(x|known)$, and allows to calculate the density probability that the given set of sensed
+features $x$ are sensed given that all the variables and graph structure, including the category of
+a specific room $a$ are correctly modelled by the agent knowledge.
+This way the distribution modelled by a factor graph equivalent to the chain-graph used by
+the conceptual map can be used as an approximation for the conditional probability of $x$.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \& \& \node (room3) [latent] {}; \& \\
+    \& \& \& \\
+    \&
+    \node (room1) [latent] {$a$}; \& \&
+    \node (room2) [latent] {}; \\
+    \& \& \& \\
+    \node (shape1f) [factor] {}; \&
+    \node (appearance1f) [factor] {}; \&
+    \node (object1f) [factor] {}; \&
+    \node (factor2) [factor] {}; \\
+    \node (shape1l) [obs] {$S_p$}; \&
+    \node (appearance1l) [obs] {$A_p$}; \&
+    \node (object1l) [obs] {$O_p$}; \&
+    \node (prop2) [obs] {$X_p$}; \\
+  };
+
+  \draw [-] (room1) -- (shape1f) -- (shape1l);
+  \draw [-] (room1) -- (appearance1f) -- (appearance1l);
+  \draw [-] (room1) -- (object1f) -- (object1l);
+  \draw [-] (room2) -- (factor2) -- (prop2);
+
+  \draw [-] (room1) -- (room2) node (r12f) [midway,factor] {};
+  \draw [-] (room1) -- (room3) node (r13f) [midway,factor] {};
+  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+
+  \begin{pgfonlayer}{background}
+    \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+    \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+  \end{pgfonlayer}
+\end{tikzpicture}
+
+\caption{Factor graph modelling the conditional probability distribution, case where the
+         room category of room $a$ is known by the system.}
+\end{figure}
+
+
+\subsection{Approximating the Unconditional Probability}
+
+With no knowledge on the unconditional probability the correct approach is to
+assume a uniform distribution (\autoref{sec:max-entropy}).
+That is represented in factor graphs by a graph without any factors: \autoref{fig:uniform-graph}.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=20pt, row sep=10pt,ampersand replacement=\&] {
+    \node (x1) [obs] {$S_1$}; \&
+    \node (x2) [obs] {$A_1$}; \&
+    \node (x3) [obs] {$O_1$}; \&
+    \node (xi) [] {\dots}; \&
+    \node (xn) [obs] {$X_n$}; \\
+  };
+\end{tikzpicture}
+\caption{\label{fig:uniform-graph}A factor graph modelling a uniform
+         distribution over the sensed set of features $x$.}
+\end{figure}
+
+Thought, very often there is extra knowledge that can be obtained about the distribution
+of the variables that helps to model the unconditional distribution. With that, more accurate
+models can be produced.
+In this case, the system is interested in detecting only if a specific variable category is not
+known. With that in mind, it was assumed that an unknown category can only influence variables
+by using the same structure as the known variables. This is: it was assumed the structure of the
+graph was correct even when a room has an unknown category.
+
+\begin{figure}[h]
+\centering
+\subfloat[\label{fig:any-a}Since variable $a$ can be unknown, the agent does not has
+knowledge on how to model the dashed relations.]{
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \&
+    \&
+    \node (room3) [latent] {}; \& \\
+    \& \& \& \\
+    \&
+    \node (room1) [latent,dashed] {$a$}; \& \&
+    \node (room2) [latent] {}; \\
+    \& \& \& \\
+    \nofactor {shape1f}{}{} {right=0pt}; \&
+    \nofactor {appearance1f}{} {} {right=0pt}; \&
+    \nofactor {object1f}{} {} {right=0pt}; \&
+    \node (factor2) [factor] {}; \\
+    \node (shape1l) [obs] {$S_p$}; \&
+    \node (appearance1l) [obs] {$A_p$}; \&
+    \node (object1l) [obs] {$O_p$}; \&
+    \node (prop2) [obs] {$X_p$}; \\
+  };
+  \draw [-] (shape1f) -- (shape1l);
+  \draw [-] (appearance1f) -- (appearance1l);
+  \draw [-] (object1f) -- (object1l);
+  \draw [-] (room2) -- (factor2) -- (prop2);
+  \draw [-,draw=none] (room1) -- (room2) node (r12f) [midway,factor] {};
+  \draw [-,draw=none] (room1) -- (room3) node (r13f) [midway,factor] {};
+  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+  \draw [-] (room2) -- (r12f);
+  \draw [-] (room3) -- (r13f);
+
+  \draw [-,dashed] (room1) -- (shape1f);
+  \draw [-,dashed] (room1) -- (appearance1f);
+  \draw [-,dashed] (room1) -- (object1f);
+  \draw [-,dashed] (room1) -- (r12f);
+  \draw [-,dashed] (room1) -- (r13f);
+
+  \begin{pgfonlayer}{background}
+    \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+    \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+  \end{pgfonlayer}
+\end{tikzpicture}
+}
+\qquad \qquad
+\subfloat[Without knowledge on all states of $a$, all variables dependent on $a$ get directly
+          dependent between each other, introducing a big single factor.]{
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \& \& \node (room3) [latent] {}; \& \\
+    \& \& \& \\
+    \&
+    \node (room1) [factor] {}; \& \&
+    \node (room2) [latent] {}; \\
+    \& \& \& \\
+    \&
+    \&
+    \&
+    \node (factor2) [factor] {}; \\
+    \node (shape1l) [obs] {$S_p$}; \&
+    \node (appearance1l) [obs] {$A_p$}; \&
+    \node (object1l) [obs] {$O_p$}; \&
+    \node (prop2) [obs] {$X_p$}; \\
+  };
+
+  \draw [-] (room1) -- (shape1l);
+  \draw [-] (room1) -- (appearance1l);
+  \draw [-] (room1) -- (object1l);
+  \draw [-] (room2) -- (prop2);
+
+  \draw [-] (room1) -- (room2);
+  \draw [-] (room1) -- (room3);
+  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+
+  \begin{pgfonlayer}{background}
+    \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+    \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+  \end{pgfonlayer}
+\end{tikzpicture}
+}
+\caption{\label{fig:known-struct}Factor graph modelling distribution of sensed variables when variable $a$ can be unknown.}
+\end{figure}
+
+If the structure and all the other variables can be assumed to be correctly modelled by the
+knowledge of the agent, then all variables that were directly dependent on $a$ become directly
+dependent between them, introducing a single factor (\autoref{fig:known-struct}).
+By approximating this factor the agent can then obtain a model for the unconditional probability.
+
+In cases no other information is available the introduced factor can be considered uniform\footnote{Uniform factors do not influence the
+distribution represented by the factor graph and so can be removed from the graph representation}
+and dropped from the graph (see \autoref{fig:uniform-model}).
+Nonetheless it may be the case that due the cost of labelling data, the agent does not has knowledge
+on all the possible categories of $a$, but still has access to unlabelled data.
+In that case unlabelled samples may be gathered and explored to achieve a better approximation of
+the real distribution of variables.
+Though the factor that needs to be approximated requires handling of all the connected variables
+and enormous amounts of data may be needed to approximate it.
+
+A simple approach can be performed by assuming the variables connected to the factor to be independent
+but having a bias towards certain values. This approach is equivalent to connecting single factors
+on each of variables and approximating those factors using unlabelled data as seen on \autoref{fig:independent-model}.
+
+
+\begin{figure}[h]
+\centering
+\subfloat[\label{fig:uniform-model}Uniform Model]{
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \& \& \node (room3) [latent] {}; \& \\
+    \& \& \& \\
+    \&
+    \node (room1) [latent,draw=none] {}; \& \&
+    \node (room2) [latent] {}; \\
+    \& \& \& \\
+    \&
+    \&
+    \&
+    \node (factor2) [factor] {}; \\
+    \node (shape1l) [obs] {$S_p$}; \&
+    \node (appearance1l) [obs] {$A_p$}; \&
+    \node (object1l) [obs] {$O_p$}; \&
+    \node (prop2) [obs] {$X_p$}; \\
+  };
+
+  \draw [-] (room2) -- (factor2) -- (prop2);
+  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+
+
+  \begin{pgfonlayer}{background}
+    \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+    \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+  \end{pgfonlayer}
+\end{tikzpicture}
+}
+\qquad
+\subfloat[\label{fig:independent-model}Independent Model] {
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \& \& \node (room3) [latent] {}; \& \\
+    \& \& \& \\
+    \&
+    \node (room1) [latent,draw=none] {}; \& \&
+    \node (room2) [latent] {}; \\
+    \& \& \& \\
+    \node (shape1f) [factor] {}; \&
+    \node (appearance1f) [factor] {}; \&
+    \node (object1f) [factor] {}; \&
+    \node (factor2) [factor] {}; \\
+    \node (shape1l) [obs] {$S_p$}; \&
+    \node (appearance1l) [obs] {$A_p$}; \&
+    \node (object1l) [obs] {$O_p$}; \&
+    \node (prop2) [obs] {$X_p$}; \\
+  };
+
+  \draw [-] (shape1f) -- (shape1l);
+  \draw [-] (appearance1f) -- (appearance1l);
+  \draw [-] (object1f) -- (object1l);
+  \draw [-] (room2) -- (factor2) -- (prop2);
+
+  \draw [-,draw=none] (room1) -- (room2) node (r12f) [midway,factor] {};
+  \draw [-,draw=none] (room1) -- (room3) node (r13f) [midway,factor] {};
+  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+  \draw [-] (room2) -- (r12f);
+  \draw [-] (room3) -- (r13f);
+
+  \begin{pgfonlayer}{background}
+    \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+    \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+  \end{pgfonlayer}
+\end{tikzpicture}
+}
+
+\caption{Factor graph modelling the conditional probability distribution, case where the
+         room category of room $a$ is known by the system.}
+\end{figure}
+ 
+
+Other schemes may be tried to approximate the unconditional independent assuming that only
+a specific variable is not necessarily known. For example modelling unconditional probability
+with an hidden variable trained from the unlabelled data. Or by trying to split the single big
+factor on factorizations of other factors.
+Though the presented cases have interesting properties:
+
+\begin{description}
+\item[uniform model] - by assuming the factor to be uniform, it can be considered as not existent on
+the graphical model and so special methods can be devised to calculate novelty on several variables
+by analysing the messages that are propagated in and out of each variable when performing inference.
+
+\item[independent model] - it can very easily be trained from unlabelled data. 
+\end{description}
+
+\subsection{Threshold}
+After defining a model for the conditional and unconditional distributions, a threshold can be applied
+over the ratio of those.
+
+For that 
+
 \section{A Practical Example}
 \label{sec:unlabelled-data}
 In order to sum up the presented concepts on novelty detection with a threshold
