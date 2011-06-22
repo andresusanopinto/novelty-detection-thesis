@@ -255,11 +255,55 @@ together with an assumption of a uniform unconditional probability.
 On those cases $P(x)$ becomes a constant and therefore a novelty threshold
 can be directly applied on $P(x|\overline{novel})$ as is the case in \cite{bishop1994novelty}.
 But in the case where the set of features $x$ is variable it cannot be
-discarded. There $P(x)$ also plays a role in levering all the conditional
+discarded. There $P(x)$ plays a role in levering all the conditional
 probabilities on different sets of variables into the same measure units
 such that a threshold can be implemented.
 
+\subsection{Assumption on a constant $P(novel)$}
+The ratio between the conditional and unconditional probabilities of the sensed variables
+is only directly applicable to novelty detection under the assumption of a constant $P(novel)$.
 
+All the literature focus on novelty detection within a fixed scenario, where the set of variables
+used to model the distribution is fixed and defined at the moment the threshold is trained.
+Due to that, they can drop a constant $P(novel)$ and never need to directly or indirectly calculate
+it.
+To the best of the author knowledge there has not been studies on how to approximate it on dynamic
+sets and structures of sensed variables, and so a strong assumption on being constant through all
+the possible scenarios is used to allow dropping the factor.
+
+This assumption was considered questionable on whether it holds on a realistic scenario,
+and for that a sampling scheme able to comply with it is now presented as well an unbiased sampling
+scheme. A method to generate samples that match this \emph{criterium} of having a constant $P(novel)$ can be:
+
+\begin{algorithm}[Draw samples with equal $P(novel)$]
+\begin{enumerate}
+\item Sample a graph structure $G$ (where variable $a$ can be any of the known or unknown classes)
+\item Decide novelty of $a$.
+\item Sample the remaining variables according to distribution $P_G(x|a)$.
+\end{enumerate}
+\end{algorithm}
+
+According to this sampling algorithm, given any structure the probability of
+variable $a$ being novel is constant. This is somehow unexpected as it means
+the sampling method is biased to adjust the real distribution $G$ such that
+exactly a constant percentage of drawn samples are novel.
+
+Alternative, the sampling method described below is considered more correct as
+it introduces no bias on the distribution $G$ describing the real distribution
+and classes of $a$:
+\begin{algorithm}[Draw samples with equal $P(novel)$]
+\begin{enumerate}
+\item Sample a graph structure $G$ (where variable $a$ can be any of the known or unknown classes)
+\item Sample variables $x$ according to distribution $P_G(x)$.
+\end{enumerate}
+\end{algorithm}
+
+Due to the highly bias needed to drawn a constant amount of novel sampes from any structure, the
+author defends this assumption to be very strong and points that future work should avoid.
+
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Novelty Detection on the Conceptual Map}
 
 This section presents now how to use graphical models produced by the conceptual map and the
@@ -275,15 +319,15 @@ The actual semantic mapping of the environment happens using the \emph{conceptua
 introduced on \autoref{sec:conceptual-map}. During it the agent instantiates a
 \emph{chain graph} to model distribution of the sensed variables according to the known
 concepts and categories introduced as hidden variables on the graph. Using that graphical model
-the system is then able to propagate and find the most likely configuration of the represented
-variables, for instance the semantic category of a specific room is modelled as an hidden variable
+the system is able to propagate and find the most likely configuration of the represented
+variables. For instance, the semantic category of a specific room is modelled as an hidden variable
 with states representing the semantic values, by calculating probabilities on that variable the
 system finds its belief on the room belonging to a specific category.
 
 Since the graphical model produced by the conceptual map tries to model the distribution of
-variables assuming the knowledge of the agent holds true, it represents the way to model
-$P(x|known)$, and allows to calculate the density probability that the given set of sensed
-features $x$ are sensed given that all the variables and graph structure, including the category of
+variables assuming the knowledge of the agent holds true, it represents a method to model
+$P(x|known)$ since it allows to calculate the density probability that the set of features $x$ is
+sensed given that all the variables and graph structure, including the category of
 a specific room $a$ are correctly modelled by the agent knowledge.
 This way the distribution modelled by a factor graph equivalent to the chain-graph used by
 the conceptual map can be used as an approximation for the conditional probability of $x$.
@@ -331,8 +375,8 @@ the conceptual map can be used as an approximation for the conditional probabili
 \subsection{Approximating the Unconditional Probability}
 
 With no knowledge on the unconditional probability the correct approach is to
-assume a uniform distribution (\autoref{sec:max-entropy}).
-That is represented in factor graphs by a graph without any factors: \autoref{fig:uniform-graph}.
+assume a uniform distribution (\autoref{sec:max-entropy}), which can be modelled by a
+factor graph without any factors: \autoref{fig:uniform-graph}.
 
 \begin{figure}[h]
 \centering
@@ -353,9 +397,10 @@ Thought, very often there is extra knowledge that can be obtained about the dist
 of the variables that helps to model the unconditional distribution. With that, more accurate
 models can be produced.
 In this case, the system is interested in detecting only if a specific variable category is not
-known. With that in mind, it was assumed that an unknown category can only influence variables
-by using the same structure as the known variables. This is: it was assumed the structure of the
-graph was correct even when a room has an unknown category.
+known. With that in mind, it was assumed that the graph structure is known and that an unknown
+category can only influence variables by using the same structure as the known variables.
+This way the structural information and all the other hidden variables the system is aware of
+can be used to more accurately approximate the unconditional distribution.
 
 \begin{figure}[h]
 \centering
@@ -442,7 +487,7 @@ knowledge on how to model the dashed relations.]{
 \end{figure}
 
 If the structure and all the other variables can be assumed to be correctly modelled by the
-knowledge of the agent, then all variables that were directly dependent on $a$ become directly
+knowledge of the agent, then all variables that are directly dependent on $a$ become directly
 dependent between them, introducing a single factor (\autoref{fig:known-struct}).
 By approximating this factor the agent can then obtain a model for the unconditional probability.
 
@@ -469,7 +514,7 @@ on each of variables and approximating those factors using unlabelled data as se
     \& \& \node (room3) [latent] {}; \& \\
     \& \& \& \\
     \&
-    \node (room1) [latent,draw=none] {}; \& \&
+    \node (room1) [factor] {}; \& \&
     \node (room2) [latent] {}; \\
     \& \& \& \\
     \&
@@ -482,9 +527,15 @@ on each of variables and approximating those factors using unlabelled data as se
     \node (prop2) [obs] {$X_p$}; \\
   };
 
-  \draw [-] (room2) -- (factor2) -- (prop2);
-  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+  \draw [-,dashed] (room1) -- (shape1l);
+  \draw [-,dashed] (room1) -- (appearance1l);
+  \draw [-,dashed] (room1) -- (object1l);
+  \draw [-] (room2) -- (prop2);
 
+  \draw [-,dashed] (room1) -- (room2);
+  \draw [-,dashed] (room1) -- (room3);
+  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+  \node (captroom1) [above=0pt of room1] {\footnotesize{U}};
 
   \begin{pgfonlayer}{background}
     \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
