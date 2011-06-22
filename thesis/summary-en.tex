@@ -83,39 +83,40 @@ properties and actions that take place on them, a robot can solve tasks like:
 ``Where are the cornflakes?''
 
 \section{Problem and Goals}
-This thesis focus then on the particular problem of identifying novel semantic categories for places
-using
-This thesis studies a proposed %~\cite{pronobis2011semmap}
-process that utilizes spatial and semantic knowledge for semantic mapping using a
-probabilistic graphical model,
-and develops methods to perform detection of room categories not previously
-known to the robot using that graphical model.
+The semantic mapping process plays an important role for allowing agents to reason at an high-level
+and is totally defined by the knowledge the agent has on the spatial concepts and semantic categories.
+For that reason there is an high interest in creating methods that are able to alert the agent for
+gaps on its knowledge.
+And with that purpose, this thesis, studies novelty detection techniques and how to apply them to
+detect novel room categories during a semantic mapping process.
+To this end, the semantic mapping process proposed by \cite{pronobis2011phd} is studied and a method
+to detect novel categories using graphical models is suggested.
 
 \section{Semantic Mapping}
 Semantic mapping is the process by which an agent builds a representation of the environment and
 enhances the identified entities with semantic values (i.e.\ human semantics).
-In this thesis the semantic mapping process proposed by \cite{pronobis2011phd} was used as based.
+In this thesis the semantic mapping process proposed by \cite{pronobis2011phd} is used as base.
 
 \subsection{Spatial Knowledge Representation}
-In order to perform semantic mapping an agent needs to possess knowledge on how to segment, identify
-entities existent in the space by analysing the sensed properties. For that Pronobis~\cite{pronobis2011semmap} presents a
-layered knowledge structure:
-the sensory layer maintains an accurate and exact description of environment in a machine-friendly representation,
-the place layer employs knowledge on how to segment and identify areas such as rooms,
-the categorical layer defines knowledge on properties and categories that allow to extract
+In order to perform semantic mapping an agent needs to possess knowledge on how to segment and
+identify entities existent in space by analysing the sensed data. For that
+Pronobis~\cite{pronobis2011semmap} presents a layered knowledge structure:
+the \emph{sensory layer} maintains an accurate and exact description of environment in a machine-friendly representation,
+the \emph{place layer} employs knowledge on how to segment and identify areas such as rooms,
+the \emph{categorical layer} defines knowledge on properties and categories that allow to extract
 higher-level information from the sensed data
-and the conceptual layer maintains knowledge on entities and their relations between them as well
-information on how to map those to human semantics.
+and the \emph{conceptual layer} maintains knowledge on entities concepts, the relations between them
+and information on how to map them to human semantics.
 
 \subsection{Conceptual Map}
 The semantic mapping is then based on the instantiation of a conceptual map that uses all the
 ontology defined on the conceptual layer in order to build a probabilistic graphical model that
-relates and propagates probabilities across all the entities detect and properties detected by the
+relates and propagates probabilities across all the entities and properties detected by the
 other layers.
 
 By using probabilistic graphical models, the conceptual map becomes then a generative model that
-allows several inferences on variable configurations to be performed and for that serves as a useful
-tool for novelty detection of unknown categories of some of its variables.
+allows to perform inference on variable configurations. For that it is used as a base tool
+for novelty detection of unknown categories on some of its variables.
 
 \section{Novelty Detection}
 Novelty detection, also known as outlier or anomaly detection, is a
@@ -148,39 +149,43 @@ P(\overline{novel}|x) &=& \frac{P(x|\overline{novel})P(\overline{novel})}{P(x)}
 \end{eqnarray}
 
 \subsection{Assumption on a constant $P(novel)$}
-The ratio introduced on the previous section allows to implement an optimal detector.
-Though the factors involved need to be defined according to available data.
-
-$P(\overline{novel})$ was considered constant through all possible situations. Although this
-sounds a weak assumption note that in the case hat uses the ratio
+By considering $P(novel)$ to be constant a ratio between conditional and unconditional probabilities
+of the sensed variables is obtained.
+Although it sounds reasonable to assume the probability of specific room belong to a novel
+category is constant, this thesis points that this assumption might be very strong and not
+reasonable in a realistic scenario. The main point being that in this case the graph structure
+changes between samples and some might be more prone to produce novel samples, as opposed to normal
+classification scenarios where its clear that the category is indeed the only generator of features.
 
 \subsection{Modeling Conditional Probability}
 Since the graphical model produced by the conceptual map tries to model the distribution of
 variables assuming the knowledge of the agent holds true, it represents a method to model
-$P(x|\overline{novel})$ since it allows to calculate the density probability that the set of features $x$ is
-sensed given that all the variables and graph structure, including the category of
-a specific room $a$ are correctly modelled by the agent knowledge.
-This way the distribution modelled by a factor graph equivalent to the chain-graph used by
-the conceptual map can be used as an approximation for the conditional probability of $x$.
+$P(x|\overline{novel})$.
+%since it allows to calculate the density probability that the set of features $x$ is
+%sensed given that all the variables and graph structure, including the category of
+%a specific room $a$ are correctly modelled by the agent knowledge.
+%This way the distribution modelled by a factor graph equivalent to the chain-graph used by
+%the conceptual map can be used as an approximation for the conditional probability of $x$.
 
 \subsection{Modeling Unconditional Probability}
-With no knowledge on the real distribution of all samples, the correct approach is to model it
+With no knowledge on the real distribution samples, the correct approach is to model it
 with a uniform distribution. Nonetheless in the presented case, it was assumed that only the room
 category of a specific room is unknown and that the remaining knowledge holds trues.
-In that case, the correct approach is to replace the variable $a$, that represents the room where to
-detect novelty, with a single factor connecting all variables directly dependent on it. 
+In that case, the correct approach is to replace the variable that represents the room where to
+detect novelty with a single factor connecting all variables directly dependent on it. 
 
 Due to its high-dimensionality, approximating that factor with unlabelled data is infeasible and
-approximations have to be done. In this thesis work two approximations where tried: an uniform model
-and an independent model as illustrated in \autoref{fig:models}. In the independent model, the
+approximations have to be done. In this thesis two approximations were presented: an uniform model
+and an independent model. In the independent model, the
 single\hyp{}connected factors are trained from unlabelled data and its expected that they create a better
 approximation to the unconditional probability than an assumption on the uniform model.
 
 \section{Results}
 A synthetic dataset modelling the expected features when implementing on the real case and enforcing
 a constant $P(novel)$ was used for testing the developed models.
-The two suggested models where compared between them and to an optimal case across several situations
-showing they behaviour as more information is sensed from the environment.
+The two suggested models where compared between them and to an optimal case.
+The tests across several situations shows how they behaviour change as more information is sensed
+from the environment.
 
 \begin{figure}[H]
 \centering
