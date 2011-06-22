@@ -1,0 +1,207 @@
+%-----------------------------------------------
+% Template para criação de resumos de projectos/dissertação
+% jlopes AT fe.up.pt,   Fri Jul  3 11:08:59 2009
+%-----------------------------------------------
+
+\documentclass[9pt,a4paper]{extarticle}
+
+%% English version: comment first, uncomment second
+%\usepackage[portuguese]{babel}  % Portuguese
+\usepackage[english]{babel}     % English
+\usepackage{graphicx}           % images .png or .pdf w/ pdflatex OR .eps w/ latex
+\usepackage{times}              % use Times type-1 fonts
+\usepackage[utf8]{inputenc}     % 8 bits using UTF-8
+\usepackage{url}                % URLs
+\usepackage{multicol}           % twocolumn, etc
+\usepackage{float}              % improve figures & tables floating
+\usepackage[tableposition=top]{caption} % captions
+%% English version: comment first (maybe)
+%\usepackage{indentfirst}        % portuguese standard for paragraphs
+%\usepackage{parskip}
+
+%% page layout
+\usepackage[a4paper,margin=30mm,noheadfoot]{geometry}
+
+%% space between columns
+\columnsep 12mm
+
+%% headers & footers
+\pagestyle{empty}
+
+%% figure & table caption
+\captionsetup{figurename=Fig.,tablename=Tab.,labelsep=endash,font=bf,skip=.5\baselineskip}
+
+%% heading
+\makeatletter
+\renewcommand*{\@seccntformat}[1]{%
+  \csname the#1\endcsname.\quad
+}
+\makeatother
+
+%% avoid widows and orphans
+\clubpenalty=300
+\widowpenalty=300
+
+\input{macros}
+
+\begin{document}
+
+\title{\vspace*{-8mm}\textbf{\textsc{Novelty Detection for Semantic Place Categorization}}}
+\author{\emph{André Susano Pinto}$^\dag$\\[2mm]
+        \small{Supervised by: Andrzej Pronobis$^\ddag$, Luis Paulo Reis$^\dag$}\\
+        \small{$^\dag$Faculdade de Engenharia da Universidade do Porto, Portugal}\\
+        \small{$^\ddag$Royal Institute of Technology (KTH), Stockholm, Sweden}}
+%\url{andresusanopinto@gmail.com}\\
+\date{}
+\maketitle
+%no page number 
+\thispagestyle{empty}
+
+\vspace*{-4mm}\noindent\rule{\textwidth}{0.4pt}\vspace*{4mm}
+
+\begin{multicols}{2}
+
+\section{Motivation}
+For a long time humanity has fantasized that one day robots will walk among us.
+They will move and be able to interact with us, understand our concepts and
+be able to reason.
+An important step on that direction is endowing robots with knowledge of human concepts and
+semantics. However its unrealistic to believe on the possibility of extensively
+describing human concepts and semantics to robots on a pre-deploy phase, and so, robots must be able
+to adapt and learn when confronted with novel situations.
+Detection of novel situations, where the robot knowledge is not sufficient, plays then an important
+role for the subsequent adapting and learning of new concepts and its this thesis main topic.
+
+Additionally in the context of mobile robotics, spatial concepts and semantics play a main role to perform
+complex human-like tasks and human interactions. For handling those, a robot builds a representation
+of space extended with semantic properties, process which is known as semantic mapping.
+This representation identifies spatial entities and classifies them according to their meaning to
+humans allowing the robot to reason at a very high-level.
+For example, in a room scale, humans categorize space in kitchens, bedrooms, corridors,
+office, theater, computer lab, etc\dots, by relating room areas with those categories, that describing expected
+properties and actions that take place on them, a robot can solve tasks like:
+``Where are the cornflakes?''
+
+\section{Problem and Goals}
+This thesis focus then on the particular problem of identifying novel semantic categories for places
+using
+This thesis studies a proposed %~\cite{pronobis2011semmap}
+process that utilizes spatial and semantic knowledge for semantic mapping using a
+probabilistic graphical model,
+and develops methods to perform detection of room categories not previously
+known to the robot using that graphical model.
+
+\section{Semantic Mapping}
+Semantic mapping is the process by which an agent builds a representation of the environment and
+enhances the identified entities with semantic values (i.e.\ human semantics).
+In this thesis the semantic mapping process proposed by \cite{pronobis2011phd} was used as based.
+
+\subsection{Spatial Knowledge Representation}
+In order to perform semantic mapping an agent needs to possess knowledge on how to segment, identify
+entities existent in the space by analysing the sensed properties. For that Pronobis~\cite{pronobis2011semmap} presents a
+layered knowledge structure:
+the sensory layer maintains an accurate and exact description of environment in a machine-friendly representation,
+the place layer employs knowledge on how to segment and identify areas such as rooms,
+the categorical layer defines knowledge on properties and categories that allow to extract
+higher-level information from the sensed data
+and the conceptual layer maintains knowledge on entities and their relations between them as well
+information on how to map those to human semantics.
+
+\subsection{Conceptual Map}
+The semantic mapping is then based on the instantiation of a conceptual map that uses all the
+ontology defined on the conceptual layer in order to build a probabilistic graphical model that
+relates and propagates probabilities across all the entities detect and properties detected by the
+other layers.
+
+By using probabilistic graphical models, the conceptual map becomes then a generative model that
+allows several inferences on variable configurations to be performed and for that serves as a useful
+tool for novelty detection of unknown categories of some of its variables.
+
+\section{Novelty Detection}
+Novelty detection, also known as outlier or anomaly detection, is a
+classification problem related to identification of new or unknown data
+patterns that the system is not aware of~\cite{markou2003novelty}.
+The ability to identify novel cases is crucial in any autonomous system
+that is deployed to unknown or to uncontrolled environments, as it gives the
+system the ability to detect that something is not conforming to its knowledge and
+therefore should be treated with caution.
+% It has several applications such as fault detection~\cite{tarassenko1999novelty},
+% intrusion detection~\cite{fan2001using},
+% detection of masses in mammograms~\cite{tarassenko1995novelty} or detection of
+% novel and useful documents~\cite{zhang2002novelty}.
+
+\subsection{Novelty Detection as Threshold}
+Due to the noisy, uncertain and insufficient nature of sensed data, novelty ought to be
+treated in a probabilistic way in where each sample has a certain probability
+of being generated by a class not known for the agent and a complementary probability $P(\overline{novel}|x)$
+of being generated by a known class.
+
+Additionally any detector can be uniquely described by the set $N$ of samples that it
+classifies as novel. With that its possible to show that by including a new sample $a$ in $N$ an agent
+can increase its detection rate at a cost of producing more mis-classifications.
+This describes the base of the \emph{error and rejection tradeoff} described by \cite{chow1970optimum}.
+Due to the interest of having the highest detection rate with a given minimum error rate, any optimal
+detector can be described as a \emph{continuous knapsack problem} of the sample space.
+The greedy ordering defined to solve it can be shown to be equivalent to:
+\begin{eqnarray}
+P(\overline{novel}|x) &=& \frac{P(x|\overline{novel})P(\overline{novel})}{P(x)}
+\end{eqnarray}
+
+\subsection{Assumption on a constant $P(novel)$}
+The ratio introduced on the previous section allows to implement an optimal detector.
+Though the factors involved need to be defined according to available data.
+
+$P(\overline{novel})$ was considered constant through all possible situations. Although this
+sounds a weak assumption note that in the case hat uses the ratio
+
+\subsection{Modeling Conditional Probability}
+Since the graphical model produced by the conceptual map tries to model the distribution of
+variables assuming the knowledge of the agent holds true, it represents a method to model
+$P(x|\overline{novel})$ since it allows to calculate the density probability that the set of features $x$ is
+sensed given that all the variables and graph structure, including the category of
+a specific room $a$ are correctly modelled by the agent knowledge.
+This way the distribution modelled by a factor graph equivalent to the chain-graph used by
+the conceptual map can be used as an approximation for the conditional probability of $x$.
+
+\subsection{Modeling Unconditional Probability}
+With no knowledge on the real distribution of all samples, the correct approach is to model it
+with a uniform distribution. Nonetheless in the presented case, it was assumed that only the room
+category of a specific room is unknown and that the remaining knowledge holds trues.
+In that case, the correct approach is to replace the variable $a$, that represents the room where to
+detect novelty, with a single factor connecting all variables directly dependent on it. 
+
+Due to its high-dimensionality, approximating that factor with unlabelled data is infeasible and
+approximations have to be done. In this thesis work two approximations where tried: an uniform model
+and an independent model as illustrated in \autoref{fig:models}. In the independent model, the
+single\hyp{}connected factors are trained from unlabelled data and its expected that they create a better
+approximation to the unconditional probability than an assumption on the uniform model.
+
+\section{Results}
+A synthetic dataset modelling the expected features when implementing on the real case and enforcing
+a constant $P(novel)$ was used for testing the developed models.
+The two suggested models where compared between them and to an optimal case across several situations
+showing they behaviour as more information is sensed from the environment.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{results/synthetic-all.pdf}
+\caption{\label{fig:results}Comparison of the proposed models using samples from a synthetic dataset
+         with variable number of sensed features.}
+\end{figure}
+
+\section{Conclusions}
+This thesis studied the problem of novelty detection of semantic categories on the spatial knowledge
+of mobile robots. To that purpose a semantic mapping process~\cite{pronobis2011semmap} was studied and
+a novelty detection scheme based on the conceptual map used by it proposed.
+Initial tests where performed on synthetic data showing an interest in using unlabelled data to
+increase the detection performance.
+Additionally all the assumptions and bases behind novelty detection were presented and several
+directions on how to create a generalized framework for novelty detection were discussed.
+
+
+\bibliographystyle{unsrt}
+\bibliography{refs}
+
+\end{multicols}
+
+\end{document}
