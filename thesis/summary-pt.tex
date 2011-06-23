@@ -61,158 +61,133 @@
 
 \begin{multicols}{2}
 
-\section{Motivation}
+\section{Motivação}
 Já à muitos anos que a humanidade sonha que um dia robôs caminharam lado a lado com os humanos.
-Acredita-se que eles serão capaz de ser mover e interagir connosco, compreender os nossos conceitos
+Acredita-se que eles serão capaz de se mover e interagir connosco, compreender os nossos conceitos
 e serem capazes de pensar.
 Um passo importante nesta direcção é a criação de robôs com conhecimento de conceitos e significados
 próprios do mundo humano.
-No entanto é irrealista acreditar que será possivel descrever e representar em toda a sua extensão
+No entanto é irrealista acreditar que será possível descrever e representar em toda a sua extensão
 tais conceitos. Assim os agentes deverão ser capazes de aprender e adaptar o seu conhecimento quando
 confrontados com novas situações.
-A detecção destas novas situações onde o conhecimento de um agente não é suficiente têm um papel importante
+A detecção destas novas situações, onde o conhecimento de um agente não é suficiente, têm um papel importante
 na adaptação e aprendizagem de novos conceitos e significados e é por isso o tópico principal desta tese.
 
-Addicionalmente no contêxto de agentes moveis, para facilitar o deslocamento e planeamento, os
-agentes constroiem uma representação do ambiente na qual detectam conceitos e propriedades
-conceitos espaciais.
-Essa representação identifica conceitos e classifica-os de acordo com significados humanos,
-permitindo assim ao agente obter uma representação dos conceitos humanos e pensar e planear a um
-nível próximo dos mesmos.
-Ao processo de construção desta representação é attribuido o nome de \emph{semantic mapping}.
+No contexto de agentes moveis, para facilitar o deslocamento e planeamento, os
+agentes constroem uma representação do ambiente. Quando essa representação é estendida com
+conceitos e categorias com significado para humanos, as tarefas de alto nível ficam mais fáceis.
 Por exemplo, a uma escala de quartos, os humanos categorizam o espaço em: cozinhas, quartos, corredores,
-escritórios, sala de computadores, etc\dots
+escritórios, etc\dots
 Ao relacionar quartos com estas categorias que descrevem propriedades e acções percebidas por
-humanos, um agente consegue resolver tarefas como: ``Onde estão os ceriais?''
+humanos, um agente consegue resolver tarefas como: ``Onde estão os cereais?''
 
 \section{Problema e Objectivos}
-Como deliniado na motivação, o processo de \emph{semantic mapping} têm um papel importante na
-capacidade pensativa de um agente. Em simultâneo, esse processo está limitado pelo conhecimento
-do agente em conceitos e significados do mundo humano. É então importante estudar e analisar
-técnicas que sejam capazes de detectar falhas no conhecimento e permitir ao agente agir de maneira
+O processo de mapeamento semântico têm um papel importante na capacidade pensativa de um agente.
+Em simultâneo, esse processo está limitado pelo conhecimento em conceitos e significados do mundo humano.
+É então importante estudar e analisar técnicas que sejam capazes de detectar falhas no conhecimento e permitir ao agente agir de maneira
 cuidadosa.
-É com esse objectivo que a tese aqui descrita se foca no estudo de deteção
-de situações novas num processo de \emph{semantic mapping} propôsto por \cite{pronobis2011phd}.
-Para esse fim a tese estuda como usar modelos graphicos para detectar novas categorias nas conhecimento
-de categorias do agente.
+É com esse objectivo que a tese aqui descrita se foca no estudo de técnicas de detecção de situações novas
+e de como as aplicar num processo de mapeamento semântico com vista a detectar novas categorias de lugares
+em ambientes interiores. Para esse fim, a tese estuda o processo de mapeamento semântico proposto por \cite{pronobis2011phd},
+e procura solucionar a detecção de novas categorias usando modelos gráficos.
 
 \section{Mapeamento Semântico}
-Mapeamento semântico é o processo através do qual um agente constroi uma representação do ambiente
-extendida com conceitos e categories com significado especial (i.e.\ conceitos humanos).
+Mapeamento semântico é o processo através do qual um agente constrói uma representação do ambiente
+estendida com conceitos e categorias com significado especial (i.e.\ conceitos humanos).
 Neste tese o processo proposto por \cite{pronobis2011phd} foi usado como base.
 
 \subsection{Conhecimento Espacial}
-O conhecimento espacial de agente define todo a informação necessária para o mapeamento semântico,
+O conhecimento espacial de agente define a informação necessária para o mapeamento semântico,
 e inclui informação em como segmentar e identificar entidades e propriedades através dos dados
 recolhidos.
-Para esse fim Pronobis~\cite{pronobis2011semmap} utiliza uma representação estruturada em camadas:
-a \emph{camada de sensores} é responsável por manter uma descrição exacta do ambiente numa representação
+Para esse fim \cite{pronobis2011semmap} utiliza uma representação estruturada em camadas:
+a \emph{camada de sensores} mantém uma descrição exacta do ambiente numa representação
 de baixo nível;
-a \emph{camada de lugares} é responsável por segmentar e identificar areas e conceitos
-como quartos;
-a \emph{camada de categories} é responsável por definir conhecimento sobre propriadades e categories
-e permite ao agente obter informação de mais alto-nível;
-e a \emph{camada de conceitos} mantêm conhicimento sobre os diversoes conceitos, relações sobre os mesmos
+a \emph{camada de lugares} segmenta e identifica áreas e conceitos como quartos;
+a \emph{camada de categorias} é responsável por definir conhecimento sobre propriedades e categorias
+e permite ao agente obter informação de mais alto nível;
+e a \emph{camada de conceitos} mantêm conhecimento sobre os diversos conceitos, relações entre os mesmos
 e informação de como os mapear para conceitos humanos.
 
-\subsection{Conceptual Map}
-The semantic mapping is then based on the instantiation of a conceptual map that uses all the
-ontology defined on the conceptual layer in order to build a probabilistic graphical model that
-relates and propagates probabilities across all the entities and properties detected by the
-other layers.
-
-By using probabilistic graphical models, the conceptual map becomes then a generative model that
-allows to perform inference on variable configurations. For that it is used as a base tool
-for novelty detection of unknown categories on some of its variables.
+\subsection{Mapa Conceptual}
+Durante o processo de mapeamento semântico o agente utiliza a ontologia da camada conceptual para produzir
+um mapa conceptual. Este é produzido usando modelos gráficos probabilísticos que relacionam
+os conceitos detectados e propagam probabilidades entre os mesmos de acordo com o conhecimento do agente.
+A detecção de uma nova categoria no conhecimento do agente traduz-se na detecção de um novo estado nas
+variáveis de tal grafo e portanto os mapas conceptuais são usados como ferramenta para detecção de novas
+categorias.
 
 \section{Novelty Detection}
-Novelty detection, also known as outlier or anomaly detection, is a
-classification problem related to identification of new or unknown data
-patterns that the system is not aware of~\cite{markou2003novelty}.
-The ability to identify novel cases is crucial in any autonomous system
-that is deployed to unknown or to uncontrolled environments, as it gives the
-system the ability to detect that something is not conforming to its knowledge and
-therefore should be treated with caution.
-% It has several applications such as fault detection~\cite{tarassenko1999novelty},
-% intrusion detection~\cite{fan2001using},
-% detection of masses in mammograms~\cite{tarassenko1995novelty} or detection of
-% novel and useful documents~\cite{zhang2002novelty}.
+\emph{Novelty detection}, também conhecido por \emph{detecção de anomalias} ou \emph{detecção de outliers},
+é o problema de detecção que os dados foram produzidos por uma nova classe,
+sobre a qual o agente não têm conhecimento~\cite{markou2003novelty}.
+A habilidade de detectar estes casos é de fulcral importância em sistemas autónomos que operam em ambientes
+desconhecidos. Pois permite detectar que algo está fora do normal e assim actuar com cuidado.
 
-\subsection{Novelty Detection as Threshold}
-Due to the noisy, uncertain and insufficient nature of sensed data, novelty ought to be
-treated in a probabilistic way in where each sample has a certain probability
-of being generated by a class not known for the agent and a complementary probability $P(\overline{novel}|x)$
-of being generated by a known class.
+\subsection{\emph{Novelty Detection} através de \emph{Thresholds}}
+Devido a ruídos e incerteza existentes nos dados, a detecção de casos novos é tratada com
+probabilidades. Assim para cada amostra de dados $x$ existe uma certa probabilidade de a mesma
+ser gerada por uma classe desconhecida e uma probabilidade complementar $P(\overline{novel}|x)$
+de ser por uma classe conhecida.
 
-Additionally any detector can be uniquely described by the set $N$ of samples that it
-classifies as novel. With that its possible to show that by including a new sample $a$ in $N$ an agent
-can increase its detection rate at a cost of producing more mis-classifications.
-This describes the base of the \emph{error and rejection tradeoff} described by \cite{chow1970optimum}.
-Due to the interest of having the highest detection rate with a given minimum error rate, any optimal
-detector can be described as a \emph{continuous knapsack problem} of the sample space.
-The greedy ordering defined to solve it can be shown to be equivalent to:
+Além disso, qualquer detector por ser descrito unicamente pelo conjunto $N$ de amostras que classifica
+como novas. Com isso é possível demonstrar que ao expandir o conjunto $N$ com um novo elemento $a$,
+o agente aumenta a taxa de detecção a um custo de produzir mais classificações erradas.
+Isto descreve o principio de troca entre erro e rejeição descrito por \cite{chow1970optimum}.
+Um detector óptimo, é assim equivalente ao problema da mochila com quantidades fraccionarias, pois têm
+como objectivo obter a maior taxa de detecção com uma taxa de erro máximas. Assim qualquer detector
+óptimo pode ser descrito através de um limite imposto sobre a relação gulosa dado por:
 \begin{eqnarray}
 P(\overline{novel}|x) &=& \frac{P(x|\overline{novel})P(\overline{novel})}{P(x)}
 \end{eqnarray}
 
-\subsection{Assumption on a constant $P(novel)$}
-By considering $P(novel)$ to be constant a ratio between conditional and unconditional probabilities
-of the sensed variables is obtained.
-Although it sounds reasonable to assume the probability of specific room belong to a novel
-category is constant, this thesis points that this assumption might be very strong and not
-reasonable in a realistic scenario. The main point being that in this case the graph structure
-changes between samples and some might be more prone to produce novel samples, as opposed to normal
-classification scenarios where its clear that the category is indeed the only generator of features.
+\subsection{Critério: $P(novel)$ como Constante}
+Ao considerar $P(novel)$ constante, uma relação equivalente pode ser obtida usando somente a fracção entre $P(x|\overline{novel})$ e $P(x)$.
+Apesar de parecer inofensivo, o caso apresentado neste tese é diferente dos casos normais em que todos as amostras
+são geradas através de uma categoria. Aqui toda estrutura e relação entre as variáveis toma um papel na geração
+de amostras e portanto não é claro como tal critério se comporta na realidade.
 
-\subsection{Modeling Conditional Probability}
-Since the graphical model produced by the conceptual map tries to model the distribution of
-variables assuming the knowledge of the agent holds true, it represents a method to model
-$P(x|\overline{novel})$.
-%since it allows to calculate the density probability that the set of features $x$ is
-%sensed given that all the variables and graph structure, including the category of
-%a specific room $a$ are correctly modelled by the agent knowledge.
-%This way the distribution modelled by a factor graph equivalent to the chain-graph used by
-%the conceptual map can be used as an approximation for the conditional probability of $x$.
+\subsection{Modelar $P(x|\overline{novel})$}
+O modelo gráfico produzido durante o mapeamento semântico, modela a distribuição de todas as variáveis
+assumindo que o conhecimento do agente é representativo da realidade, como tal pode ser usado
+para aproximar $P(x|\overline{novel})$.
 
-\subsection{Modeling Unconditional Probability}
-With no knowledge on the real distribution samples, the correct approach is to model it
-with a uniform distribution. Nonetheless in the presented case, it was assumed that only the room
-category of a specific room is unknown and that the remaining knowledge holds trues.
-In that case, the correct approach is to replace the variable that represents the room where to
-detect novelty with a single factor connecting all variables directly dependent on it. 
+\subsection{Modelar $P(x)$}
+Sem conhecimento sobre a distribuição real é correcto modela-la usando uma distribuição
+uniforme. No entanto, o agente considera que todo o seu conhecimento é representativo
+da realidade à excepção da categoria de uma das suas variáveis. Nesse caso a aproximação correcta é substituir
+os factores dependentes dessa variável por um único factor.
+Devido à dimensão do mesmo, é inviável aproximá-lo sem realizar simplificações.
+A tese apresenta assim duas aproximações: um modelo uniforme e um modelo independente. No modelo independente
+esse factor é aproximado com vários factores dependentes somente numa variável. Esses podem facilmente ser
+aproximados e é esperado que obtenham melhores resultados ao compensar por uma tendência do ambiente em gerar
+certas \emph{features}.
 
-Due to its high-dimensionality, approximating that factor with unlabelled data is infeasible and
-approximations have to be done. In this thesis two approximations were presented: an uniform model
-and an independent model. In the independent model, the
-single\hyp{}connected factors are trained from unlabelled data and its expected that they create a better
-approximation to the unconditional probability than an assumption on the uniform model.
-
-\section{Results}
-A synthetic dataset modelling the expected features when implementing on the real case and enforcing
-a constant $P(novel)$ was used for testing the developed models.
-The two suggested models where compared between them and to an optimal case.
-The tests across several situations shows how they behaviour change as more information is sensed
-from the environment.
+\section{Resultados}
+Para testes um conjunto de dados sintético foi preparado. Este aproxima as propriedades
+esperadas num cenário realístico como por exemplo um número variável de \emph{features}.
+Os modelos sugeridos foram comparados entre eles e entre um detector óptimo, e os testes realizados
+mostram o comportamento dos modelos em diversas situações, por exemplo conforme mais informação
+é recolhida pelo agente.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{results/synthetic-all.pdf}
-\caption{\label{fig:results}Comparison of the proposed models using samples from a synthetic dataset
-         with variable number of sensed features.}
+\caption{\label{fig:results}Comparação dos modelos propostos usando dados sintéticos com número variável de \emph{features}.}
 \end{figure}
 
-\section{Conclusions}
-This thesis studied the problem of novelty detection of semantic categories on the spatial knowledge
-of mobile robots. To that purpose a semantic mapping process~\cite{pronobis2011semmap} was studied and
-a novelty detection scheme based on the conceptual map used by it proposed.
-Initial tests where performed on synthetic data showing an interest in using unlabelled data to
-increase the detection performance.
-Additionally all the assumptions and bases behind novelty detection were presented and several
-directions on how to create a generalized framework for novelty detection were discussed.
-
+\section{Conclusão}
+Esta tese estudou o problema da detecção de novas categorias de espaços interiores no contexto de agentes moveis.
+Para tal o processo de mapeamento semântico~\cite{pronobis2011semmap} foi estudado e um mecanismo de detecção,
+baseado no mapa conceptual usado pelo mesmo, foi proposto.
+Foram realizados testes iniciais com dados sintéticos, mostrando o benefício de usar dados não supervisionados.
+Adicionalmente toda a teoria e assunções por trás do método apresentado foram documentadas, incluindo
+discussão de diversas direcções futuras em como criar uma \emph{framework} generalizada para detecção de casos
+novos no conhecimento semântico e espacial de agentes.
 
 \bibliographystyle{unsrt}
 \bibliography{refs}
+
 
 \end{multicols}
 
