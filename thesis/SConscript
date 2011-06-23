@@ -1,7 +1,10 @@
 SConscript('synthetic/SConscript')
 
 summary = PDF('summary-en.pdf', 'summary-en.tex')
+Depends(summary, 'results/synthetic-all.pdf')
 summary_pt = PDF('summary-pt.pdf', 'summary-pt.tex')
+Depends(summary_pt, 'results/synthetic-all.pdf')
+
 thesis = PDF('thesis.pdf', 'thesis.tex')
 
 Depends(thesis, ['feupteses.sty', 'mieicpatch.sty', 'tkz-base.sty', 'tkz-arith.sty', 'figures/feup-logo.pdf']
@@ -12,7 +15,6 @@ Depends(thesis, ['feupteses.sty', 'mieicpatch.sty', 'tkz-base.sty', 'tkz-arith.s
                  'contents.tex',
                  'semantic-mapping.tex',
                  'novelty-intro.tex',
-                 'novelty.tex',
                  'refs.bib'])
 
 SVGS = """
