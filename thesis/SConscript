@@ -1,6 +1,7 @@
 SConscript('synthetic/SConscript')
 
 summary = PDF('summary-en.pdf', 'summary-en.tex')
+summary_pt = PDF('summary-pt.pdf', 'summary-pt.tex')
 thesis = PDF('thesis.pdf', 'thesis.tex')
 
 Depends(thesis, ['feupteses.sty', 'mieicpatch.sty', 'tkz-base.sty', 'tkz-arith.sty', 'figures/feup-logo.pdf']
