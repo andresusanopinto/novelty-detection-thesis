@@ -1,105 +1,101 @@
 \chapter{Conclusions and Future Work}\label{chap:conclusions}
 
 % Summary of developed work
-This thesis studied the problem of detecting novel situations where a robot lacks knowledge to
-correctly describe them.
-It did so on the area of semantic mapping on indoor spaces, by detecting that none of the known room
-categories was able to correctly explain the sensed properties.
+This thesis studied the problem of detecting novel situations in case of which the robot
+lacks sufficient knowledge to explain the sensory information. It did so in the area of 
+semantic mapping on indoor spaces, and more precisely, for the problem of detecting the situtation when
+none of the known room category models were able to correctly explain the sensed spatial properties.
 
-For that it reviewed novelty detection and how an optimal detector can be implemented by
-thresholding. Showing after, that with the assumption of constant probability of seeing a
-novel case an optimal ordering function for thresholding can be implemented based on
-the factor between a conditional and unconditional probability.
+It reviewed novelty detection and how an optimal detector can be implemented by
+thresholding. It also showed that with the assumption of constant probability of seeing a
+novel case, an optimal ordering function for thresholding can be implemented based on
+the factor between conditional and unconditional probability.
 
-It studied the semantic mapping process proposed by \cite{pronobis2011semmap} and presented a method
-to detect novel room categories based on probabilistic graphical models.
-Using a synthetic dataset, respecting the assumptions, it showed that such a method would be optimal
-if unconditional probability could be optimally approximated.
-Since, in realistic conditions, unconditional probability cannot be implemented due to the lack of
-knowing all the classes, some approaches were performed to approximate it with either a uniform
-assumption or by approximating with simplified models using unlabelled data.
+It studied the semantic mapping process proposed in \cite{pronobis2011semmap} and presented 
+a method to detect novel room categories based on probabilistic graphical models.
+Using a synthetic dataset, respecting the assumptions, it showed that such a method would be 
+optimal if unconditional probability could be optimally approximated. Since, in realistic conditions, 
+unconditional probability cannot be obtained due to the lack of knowledge about all possible classes, various
+techniques were used to approximate it with either a uniform assumption or simplified models built from 
+unlabelled data.
 
-On the rest of this chapter the main results and conclusions are presented.
-Additionally limitations of the presented method and directions for future work are given.
+The rest of this chapter presents the main results and conclusions. Additionally limitations of the 
+presented methods and directions for future work are discussed.
 
 
 \section{Results and Conclusions}
 
 After studying the semantic mapping process and novelty detection methods, this
 thesis proposed modelling the conditional and unconditional probability distribution of sensed
-data using graphical models. Under the presented assumptions and assuming both can be exactly known
-a ratio between those probabilities would yield an optimal ordering function for implementing a
-novelty detector.
+data using graphical models. Under the presented assumptions, and assuming both distributions can be 
+exactly known, a ratio between those probabilities would yield an optimal ordering function for implementing a
+novelty detector. This case was showed to be optimal using a synthetic dataset that simulates a simplified
+environment for semantic categorization of rooms based on sensed properties.
+As the next step, this thesis tested methods to approximate the unconditional probability. 
+It tested the usage of a uniform distribution and explored the usage of unlabelled data to 
+produce better models.
 
-This case, was showed to be optimal using a synthetic dataset that simulates a simplified
-environment of semantic categorization of room based on sense properties.
-Being the correct way to model the conditional probability with the probabilistic graphical model
-used by the semantic mapping process, this thesis moved forward with testing methods to approximate
-the unconditional probability. It tested the usage of a uniform distribution and explored the usage
-of unlabelled data to produce better models.
-
-Additionally it has studied how the performance of the presented methods change as more data
-is sensed from the environment. As expected all the methods increase their performance, but they
+Additionally it studied how the performance of the presented methods changed as more data
+was sensed from the environment. As expected, all the methods increase their performance, but they
 move further away from what could be obtained with exact information.
-Additionally the disadvantage between picking a uniform assumption and using an highly simplified
-model for the unlabelled data, starts reducing as more information is available.
+Additionally, the disadvantage of the uniform assumption compared to using a highly simplified
+model for the unlabelled data starts reducing as more information is available.
 Nonetheless the model based on the usage of unlabelled data consistently lead to better detector
-performance, being a strong indicator to use unlabelled data whenever there is access to it.
+performance, which is a strong indication that unlabelled data should be used whenever it is available.
 
-As a note, all the results presented on this thesis are directly reproducible from an
+As a note, all the results presented in this thesis are directly reproducible from an
 online\footnote{\url{https://github.com/andresusanopinto/novelty-detection-thesis}}
 repository. That repository besides containing all the code and data for the results also
 includes tech-reports, presentations, articles and notes that have been produced during
-this thesis work. Additionally future research by the author will be correctly linked there,
+this thesis work. Additionally, future research by the author will be correctly linked there,
 when appropriate.
+
 
 \section{Limitations}
 
 The presented methods use a strong assumption on a constant $P(novel)$, this is unrealistic and
 forbids one to exploit graph structural information that could show a given variable is more likely
 to be unknown to the system because the given graph structure is not easily explained by the
-current knowledge.
-An example of that can be seen as: if all the agent knows are two categories that are very often
-seen as a bi-colored graph, when presented with a non-bipartite graph, the agent should consider
-the likelihood of a new category greater than on bipartite graphs.
+current knowledge. As as example of that, consider the following: if all the agent knows are two 
+categories that are very often seen as a bi-colored graph, when presented with a non-bipartite graph, 
+the agent should consider the likelihood of a new category greater than on bipartite graphs.
 
 Additionally, all the presented methods require calculation of $P(x|\overline{novel})$ and
-$P(x)$. This way a full model of the graphical model is needed and uncertain sensing as described in
+$P(x)$. This way a full graphical model is needed and uncertain sensing as described in
 \autoref{sec:cues-from-low-level} cannot be easily incorporated.
 
-This two limitations are a single symptom of the decision on inverting the conditional probability
-$P(novel|x)$ to obtain a threshold that can be directly modelled by data.
+These two limitations are a single symptom of the decision on inverting the conditional probability
+$P(novel|x)$ to obtain a threshold that can be directly modelled by the data.
 It is expected that by trying to model how the potentials in the factor graphs change between the
 conditional and unconditional graphical model, both limitations can be surpassed.
 
+
 \section{Future Work}
 
-Future work should try to study and or work around the limitations above presented. At the moment
-it is not clear on how the threshold changes when the assumption on constant $P(novel)$ cannot be
-made, and attempts to bypass the listed limitations will need to consider that by developing a
-method where a static threshold can have a more realistic and controlled behaviour through any graph
-structure.
+Future work will try to study and work around the limitations presented above. At the moment
+it is not clear how the threshold changes when the assumption about constant $P(novel)$ cannot be
+made. Any attempts to bypass the listed limitations will need to consider that problem by 
+developing a method where a threshold can have a more realistic and controlled behaviour 
+for any graph structure.
 
-At a longer and larger scale the following paragraphs describe possible and interesting directions
-to exploit in the context of detecting knowledge gaps on artificial intelligence systems:
-
+The following paragraphs describe possible and interesting directions to explore in the context 
+of detecting knowledge gaps in artificial intelligent systems:
 
 % \subsection*{Extend Novelty to All Variable Types on the Graph}
 % Extend novelty to all categories on the graph (room, size, shape, etc..)
 % \subsection*{Handle Uncertain and Novel Sensing from Low-level Classifiers}
 % Handle uncertain sensing
-\subsubsection*{Generalized Framework}
-The presented method should be generalized by allowing novelty to be performed on any variable of
-graphical model. Additionally the novelty information could be incorporated back in the graph
-allowing the agent to probabilistically reason even when variables are considered unknown.
-That generalization should aim at being fully probabilistic such as the system presented by
+\subsubsection*{Generalized the Framework}
+The presented method should be generalized by allowing novelty detection to be performed on any 
+variable of the graphical model. Additionally, the novelty information could be incorporated back 
+into the graph allowing the agent to probabilistically reason even when variables are considered 
+unknown. That generalization should aim at being fully probabilistic such as the system presented by
 \cite{ranganathan2010pliss} and not deterministic by having to make decisions on which variables
 it considers novel.
 
-Additionally several methods exists that allow to produce novelty signals from the low-level
+Additionally, several methods exists that allow to produce novelty signals from the low-level
 classifiers. A generalized framework should try to fuse and handle all that information by
-incorporate it back in the graphical model in a similar fashion on how uncertain sensing is
-performed.
+incorporating it into the graphical model in a similar fashion as how uncertain sensing outcomes are incorporated.
 
 % \subsection*{Explain Why a Certain Sample is Novel}
 % Explain why a certain sample is novel
@@ -107,29 +103,28 @@ performed.
 % Generate most likely novel sample
 \subsubsection*{Exploiting Generative Models}
 An interesting aspect that arises from the use of generative models is the ability to generate new
-samples according to it. It is expected that this can be exploited to achieve a better understanding
-of what the system is modelling and what understand common properties between several novel samples
-that allow to explain the novelty back to user. For example by generating the most
-likely novel samples, it maybe be possible to understand the limitations of its
-knowledge and use them for active learning.
+samples from the models. It is expected that this can be exploited to achieve better understanding
+of what the system is modelling and what explain the character of the novelty back to the user.
+Moreover, this feature can be used to refine and actively update the models by confronting the captured 
+knowledge with the human understanding of the modeled concepts.
 
 % \subsection*{Probabilistic Modelling of Space Segmentation}
 % \subsection*{Learn New Concepts}
 % Learn Concepts / hidden variable types - (areas, rooms, floors, environments, etc\dots)
-\subsubsection*{More than Novel Semantic Categories: Learning Graph Structures}
-Though this thesis only touched the problem of detecting novel semantic categories, other knowledge
-types should also be considered incomplete and are also candidates for novelty detection and
-modelling tools that allow to handle the associated uncertainty on them.
-More concretely, besides detecting novel semantic categories on given spatial concepts, there is
-also interest on detecting novel concepts: the presence of hidden variables of a new type, not known
-for the system: for example detecting room areas or types of environment.
+\subsubsection*{Beyond Novel Semantic Categories: Learning Graph Structures}
+Although this thesis only touched the problem of detecting novel semantic categories, other knowledge
+types should also be considered incomplete and are also candidates for novelty detection.
+More concretely, besides detecting novel semantic categories for given spatial concepts, there is
+also interest in detecting novel concepts: the presence of hidden variables of a new type, not known
+to the system: for example detecting rooms or types of environment.
 
-For that an initial step should be made using probabilistic graph structures to model the several
-possible space segmentations. Allowing to use a probabilistic approach instead of a deterministic
-approach where space is segmented based on the presence of doors or other landmarks.
+An initial step towards that goal could be probabilistic learning of graph structures to model various
+possible space segmentations. This would permit the use of a probabilistic approach instead of the currently used
+deterministic approach where space is segmented based on the presence of doors or other landmarks.
 
 \subsubsection*{Beyond Detection of Knowledge Gaps}
-Having methods to detect gaps of knowledge is just one of the first step on creating long-term and
-life-long adaptable systems that are capable of learning through time. After detecting new
-situations, ways to learn and incorporating the knowledge back on the agent must be developed.
+Having methods to detect gaps of knowledge is just one of the first steps towards creating long-term and
+life-long adaptable systems that are capable of learning over time. After detecting new
+situations, ways to learn and incorporate the knowledge into the models must be developed.
 
+g
