@@ -33,11 +33,19 @@ random.seed(0)
 
 import ontology
 import graph
+import explain
 
 FEATURES    = ontology.features
 ALL_CLASSES = ontology.rooms.keys()
 POTENTIAL   = ontology.potential
 PROB        = dict()
+
+out = explain.ExplainDistributions(sorted(ontology.features.items()),
+                                   sorted(ontology.rooms.items()))
+
+file = open("ontology-explain.tex", 'w')
+file.write(out)
+file.close()
 
 KNOWN_CLASSES = """bathroom hallway kitchen robotlab singleoffice""".split()
 for label in KNOWN_CLASSES: assert label in ALL_CLASSES

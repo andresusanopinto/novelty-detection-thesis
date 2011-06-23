@@ -1,9 +1,9 @@
 SConscript('synthetic/SConscript')
 
 summary = PDF('summary-en.pdf', 'summary-en.tex')
-Depends(summary, 'results/synthetic-all.pdf')
+Depends(summary, ['results/synthetic-all.pdf', 'tkz-base.sty', 'tkz-arith.sty', 'macros.tex'])
 summary_pt = PDF('summary-pt.pdf', 'summary-pt.tex')
-Depends(summary_pt, 'results/synthetic-all.pdf')
+Depends(summary_pt, ['results/synthetic-all.pdf', 'tkz-base.sty', 'tkz-arith.sty', 'macros.tex'])
 
 thesis = PDF('thesis.pdf', 'thesis.tex')
 
@@ -41,6 +41,7 @@ Command('results/synthetic-3features.pdf', '../semantic-nd/results/synthetic-3fe
 Command('results/synthetic-5features.pdf', '../semantic-nd/results/synthetic-5features.pdf', 'cp $SOURCE $TARGET')
 Command('results/synthetic-10features.pdf', '../semantic-nd/results/synthetic-10features.pdf', 'cp $SOURCE $TARGET')
 Command('results/synthetic-50features.pdf', '../semantic-nd/results/synthetic-50features.pdf', 'cp $SOURCE $TARGET')
+#Command('results/ontology-explain.tex', '../semantic-nd/results/ontology-explain.tex', 'cp $SOURCE $TARGET')
 Command('figures/processes.pdf', '../semantic-nd/figures/processes.pdf', 'cp $SOURCE $TARGET')
 Command('figures/chaingraph.pdf', '../semantic-nd/figures/chaingraph.pdf', 'cp $SOURCE $TARGET')
 Command('figures/spatial-knowledge-representation.pdf', '../pdis/techreport/figures/system-representation/structure.pdf', 'cp $SOURCE $TARGET')

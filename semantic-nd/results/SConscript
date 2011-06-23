@@ -19,9 +19,11 @@ PythonCommand(['synthetic-all.pdf',
                'synthetic-3features.pdf',
                'synthetic-5features.pdf',
                'synthetic-10features.pdf',
-               'synthetic-50features.pdf'],
+               'synthetic-50features.pdf',
+               'ontology-explain.tex'],
               ['synthetic.py',
                'ontology.py',
+               'explain.py',
                'default_knowledge-semmap.xml',
                'defaultprobs-semmap.txt'])
 
