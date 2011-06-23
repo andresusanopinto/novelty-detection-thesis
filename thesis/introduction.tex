@@ -18,8 +18,8 @@
 % Introduction
 There has been several efforts in the areas of artificial intelligence and mobile robotics
 in creating robots that are able to interact with humans and their environments.
-Those robots would be able to move into our houses and offices. They would be able to communicate
-with us and provide help solving our tasks.
+Those robots would be able to explore our houses and offices. They would be able to communicate
+with humans and perform typical human-like tasks.
 
 % Keep listing problems robots should be able to solve 
 %\begin{itemize}
@@ -30,47 +30,46 @@ with us and provide help solving our tasks.
 
 
 % Representation of environments are needed!
-In order to reason and understand about the surrounding environment a robot first has to
-obtain a manageable representation of it.
-Such a representation provides the robot with a understanding on how the several
-entities relate to each other, and, if persistent, allow the robot to reason beyond its sensory
-horizon.
+In order to reason about and perform actions in the surrounding environment, the robot first 
+has to obtain a manageable representation of it. Such a representation provides the robot with 
+understanding of how the spatial entities relate to each other and spatial concepts, and, 
+if persistent, allow the robot to reason beyond its sensory horizon.
 
 % Machine-representations are not useful to solve the required problem.
 One may argue that robots and computers can already represent and understand environments, but they
 do so by using representations that are not human friendly: e.g.\ a robot can uniquely identify the
-location of a certain object with coordinates, but those coordinates are not suitable for humans.
-A robot may be able to detect a tag placed on an object, but such an approach besides limited
-and hard-working does not scales: new objects are created everyday, the huge amount of already
-existent objects and concepts also forbids any tagging and concepts by their nature are dynamic.
-Summing up: methods are needed that allow robots to represent environments and allow human concepts
-to also be representable.
+location of a certain landmark using internal coordinates, but those coordinates are not understandable
+for humans. A robot may be able to detect a tag placed on an object, but such an approach does not scale
+outsize structured environments: new objects are created everyday, there is huge amount of already
+existing objects and concepts by their nature are dynamic. For this reason, methods need 
+to be developed that will allow robots to represent real-world environments and allow human concepts
+to be transferred into the robot representations.
 
 % Semantic Mapping
-By gathering semantic knowledge a robot can learn how to map their internal representation to the
-given set of human concepts. Web and other common databases, that have been created by humans, are a
-great source of semantic information, and, in some sense have helped to solve this semantic mapping
-problem.
-Common approaches at semantic mapping are based on classification, this is: a robot has a set of
-defined categories and it picks the one that best represents the sensed data. This approach often
-gives satisfactory results, but only when applied on a controlled environment where the robot has
-knowledge of all the categories that exist.
+By gathering semantic knowledge a robot can learn how to augment the internal representation with a
+set of human concepts. Web and other common databases, that have been created by humans, are a
+great source of semantic information, and can be a valuable source of knowledge for the semantic mapping
+problem. Common approaches to semantic mapping are based on classification, i.e., a robot has a set of
+defined categories and selects the one that best represents the sensed data. This approach often
+gives satisfactory results, but only when applied in a controlled environment where the robot has
+knowledge about all of the categories that exist.
 
 % Complete knowledge? Don't joke me.
-This assumption on knowledge of all the categories that an entity can be mapped to is too strong
-to hold on unknown environments. In specific, a mapping defined over the human semantics will always
-be incomplete due to infeasibility to map all the concepts or even due to its dynamic nature where
-concepts change not only on time but also between sociocultural aspects.
+This assumption about the complete knowledge of all the categories that an entity can be mapped to is 
+too strong to hold on real-world environments. More specifically, a mapping defined over the human semantics 
+will always be incomplete due to the infeasibility to map all the concepts or even due to its dynamic nature 
+where concepts change not only over time but also between sociocultural aspects.
 
 % Novelty Detection
-In this sense a robot should be able to identify gaps on its knowledge by detecting novelty.
+Consequently, a robot should be able to identify gaps in its own knowledge and detect novelty.
 Developing methods for this problem helps to provide robots with novelty signals that can be
-used to improve its reliability, decide when to initiate active-learning or even provide basic
+used to improve reliability, decide when to initiate active learning or even provide basic
 information for keeping knowledge continuously adapted in long-term or life-long scenarios.
 
-The rest of this chapter presents in which context is this thesis interested in detecting novelty.
-It presents then the specific problem it addresses and defines the goals to achieve.
-At last it presents the structure of the other chapters.
+The rest of this chapter presents the context in which this thesis addresses the problem of novelty detection.
+Then, it presents the specifics of the problem and defines the goals to achieve. Finally, it outlines the 
+structure of the remaining chapters.
+
 
 \section{Context}
 % Spatial Representations
@@ -78,59 +77,54 @@ At last it presents the structure of the other chapters.
 % Room Categories actually.
 
 %
-In mobile robotics the main need is on spatial information. Having a representation of all
-the spatial entities and relations between them allow the robot to navigate and interact
-with them. Maps are the default tool for representing those spaces, and computers excel at
-creating close to exact representations of spatial environments.
-But which concepts existent in the human spatial knowledge are needed in order to turn those
-representations a usable tool to represent human concepts?
+One of the most crucial problems in mobile robotics is that of representing space in which the robot operates. 
+Having a representation of all the spatial entities and relations between them allows the robot to navigate and 
+interact with the environment. Maps are the default tool for representing those spaces, and computers excel at
+creating close to exact representations of spatial environments. However, those representations usually fail to
+capture aspects important for human-like spatial understanding.
 
 Different spatial knowledge types can be identified depending on the scale, abstraction level,
-and required generalization. For example geometric type aspects which robots are already very
-good at representing, object knowledge which is incredibly basic for humans, delineation
-of spatial areas and relations between instances of all those knowledge types. e.g.\ a specific
+and required generalization. Examples include geometric aspects of the world, object knowledge 
+(which is fundamental for humans, but difficult to extract for robots), segmentation of
+spatial areas, and finally, relations between different spatial entities e.g. a specific
 object (book) is on top of another object (table) that is located inside an area (room-library)
-that is inside a another area (university).
-As seen on this example humans do not limit themselves at representing entities
-in space and spatially relate them but they also attribute semantic value to them.
+that is inside a another area (university). We see that humans do not limit themselves to representing 
+entities of space and relating them spatially, but they also attribute semantic concept to them.
 
-It is this semantic value attributed by humans to entities that is interesting for endowing
-robots with knowledge on how to interpret and reason over human environments.
-By understanding which objects are expected to be found on a room, what are the properties that
-distinguish room categories, which room types are likely to be connected together a robot can
-aim at increase its effectiveness on indoor environments.
+It is those semantic concepts attributed by humans to spatial entities that are interesting for 
+endowing robots with knowledge on how to interpret and reason about human environments.
+By understanding which objects are expected to be found in a room, what are the properties that
+distinguish room categories, or which room types are likely to be connected together, a robot can
+increase its communication abilities but also its performance on complex tasks in indoor environments.
 
-A basic concept on indoor environments is that of room. Rooms allow humans to segment areas
-in high\hyp{}level entities that can be categorized according to the properties and expected
-activities to be performed on them.
-e.g.\ kitchens are rooms where cornflakes are usually found, a library is identified by the presence
-of many books, a lecture hall is a place where lessons are given.
+A basic concept of indoor environments is that of a room. Rooms allow humans to segment areas
+into high\hyp{}level entities that can be categorized according to their properties and canonical
+activities performed there, e.g. kitchens are rooms where cornflakes are usually found, a library is 
+identified by the presence of many books, a lecture hall is a place where lessons are given.
 Since room categories play an important role in understanding and reasoning about
 indoor human environments this thesis will focus on them.
 
+
 \section{Motivation}
 % Detect limitations and novel knowledge
-It is highly desirable that a robot can be deployed to new and unknown environments. Aiming at that,
-a robot has to perform its own semantic mapping of the environment instead of relying on a provision
-of already labelled maps.
-But the semantic mapping ability of a robot is restricted by its spatial and semantic knowledge.
-This poses a problem as its unrealistic to believe that on unknown environments the robot knowledge
-is complete. So it becomes important to detect gaps on the robot knowledge, such that the robot can
-be aware of limitations of its models and devise techniques to not fail victim of its limitations.
+It is highly desirable that a robot can be deployed in new and unknown environments. In order to achieve that,
+the robot has to perform its own semantic mapping of the environment instead of relying on available labelled maps.
+However, the semantic mapping ability of a robot is restricted by its spatial and semantic knowledge.
+This poses a problem as its unrealistic to assume that in an unknown environment, the robot's knowledge
+will be complete. Therefore, it becomes important to detect gaps in the robot's knowledge so that the robot can
+be aware of the limitations of its models and deal with the novel situations. Furthermore, the detection of 
+knowledge gaps can be extremely useful for several other problems in artificial intelligence such as 
+active learning and knowledge maintenance during life-long operation.
 
-Additionally the detection of knowledge gaps, will serve as base for several other problems in
-artificial intelligence such as active-learning and maintenance of long and life-long knowledge.
-
-\section{Proposal and Goals}
-This thesis aims at developing methods that can be used to detect gaps on the semantic knowledge
-of an agent. For that the spatial knowledge representation proposed in \cite{pronobis2010ias} will
-be used as base defining the agent knowledge.
-Given an instance world, that knowledge, is used to perform semantic mapping~\cite{pronobis2011semmap}
-on indoor environments using a probabilistic graphical model. That model is instantiated from the
-environment using the spatial knowledge and captures both semantic and structural information of
-space. It allows the agent to map all the modelled variables in the presence of uncertainty and 
-therefore this thesis will focus on study and developing methods that can detect novel semantic room
-categories from it.
+\section{Goals}
+This thesis aims at developing methods that can be used to detect gaps in spatial semantic knowledge
+of a robotic agent. To this end, the spatial knowledge representation proposed in \cite{pronobis2010ias} 
+is used as a base for defining the agent's spatial knowledge. Given a concrete environment, 
+a semantic mapping process is applied and a conceptual map representation of the environment it build according
+to~\cite{pronobis2011semmap}. The conceptual map is represented in terms of a probabilistic graphical model
+capturing both semantic and structural information of space. This thesis focuses on novelty detection methods 
+from this probabilistic graphical model representation. In particular, emphasis is placed on detection of 
+novel room categories given the observed spatial properties of the environment.
 
 % Study how structure changes novelty.
 % If everything goes fine... 2 of the "Future Directions" proposed are 
@@ -146,22 +140,20 @@ categories from it.
 \section{Thesis Outline}
 The rest of this thesis is structured as follows:
 
-\autoref{chap:background} introduces background concepts for understanding the
-presented thesis. In particular \autoref{sec:graphical-models} introduces
-\emph{probabilistic graphical models} that lay the base modelling tool for
-the used structured semantic representation.
+\autoref{chap:background} introduces fundamental concepts important for understanding the problems 
+addressed in the thesis. In particular \autoref{sec:graphical-models} introduces \emph{probabilistic 
+graphical models} that lay the foundation for the conceptual map.
 
-\autoref{chap:semantic-mapping} describes the semantic mapping process.
-It introduces a spatial knowledge representation and describes a system
-that uses it for performing semantic mapping using using a \emph{probabilistic graphical model}.
+\autoref{chap:semantic-mapping} describes the semantic mapping process. It introduces the spatial 
+knowledge representation and describes a system that uses it for performing semantic mapping using 
+using the \emph{probabilistic graphical model}.
 
-\autoref{chap:novelty-intro} introduces novelty detection under a
-statistical view point and how to interpret it as a threshold function.
-It presents then the main work of this thesis: detecting novel semantic
-categories using graphical models.
+\autoref{chap:novelty-intro} introduces novelty detection from the statistical point of view and 
+shows how to interpret it as a thresholding function. Then, it the main contribution of this thesis:
+methods for detecting novel semantic categories using graphical models.
 
-\autoref{chap:conclusions} draws conclusions on the developed work and presents
-interesting directions for future works.
+\autoref{chap:conclusions} draws conclusions on the developed work and presents possible 
+directions for future works.
 
 
 
