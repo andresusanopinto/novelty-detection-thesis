@@ -5,20 +5,18 @@ map with novelty detection capabilities.
 
 The chapter starts by providing the reader with a brief overview on novelty detection
 techniques and related works. Then it shows that an optimal novelty detection system
-can be implemented by thresholding on a order-relation defined over the inputs.
-And that an equivalent order-relation can be imposed by a ratio between
+can be implemented by thresholding an order relation defined over the inputs.
+Moreover, an equivalent order relation can be imposed by a ratio between
 conditional and unconditional probabilities.
-Some discussion on how to interpret the meaning of those factors is also
-presented.
 
-At last a practical example using semantic data and probabilistic graphical
+Finally,  a practical example using semantic data and probabilistic graphical
 models is presented: it shows how to use the introduced ratio to obtain a
 novelty detection system and analyses the performance impact by increasing
 the amount of sensed data and by using an approximation on the unconditional
 probability.
 
 
-\section{Novelty Detection Review and Related Work}
+\section{Novelty Detection - Review and Related Work}
 Novelty detection, also known as outlier or anomaly detection, is a
 classification problem related to identification of new or unknown data
 patterns that the system is not aware of~\cite{markou2003novelty}.
@@ -33,22 +31,22 @@ detection of masses in mammograms~\cite{tarassenko1995novelty} or detection of
 novel and useful documents~\cite{zhang2002novelty}.
 
 Any normal classification application is also a good candidate for extending
-with novelty detection, as the results for samples the system has not been
-trained on can be unreliable~\cite{devarakota2008reliability}.
-e.g.\ applied to digit-recognition~\cite{tax1998outlier}
+with novelty detection, as the results for samples on which the system has not been
+trained on can be unreliable~\cite{devarakota2008reliability}
+e.g. when applied to digit-recognition~\cite{tax1998outlier}
 or to detection of novel inputs on a neural network~\cite{bishop1994novelty}.
 
 It is in the nature of unknown environments and in the infeasibility of
 the system to acquire examples of all possible classes where the complexity of
-novelty detection lies: it is only possible to obtain samples representing positives
+novelty detection lies: it is only possible to obtain samples representing positive
 examples of known cases and the lack of negative examples renders normal
 classification methods unusable.
 In order to become practical in real world applications, novelty detection
 methods have to overcome a series of obstacles:
 be able to generalize while still detecting novelty,
 be resistant to noisy features,
-ability to scale in feature dimension,
-deal with multiple classes and performing detection efficiently as many
+scale in feature dimension,
+deal with multiple classes and perform detection efficiently as many
 autonomous systems require real-time or close to real-time performance.
 
 \subsection{Review of Novelty Detection Methods}
@@ -69,13 +67,13 @@ with.
 
 A slightly different approach is applied in case of by one-class \gls{SVM} approaches that
 try to distinguish novelty by separating the training set from all the other
-points in the input space. They try to achieve that by enclosing the training
-set by some structure (e.g.\ an hyper-sphere)~\cite{bennett2000support}.
-Those approaches have been made in line with Vapnik principle of not solving
-something hard. As although having access to a perfect probability distribution
+points in the input space. This is achieved by enclosing the training
+set with some structure (e.g.\ an hyper-sphere)~\cite{bennett2000support}.
+Those approaches have been made in line with Vapnik's principle of never to solve a 
+problem which is more general than the one we actually need to solve~\cite{scholkopf2000support}.
+Although having access to a perfect probability distribution
 of the input would solve the problem, creating such a function is harder than
-simply creating a boundary between known data and novel data
-\cite{scholkopf2000support}.
+simply creating a boundary between known data and novel data.
 
 Error reconstruction methods have also been used for novelty detection.
 They use the assumption that the class to be defined lies on a manifold embedded
@@ -98,8 +96,8 @@ is expected that it will badly reconstruct a sample from a different one.
 \cite{ranganathan2010pliss} presents a system able to perform place recognition
 and classification from visual clues. It is able to perform segmentation by
 exploiting time-coherency on video information. The approach is particularly
-interesting by its ability of keeping a fully probabilistic distribution of
-the place classification and segmentation. This is, the system never performs
+interesting by its ability of keep a fully probabilistic distribution of
+the place classification and segmentation. In other words, the system never performs
 a deterministic decision that impacts any future result, allowing it to adjust
 the segmentation and place classification as more data becomes available.
 The system is also able to detect novel instances and methods how to adapt it
@@ -108,22 +106,21 @@ to run on a constant amount of memory and computation are presented.
 \cite{boutell2006factor} presents a method to perform scene-classification
 from low-level region detectors using probabilistic graphical models.
 The information obtained by the region detectors is exploited together with the
-spatial relations between on the higher level scene-classification task.
-A presented scheme using only pairwise relations between regions is show to
-have better performance than the correct approach of modelling all regions connectivity
-with a large single-factor as the pairwise relations can be
-approximated with modest amounts of training data, where the single-factor
+spatial relations for the higher level scene-classification task.
+A scheme using only pairwise relations between regions is shown to
+have better performance than the correct approach of modelling connectivity of all regions 
+with a large single factor as the pairwise relations can be
+approximated with modest amounts of training data, where the single factor
 demands an impractical amount of training data.
-No approach is made on it at novelty detection either of regions or scene
+No approach is made for novelty detection either of the regions or the scene
 categories. 
 
 
 \section{Novelty Detection by Thresholding}
 \label{sec:threshold}
 The objective of a novelty detection system is to classify a given sample $x$ as
-either \emph{known}: $x$ being generated by a known class to the system, or \emph{novel}:
-$x$ generated by a class unknown for the system.
-Based on the ground\hyp{}truth of a sample four cases are possible:
+either \emph{known}: $x$ being generated by a class known to the system, or \emph{novel}:
+$x$ generated by a class unknown to the system. Based on the ground\hyp{}truth of a sample four cases are possible:
 
 \begin{description}
 \item[true positive]  - when a system correctly   flags a sample of an unknown class as \emph{novel}.
@@ -132,15 +129,14 @@ Based on the ground\hyp{}truth of a sample four cases are possible:
 \item[false negative] - when a system incorrectly flags a sample of an unknown class as \emph{known}.
 \end{description}
 
-Due to noisy data, unstable features and lack of information it is impossible to develop
-a method able to exactly guess the correct classification of a sample.
-By modelling the outcomes with probabilities it becomes possible to handle the uncertainty
+Due to noisy data, unstable features and lack of information, it is impossible to develop
+a method able to always exactly guess the correct classification of a sample.
+By modelling the outcomes with probabilities, it becomes possible to handle the uncertainty
 associated with each decision.
 The notation $P(novel|x)$ will be used to denote the probability that the sample $x$ is in fact a
 sample of an unknown class. $P(x)$ will denote the probability that sample $x$ is given to the
 system to be classified. $\overline{novel}$ is also defined in such a way that
-$P(\overline{novel}|x)$ measures the probability that a decision on classifying $x$ as novel is
-wrong.
+$P(\overline{novel}|x)$ measures the probability that the sample $x$ is generated by a known class.
 
 Additionally a decision on the novelty of a sample $x$ performed by a deterministic system
 will be fully determined by the sample itself.
@@ -159,28 +155,26 @@ true positive or the false positive probability by using a set $N' \supset N$.
 This describes the base of the \emph{error and rejection tradeoff}~\cite{chow1970optimum}, which
 states that a system aiming at increasing the true-positive probability will eventually increase its
 false-positive error.
-The true positive probability can be described as the interest in detecting as much
-as possible the novel classes and the false positive probability the interest
-in not incurring in too many errors.
-By fixating one of those it is possible to define a novelty detection
-system that achieves the maximum or minimum of the other.
+The true positive probability is related to the goal of detecting as many novel samples as possible.
+At the same time, the false positive probability is related to the goal of not making too many errors.
+By fixing one of those, it is possible to define a novelty detection system that achieves the maximum or minimum of the other.
 
 This way an optimal detector can be formulated by achieving the maximum true-positive
-probability without its false-positive probability increase beyond a given limit.
+probability without its false-positive probability increasing beyond a given limit.
 This is equivalent to a \emph{continuous knapsack problem} which allows a greedy
-solution by sorting the items with a value per weight function.
-In the case of detection system that can be defined as:
+solution by sorting the items with a value per weight function. In the case of 
+detection system that can be defined as:
 
 \begin{eqnarray}
 value(x)  &=& P(\text{true positive}|x) \\
 weight(x) &=& P(\text{false positive}|x) \\
-cost(x)   &=& value(x)/cost(x) \\
+cost(x)   &=& value(x)/weight(x) \\
           &=& \frac{P(novel|x)P(x)}{P(\overline{novel}|x)P(x)}
 \end{eqnarray}
 
-Therefore a novelty system before classifying a sample $a$ as novel should (greedily)
-classify any sample $b$ with a small cost as that would achieve
-an higher true positive probability given a fixed false positive one.
+Therefore a novelty detection system before classifying a sample $a$ as novel should (greedily)
+classify any sample $b$ with a smaller cost as that would achieve a higher true positive probability 
+given a fixed false positive one.
 
 \begin{equation}
 \label{eq:knapsack}
@@ -198,15 +192,15 @@ Based on this, it can be said that an optimal novelty detection system is
 interested in defining an order relation on all the possible inputs equivalent
 to the order defined by the function: $P(\overline{novel}|x)$.
 And any optimal detector can be described by the largest $P(\overline{novel}|x)$
-accepted by it. Which is seen as threshold.
+accepted by it. This can be seen as thresholding.
 
 
 \section{Conditional and Unconditional Probability Ratio}
 
-On the previous section it was shown that an optimal novelty detector can be
-implemented with a threshold on top of the order-relation defined by
+In the previous section, it was shown that an optimal novelty detector can be
+implemented by placing a threshold on the order relation defined by
 $P(\overline{novel}|x)$ over $x$. Performing some manipulations with
-Bayes theorem and assuming a constant $P(\overline{novel})$ a more usable
+Bayes theorem and assuming a constant $P(\overline{novel})$, a more usable
 form can be attained:
 
 \begin{equation}
@@ -216,8 +210,8 @@ form can be attained:
   \propto \frac{P(x|\overline{novel})}{P(x)}
 \end{equation}
 
-Since there is only interest in maintaining the same order-relation as
-$P(\overline{novel}|x)$ any constant factor can be dropped.
+Since the interest is only in maintaining the order relation defined by
+$P(\overline{novel}|x)$, any constant factor can be dropped.
 Leaving a ratio between a \emph{conditional} and
 \emph{unconditional probability} suitable for implementing novelty detection
 by thresholding.
@@ -226,39 +220,37 @@ by thresholding.
 \subsection{Conditional Probability}
 The conditional probability $P(x|\overline{novel})$ describes the distribution
 of the samples given that they are generated by a known class.
-In case the labelled data available for the agent to learn a concept comes from
-the same distribution where the system will run the correct approach is to use it
-as prior-information for modelling the conditional probability.
+In case when the labelled data used to learn a concept come from
+the same distribution from the test samples come, the correct approach is to use it
+as prior information for modelling the conditional probability.
 
 Note that it is important for the labelled data to be a filtered version
-of the underlying world distribution (with all classes) that does not contains
-any bias.
-Otherwise that bias will lead to incorrect modelling the conditional probability
-and a subsequent wrong ordering of the sample space.
+of the underlying world distribution (one modeling all the concepts in the world) 
+that does not contain any bias. Otherwise that bias will lead to incorrect modelling of 
+the conditional probability and in consequence wrong ordering of the sample space.
 
 \subsection{Unconditional Probability}
-The unconditional probability $P(x)$ plays an important role on obtaining a
+The unconditional probability $P(x)$ plays an important role in obtaining a
 correct order relation for performing novelty detection.
-It serves as a normalizing component that allows the system to figure out
-whether a given sample conditional probability arises from it belonging to
+It serves as a normalizing component that allows the system to decide
+whether conditional probability of a given sample arises from it belonging to
 the known concept or from the likelihood of being sampled.
 
 On lack of any information about the unconditional probability and conforming to
 the principle of maximum entropy (\autoref{sec:max-entropy}) a uniform
-distribution must be chosen.
-Though by using unlabelled data it becomes possible to obtain extra information
-and achieve a better approximation.
+distribution must be chosen. However, by using unlabelled data, it becomes possible 
+to obtain extra information and achieve a better approximation.
 
 
 %\subsection{Novelty Detection on a Variable Set of Features}
-Note also that often novelty detection is applied on a fixed set of features
+Note also that often novelty detection is applied to a fixed set of features
 together with an assumption of a uniform unconditional probability.
-On those cases $P(x)$ becomes a constant and therefore a novelty threshold
-can be directly applied on $P(x|\overline{novel})$ as is the case in \cite{bishop1994novelty}.
-But in the case where the set of features $x$ is variable it cannot be
-discarded. There $P(x)$ plays a role in levering all the conditional
-probabilities on different sets of variables into the same measure units
-such that a threshold can be implemented.
+In those cases, $P(x)$ becomes a constant and therefore a novelty threshold
+can be directly applied to $P(x|\overline{novel})$ as is the approach presented in \cite{bishop1994novelty}.
+However, in case where the set of features $x$ is variable, it cannot be
+discarded. There, $P(x)$ plays a role in levering all the conditional
+probabilities on different sets of variables into the same units so that a threshold can be obtained.
+
 
 \subsection{Assumption on a constant $P(novel)$}
 The ratio between the conditional and unconditional probabilities of the sensed variables
