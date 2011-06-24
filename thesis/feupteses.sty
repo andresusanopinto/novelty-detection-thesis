@@ -167,6 +167,12 @@ with the `report' document style}{}}{}
   \par%
   \center{\noindent\large #1: #2 #3}}}
 
+\def\supervisornote#1{%
+  \setbox\@supervisorstext\vbox
+  {\unvbox\@supervisorstext
+  \vskip 0.5\baselineskip%
+  \par%
+  \center{\noindent\large #1}}}
 %if provisional add a watermark
 
 \if@provisional
