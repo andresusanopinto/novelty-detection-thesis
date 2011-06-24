@@ -3,47 +3,32 @@
 % motivation
 Humans associate concepts to areas that relate to the functionality of those. That
 association is either useful by explaining where to find certain objects as well to
-understand the types of activities to perform on it. 
+understand the types of activities to perform on certain areas. 
 Those human-concepts are meant to be meaningful for humans and by incorporating conceptual
 knowledge about them it is expected to improve the agent ability to interact and communicate
-with humans and the ability perform human-like tasks.
+with humans and to perform human-like tasks.
 
 % semantic mapping definition
 In this context semantic mapping is seen as the process of building a representation of
-the environment which associates spatial entities with a set of defined spatial concepts (in this case the human concepts).
+the environment which associates spatial entities with a set of defined spatial concepts (in this case human concepts).
 
+% Importance of spatial and conceptual knowledge
+In order to build such a semantic map, it is important to define the spatial and conceptual knowledge
+that allows an agent to map between its machine-friendly representation of the world and the high-level semantics
+characteristic of the human world.
+That knowledge needs to define concepts and how to segment and identify them from the low-level representation,
+it needs also to define how the concepts relate to each other and attribute meanings to them.
+In the case of indoor environments this can be seen for example as: rooms are a unit of division of area and are
+often separated by doors, each room can also be characterized by the objects inside, size and shape, and they
+can be categorized in meaningful concepts such as: kitchen, library, corridor, etc\dots
 
-Missing:
-\begin{itemize}
-\item importance of conceptual knowledge
-% In order to build such a mapping of the environment, it is important to define the knowledge that allows the agent to reason
-% about. 
+% Why to treat it in a probabilistic way
+The low-level representation and the knowledge of the agent, will always be to a certain a degree imperfect,
+incomplete, inaccurate and invalid. Due to that both the concepts and their relations
+cannot be quantified in a rule base system and ought to be treated in a probabilistic way in order to allow
+the agent to still reason with some accuracy about the world.
 
-\item application of conceptual knowledge
-% It is expected that by being able to reason over those semantics an agent can better
-% understand human environments and increase its efficiency when performing human-tasks on them.
-% By handling this conceptual knowledge the agent becomes aware of 
-
-\item challenges and need for representing uncertainty
-% The goal of a spatial representation is to provide the agent with a view about the environment
-% that allows it to reason beyond its sensory horizon.
-
-% Such a representation is by its nature imperfect, incomplete, inaccurate and invalid.
-
-% world that allows the agent to perform reasoning over it and efficiently perform tasks.
-% It should also give the agent ability to reason about parts 
-% Such a representation cannot be perfect since the methods and information are uncertain
-
-% It is therefore clear that the need to handle information on an high-level semantic and
-% probabilistic fashion arises not only for efficiency reasons but also from the desire
-% of being able to communicate and reason on those aspects.
-% In order to fully explore the semantic properties and their relations it is necessary to
-% detect and classify semantic aspects as well to understand the relationships between them.
-% That conceptual knowledge is important and any limitations on it will limit the capacities
-% of an agent to reason. 
-\end{itemize}
-
-% here a here a method is used that does semantic mappping and representes conceptual knowledge
+% here a here a method is used that does semantic mapping and represents conceptual knowledge
 % on a probabilistic fashion.
 This thesis motivation lies on developing methods for detecting knowledge gaps on the spatial
 semantic knowledge of a mobile agent. For that spatial knowledge needs to be defined, as well
