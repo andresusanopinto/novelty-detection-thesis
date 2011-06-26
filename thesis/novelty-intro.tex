@@ -264,9 +264,8 @@ To the best of the knowledge of the author there has been no studies on how to a
 sets and structures of sensed variables and a strong assumption has always been used about the factor being 
 constant through all possible scenarios.
 
-It is questionable whether this assumption holds in realistic scenarios.
-Note that in order to match this \emph{criterium} of having a constant $P(novel)$ samples needs to be
-drawn with a method like:
+It is questionable whether this assumption holds in realistic scenarios. Note that in order to match the 
+\emph{criterium} of having a constant $P(novel)$, samples needs to be drawn with a method like:
 
 \begin{algorithm}[Draw samples with equal $P(novel)$]
 \begin{enumerate}
@@ -276,7 +275,7 @@ drawn with a method like:
 \end{enumerate}
 \end{algorithm}
 
-Alternative, it is expected that in a realistic scenario, samples are drawn with the following
+Alternatively, it is expected that in a realistic scenario, samples are drawn with the following
 unbiased method:
 \begin{algorithm}[Draw samples with equal $P(novel)$]
 \begin{enumerate}
@@ -286,9 +285,9 @@ unbiased method:
 \end{algorithm}
 
 If in reality samples are drawn according to this unbiased method, assuming a constant $P(novel)$
-will negatively impact the exactness of the detector. For that reason the author defends this assumption
-to be very strong and points that future work should try to develop methods to include structure information
-on the probabilistic model to allow the system to deal with certain structures being more prone to produce
+will negatively impact the exactness of the detector. For that reason, the author believes this assumption
+is very strong and points out that future work should try to develop methods to include structure information
+about the probabilistic model to allow the system to deal with certain structures being more prone to produce
 novel samples.
 
  
@@ -297,29 +296,30 @@ novel samples.
 \section{Novelty Detection on the Conceptual Map}
 
 This section presents now how to use graphical models produced by the conceptual map and the
-novelty detection concepts introduced earlier on this chapter in order to detect room categories the
+novelty detection concepts introduced earlier in this chapter in order to detect room categories the
 system is not aware of.
 
-For that both models to approximate both the conditional and unconditional probability need to
-be defined and then the ratio between them used to define a function over which a threshold
-implements a novelty detection system.
+For that purpose, two models approximating both the conditional and unconditional probability need to
+be defined. Then, the ratio between the resulting probabilities is used to define a function over which 
+a threshold is specified.
 
 \subsection{Approximating the Conditional Probability}
-The actual semantic mapping of the environment happens using the \emph{conceptual map}
-introduced on \autoref{sec:conceptual-map}. During it the agent instantiates a
-\emph{chain graph} to model distribution of the sensed variables according to the known
-concepts and categories introduced as hidden variables on the graph. Using that graphical model
+The semantic mapping algorithm uses the \emph{conceptual map}
+introduced in \autoref{sec:conceptual-map} to represent the environment on the high level of abstraction. 
+During the semantic mapping process, the agent instantiates a
+\emph{chain graph} to model the distribution of the sensed variables according to the known
+concepts and categories introduced as hidden variables in the graph. Using that graphical model,
 the system is able to propagate and find the most likely configuration of the represented
-variables. For instance, the semantic category of a specific room is modelled as an hidden variable
-with states representing the semantic values, by calculating probabilities on that variable the
-system finds its belief on the room belonging to a specific category.
+variables. For instance, the semantic category of a specific room is modelled as a hidden variable
+with states representing the semantic values. By calculating probabilities of that variable, the
+system obtains the belief about the room belonging to a specific category.
 
-Since the graphical model produced by the conceptual map tries to model the distribution of
-variables assuming the knowledge of the agent holds true, it represents a method to model
-$P(x|known)$ since it allows to calculate the density probability that the set of features $x$ is
+Since the graphical model produced by the conceptual map models the distribution of
+the variables assuming the knowledge of the agent holds true, it corresponds to the model of
+$P(x|\overline{novel})$. It allows to calculate the probability density that the set of features $x$ is
 sensed given that all the variables and graph structure, including the category of
-a specific room $a$ are correctly modelled by the agent knowledge.
-This way the distribution modelled by a factor graph equivalent to the chain-graph used by
+a specific room $a$ are correctly modelled by the knowledge of the agent.
+This way, the distribution modelled by a factor graph equivalent to the chain graph used by
 the conceptual map can be used as an approximation for the conditional probability of $x$.
 
 \begin{figure}[h]
@@ -364,7 +364,7 @@ the conceptual map can be used as an approximation for the conditional probabili
 
 \subsection{Approximating the Unconditional Probability}
 
-With no knowledge on the unconditional probability the correct approach is to
+With no knowledge about the unconditional probability, the correct approach is to
 assume a uniform distribution (\autoref{sec:max-entropy}), which can be modelled by a
 factor graph without any factors: \autoref{fig:uniform-graph}.
 
@@ -383,19 +383,19 @@ factor graph without any factors: \autoref{fig:uniform-graph}.
          distribution over the sensed set of features $x$.}
 \end{figure}
 
-Thought, very often there is extra knowledge that can be obtained about the distribution
-of the variables that helps to model the unconditional distribution. With that, more accurate
-models can be produced.
-In this case, the system is interested in detecting only if a specific variable category is not
+However, very often additional knowledge can be obtained
+that helps to model the unconditional distribution. Given that knowledge, more accurate
+models can be produced. 
+In this case, the system only aims at detecting if a specific variable category is not
 known. With that in mind, it was assumed that the graph structure is known and that an unknown
-category can only influence variables by using the same structure as the known variables.
-This way the structural information and all the other hidden variables the system is aware of
+category can only influence variables using the same structure as the known variables.
+Therefore, the structural information and all the other hidden variables the system is aware of
 can be used to more accurately approximate the unconditional distribution.
 
 \begin{figure}[h]
 \centering
-\subfloat[\label{fig:any-a}Since variable $a$ can be unknown, the agent does not has
-knowledge on how to model the dashed relations.]{
+\subfloat[\label{fig:any-a}Since variable $a$ can be unknown, the agent has no
+knowledge about how to model the dashed relations.]{
 \begin{tikzpicture}
   \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
     \&
@@ -438,8 +438,8 @@ knowledge on how to model the dashed relations.]{
 \end{tikzpicture}
 }
 \qquad \qquad
-\subfloat[Without knowledge on all states of $a$, all variables dependent on $a$ get directly
-          dependent between each other, introducing a big single factor.]{
+\subfloat[Without knowledge about all the states of $a$, all variables dependent on $a$ are directly
+          dependent on each other, introducing a big single factor.]{
 \begin{tikzpicture}
   \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
     \& \& \node (room3) [latent] {}; \& \\
@@ -476,25 +476,33 @@ knowledge on how to model the dashed relations.]{
 \caption{\label{fig:known-struct}Factor graph modelling distribution of sensed variables when variable $a$ can be unknown.}
 \end{figure}
 
-If the structure and all the other variables can be assumed to be correctly modelled by the
-knowledge of the agent, then all variables that are directly dependent on $a$ become directly
-dependent between them, introducing a single factor (\autoref{fig:known-struct}).
-By approximating this factor the agent can then obtain a model for the unconditional probability.
 
-In cases no other information is available the introduced factor can be considered uniform\footnote{Uniform factors do not influence the
-distribution represented by the factor graph and so can be removed from the graph representation}
-and dropped from the graph (see \autoref{fig:uniform-model}).
-Nonetheless it may be the case that due the cost of labelling data, the agent does not has knowledge
-on all the possible categories of $a$, but still has access to unlabelled data.
-In that case unlabelled samples may be gathered and explored to achieve a better approximation of
-the real distribution of variables.
-Though the factor that needs to be approximated requires handling of all the connected variables
-and enormous amounts of data may be needed to approximate it.
 
-A simple approach can be performed by assuming the variables connected to the factor to be independent
-but having a bias towards certain values. This approach is equivalent to connecting single factors
-on each of variables and approximating those factors using unlabelled data as seen on \autoref{fig:independent-model}.
+If the knowledge of the agent is only lacking information about all the states
+of hidden variable $a$, it can still be used to approximate the sample distribution 
+by avoiding the need to directly represent $a$. For that, all the variables that were 
+directly dependent on $a$ become directly dependent between each other introducing a 
+single big factor connecting all of them (\autoref{fig:known-struct}).
+By approximating this factor, the agent can then obtain a model for the unconditional probability.
 
+In cases when no other information is available, the introduced factor can
+be considered uniform\footnote{Uniform factors do not influence the
+distribution represented by the factor graph and so can be removed
+from the graph representation} (see \autoref{fig:uniform-model}).
+Nonetheless, it may be the case that due to the cost of labelling data,
+the agent does not has knowledge on all the possible categories of $a$,
+but still has access to unlabelled data.
+In that case unlabelled samples may be gathered and exploited to
+achieve a better approximation of the real distribution of variables.
+However, the factor that needs to be approximated requires handling of
+all the connected variables and enormous amounts of data may be
+needed to approximate it.
+
+A simple approach can be used by assuming the variables connected
+to the factor are independent, but still have a bias towards certain values. 
+This approach is equivalent to connecting single factors
+to each of variables and approximating those factors using unlabelled
+data as seen in \autoref{fig:independent-model}.
 
 \begin{figure}[h]
 \centering
@@ -576,7 +584,7 @@ on each of variables and approximating those factors using unlabelled data as se
 \end{figure}
  
 
-Other schemes may be tried to approximate the unconditional independent assuming that only
+Other schemes may be used to approximate the unconditional independent assuming that only
 a specific variable is not necessarily known. For example modelling unconditional probability
 with an hidden variable trained from the unlabelled data. Or by trying to split the single big
 factor on factorizations of other factors.
@@ -594,60 +602,55 @@ the graphical model.
 
 \subsection{Threshold}
 After defining a model for the conditional and unconditional distributions, a threshold can be applied
-over the ratio of those.
-Under the assumption of a constant $P(novel)$, defining a threshold over it leads to an optimal novelty
-detector, as showed on \autoref{sec:threshold}.
+to the ratio of those. Under the assumption of a constant $P(novel)$, defining a threshold over the ratio 
+leads to an optimal novelty detector, as showed on \autoref{sec:threshold}.
 
-If the training data does not contains any bias, by picking a threshold on the training data that achieves
-a certain true-positive and false-positive rate, it is expected that on the real distribution such a system
-will achieve the same performance.
-
-Note however that the performance of the system is dependent on how well the models approximate the conditional
-and unconditional distributions and so are dependent on how the graph structure is able to model the real distribution
-and how well the training data allows the factors to be approximated.
+If the training data do not contain any bias, it is expected that by picking a threshold on the training 
+data that achieves certain true-positive and false-positive rate, a system will achieve the same performance 
+on the real distribution. However, the performance of the system is dependent on how well the models 
+approximate the conditional and unconditional distributions and so are dependent on how the graph structure 
+is able to model the real distribution and how well the training data allows the factors to be approximated.
 
 \section{A Practical Example}
 \label{sec:unlabelled-data}
-In order to sum up the presented concepts on novelty detection with a threshold
+In order to summarize the presented concepts related to novelty detection with a threshold
 function and exemplify how to use graphical models in the context of
-multi-modality room classification a synthetic dataset was generated.
+multi-modality room classification, a synthetic dataset was generated.
 The dataset was kept simple by only modelling directly sensed features from a
-room, skipping any structural knowledge or sensing model such as room
-connectivity and extra hidden variables.
+room, skipping any structural knowledge (room connectivity) and extra hidden variables.
 
-In this dataset a room $r$ is seen as an hidden-variable generator of a set of
+In this dataset, a room $r$ is seen as a hidden-variable generator of a set of
 features $X$ that are directly sensed by the agent.
 All the sensed features $x$ are independent given the room category.
-In whole there was 11 different room categories and 7 different feature types.
-Each feature can be sensed more than once (e.g.\ room shape is extracted from 2D
+In total, there were 11 different room categories and 7 different feature types.
+Each feature can be sensed more than once (e.g. room shape is extracted from 2D
 laser scans in more than one position in the room), but all those sensed
 instances are considered independent given the room category.
 
 The room categories were chosen to mimic as close as possible the real features
-and categories existing in reality (i.e.\ 1 person office, 2 person office,
-hallway, robot lab, etc\dots). A table describing the used synthetic
+and categories (i.e.\ 1 person office, 2 persons office,
+hallway, robot lab, etc.). A table describing synthetic
 distribution is given in \autoref{extra:synthetic-distribution}.
 
-The objective then was to design a system that, although only trained with
+The objective was to design a system that, although only trained with
 labelled data from 5 of the 11 room categories, was able to detect novel
-room categories.
-For that 100 labelled samples for the 5 known categories were drawn and 1000 
-unlabelled samples were drawn from all the room categories for learning the
-unconditional probability distribution and measure effect of using unlabelled
-data.
+room categories. To this end, 100 labelled samples for the 5 known categories 
+were drawn and 1000 unlabelled samples were drawn from all the room categories for 
+learning the unconditional probability distribution and measure effect of using 
+unlabelled data.
 
 \begin{sidewaystable}[h]
 \begin{center}
 \scalebox{0.40}{\input{results/ontology-explain}}
 \end{center}
-\caption{\label{extra:synthetic-distribution}Distribution used on the synthetic experiment. Each column cell shows $P(feature|class)$}
+\caption{\label{extra:synthetic-distribution}Distribution used for the synthetic data experiment. Each column cell shows $P(feature|class)$}
 \end{sidewaystable}
 
 
 \subsection{Conditional Probability}
 Using the labelled samples, 7 factors $\phi_X(r,x)$ were created, one for each
-feature type, to represent the potential of sensing features $x$ of type $X$ on
-a room of category $r$.
+feature type, to represent the potential of sensing features $x$ of type $X$ for
+the room of category $r$.
 
 % TODO: discuss this with Andrzej
 \begin{equation}
@@ -657,8 +660,8 @@ a room of category $r$.
 Where $\#(r,x)$ denotes the number of times a feature $x$ was sensed inside a
 room category $r$ and $C$ is a smoothing parameter that accounts for fixing
 the probabilities in case a given sample is never seen.
-With those the probability of sensing a set of features $x$ on a room category
-$r$ known for the agent can be modelled with a factor graph as illustrated on
+With those, the probability of sensing a set of features $x$ for a room category
+$r$ known to the agent can be modelled with a factor graph illustrated in
 \autoref{fig:simple-cond-graph}.
 
 \begin{figure}[h]
@@ -696,9 +699,8 @@ one of the known classes.}
 
 \subsection{Unconditional Probability}
 \label{sec:sample-uncond-prob}
-With no knowledge on the unconditional probability the correct approach is to
-assume a uniform distribution.
-That is represented in factor graphs by a graph without any factors.
+With no knowledge about the unconditional probability, the correct approach is to
+assume a uniform distribution. That is represented as a factor graphs without any factors.
 
 \begin{figure}[h]
 \centering
@@ -716,13 +718,13 @@ That is represented in factor graphs by a graph without any factors.
 \end{figure}
 
 Very often there is extra knowledge that can be obtained about the distribution
-of the variable that helps to model the unconditional distribution.
-In this practical example the access to unlabelled data is explored as access to
-it is common on applications in robotics.
+of the variables that helps to model the unconditional distribution.
+In this practical example, the access to unlabelled data is exploited. The availability of
+unlabeled data is common in practical robotic applications.
 
-Note that the sensed variables are dependent between each other when the room
-category $r$ is not known. With that the correct approach would be to train a
-factor that is able to correlate all the sensed variables as seen on
+Note that the sensed variables are dependent on each other when the room
+category $r$ is not known. The correct approach would be to train a
+factor that is able to correlate all the sensed variables as seen in
 \autoref{fig:simple-all-dependent}.
 
 \begin{figure}[h]
@@ -744,26 +746,24 @@ factor that is able to correlate all the sensed variables as seen on
   \draw [-] (fac) -- (xi);
 \end{tikzpicture}
 \caption{\label{fig:simple-all-dependent}A general factor graph able
-         to model any unconditional distribution on the sensed variables
+         to model any unconditional distribution of the sensed variables
          requires a factor connecting all of them.}
 \end{figure}
 
 Nonetheless such an approach suffers from
 the \emph{curse of dimensionality}: as the number of sensed features and feature
-types increases exponential amounts of data are needed to describe it.
-Having interest in avoiding the issues associated with an high-connected factor
-an assumption on independent features can be done and then the unconditional
-probability can be modelled with a fully disconnected variables, but with
-factors that account for existent bias on each single feature (as visible on
-graph in \autoref{fig:simple-independent-graph}).
+types increase, exponential amounts of data is needed to describe it.
+In order to avoid those the issues, an assumption about independent features can be made
+and then the unconditional probability can be modelled with fully disconnected variables, 
+but with factors that account for existent bias on each single feature (as shown in
+the graph in \autoref{fig:simple-independent-graph}).
 
-In the case there is only one sensed feature the distribution generated by an
+In case there is only one sensed feature, the distribution generated by the
 assumption of independent features correctly models the unconditional
-probability. And it deviates from it as more features are sensed.
+probability and it deviates as more features are sensed.
 The individual factors associated with each variable can be seen as a scaling of
-each feature that tries to account for a possible existent bias on each
-of them. Therefore, although far from the desired factor, it is expected to be a
-better estimate than assuming a uniform distribution.
+each feature which tries to account for a possible existent bias for each
+of them. Therefore, it is expected to be a better estimate than assuming a uniform distribution.
 
 \begin{figure}[h]
 \centering
@@ -802,17 +802,16 @@ $I$ on \autoref{fig:simple-independent-graph}.
 
 \begin{description}
 \item[exact] 
-- since the distribution is synthetic there is access to $P(x)$ and $P(x|concept)$
+- since the distribution is synthetic, there is access to $P(x)$ and $P(x|concept)$
 and the ordering function $P(x|\overline{novel})/P(x)$ could be created
-to test how far the other presented thresholds are from optimal.
-
+to test how far the other presented thresholds are from the optimum.
 
 \item[uniform]
-- by assuming a uniform unconditional distribution the ordering function is
+- by assuming a uniform unconditional distribution, the ordering function is
   given by $P_G(x)/P_U(x)$.
 
 \item[independent]
-- using the unlabelled data the unconditional distribution can be approximated.
+- using the unlabelled data, the unconditional distribution can be approximated.
   In this case, it was approximated with an independent distribution of the
   sensed features. The independent threshold was implemented with $P_G(x)/P_I(x)$.
 \end{description}
@@ -822,9 +821,9 @@ to test how far the other presented thresholds are from optimal.
 %%% Results 1
 % Show the threshold ratio is an optimal detector (if perfect information was available)
 % Show that the thresholds are suitable functions for implementing a static threshold.
-As first tryout, the performance of the novelty threshold selection was plotted for a set
-of 1000 samples taken out from the whole distribution (\autoref{fig:synthetic-roc}).
-Those samples contain different number of sensed properties for each room, mimicking
+First, the performance of the novelty threshold selection was plotted for a set
+of 1000 samples taken from the whole distribution (\autoref{fig:synthetic-roc}).
+Those samples contain different numbers of sensed properties for each room, mimicking
 the dynamic properties expected to see when implemented on a robot.
 
 \begin{figure}[h]
