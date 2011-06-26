@@ -583,22 +583,22 @@ data as seen in \autoref{fig:independent-model}.
          room category of room $a$ is known by the system.}
 \end{figure}
  
-
-Other schemes may be used to approximate the unconditional independent assuming that only
-a specific variable is not necessarily known. For example modelling unconditional probability
-with an hidden variable trained from the unlabelled data. Or by trying to split the single big
-factor on factorizations of other factors.
-Though the presented cases have interesting properties:
+Other approaches may be used to approximate the single factor described above
+and allow modeling the distribution when there is no knowledge about all the states
+of a specific variable. For example: by training a hidden variable in an
+unsupervised fashion or by using other factorization schemes for the factor.
+The presented cases have interesting properties:
 
 \begin{description}
-\item[uniform model] - by assuming the factor to be uniform, it can be considered as not existent on
-the graphical model.
+\item[uniform model] - by assuming the factor to be uniform, it can be
+considered as not existent in the graphical model.
 
-\item[independent model] - due to the use of single connected factors, it can easily be trained from
-                           unlabelled data. This helps the system to account for an existent bias on
-                           each of the variables without allowing the system to overfit to the unlabelled
-                           data.
+\item[independent model] - due to the use of single connected factors,
+it can easily be trained from unlabelled data. This helps the system to
+account for existing bias for each of the variables without the
+system overfitting to the unlabelled data.
 \end{description}
+
 
 \subsection{Threshold}
 After defining a model for the conditional and unconditional distributions, a threshold can be applied
@@ -830,13 +830,13 @@ the dynamic properties expected to see when implemented on a robot.
 \centering
 \includegraphics[width=0.60\textwidth]{results/synthetic-all.pdf}
 
-\caption{\label{fig:synthetic-roc}ROC curve comparing novelty detection performance
-         under samples with variable size of sensed properties.}
+\caption{\label{fig:synthetic-roc}ROC curve comparing the novelty detection performance
+         for samples with variable size of sensed properties.}
 \end{figure}
 
-The convex shape for the optimal threshold shows that the ratio between conditional
-and unconditional probability is indeed an optimal detector and is suitable for
-implementing a threshold when the samples are taken from dynamic
+The convex shape of the optimal threshold shows that the ratio between conditional
+and unconditional probability is indeed an optimal detector \textbf{[Why does it show it's optimal?? Maybe too strong word?]}
+and is suitable for implementing a threshold when the samples are taken from dynamic
 distributions (e.g.\ some samples where there is only access to room size versus
 samples where there is a lot of information about the room properties).
 
@@ -845,16 +845,16 @@ Its also possible to see how important it is to estimate a correct unconditional
 probability in order to obtain a correct novelty measure on the inputs.
 The assumption of a uniform unconditional probability has led to very poor results.
 That is probably explained by the semantic properties being highly
-biased towards some values. And shows that bias plays an important step
+biased towards some values. This shows that bias plays an important role
 in detecting whether a given sensed value is a valuable cue about the room category.
 
 
 
 %%% Results 2
 % Measure performance of the thresholds as more information becomes available.
-\subsection{Performance Changes With Amount of Available Information}
+\subsection{Influence of the Amount of Available Information}
 In order to measure the performance impact as more semantic information becomes
-available ROC curves were plotted for samples grouped by the number of sensed
+available, ROC curves were plotted for samples grouped by the number of sensed
 semantic features.
 
 \begin{figure}[h]
@@ -869,13 +869,13 @@ semantic features.
 \subfloat[50 sensed features]{\includegraphics[width=0.40\textwidth]{results/synthetic-50features.pdf}}
 
 \caption{\label{fig:synthetic-roc-breakdown}ROC curves plotted showing performance of the
-         presented novelty detection method on graphs generated for different amount of
+         presented novelty detection method for graphs generated for different amount of
          sensed features.}
 \end{figure}
 
-It is possible to see that as the system gains more semantic information it
-becomes easier to detect novelty. The input space size increases and allows the
-several existing classes to become more easily distinguished.
+It is possible to see that as the system gains more semantic information, it
+becomes easier to detect novelty. The size of the input space increases and allows the
+existing classes to become more easily distinguished.
 
 The performance of the independent threshold decreases as the number of sensed
 features increases. This is easily explained by the fact that the graph $I$ is not
@@ -883,8 +883,8 @@ able to model the existent dependence between the features. This becomes obvious
 as the number of features increases (e.g.\ graph $I$ perfectly models $P(x)$ in the
 case where only 1 feature is sensed).
 
-The uniform threshold shows a poor performance specially on small size samples
-where its performs almost no better than random.
-It performance increases as the size of sensed features increases but nonetheless
-its very small when compared to how optimal a threshold could be.
+The uniform threshold shows poor performance especially for samples with small amount of features
+where it performs almost no better than random.
+The performance increases as the size of sensed features increases but nonetheless
+is very small when compared to the optimal threshold.
 
