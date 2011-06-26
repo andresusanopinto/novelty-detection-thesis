@@ -252,19 +252,20 @@ discarded. There, $P(x)$ plays a role in levering all the conditional
 probabilities on different sets of variables into the same units so that a threshold can be obtained.
 
 
-\subsection{Assumption on a constant $P(novel)$}
+\subsection{Assumption about Constant $P(novel)$}
 The ratio between the conditional and unconditional probabilities of the sensed variables
 is only directly applicable to novelty detection under the assumption of a constant $P(novel)$.
 
-All the literature focus on novelty detection within a fixed scenario, where the set of variables
+All the literature focuses on novelty detection within a fixed scenario, where the set of variables
 used to model the distribution is fixed and defined at the moment the threshold is trained.
-Due to that, they can drop a constant $P(novel)$ and never need to directly or indirectly calculate
-it.
-To the best of the author knowledge there has not been studies on how to approximate it on dynamic
-sets and structures of sensed variables, and so a strong assumption on being constant through all
-the possible scenarios is used to allow dropping the factor.
+Due to that, it is possible to drop the constant $P(novel)$ and there is no need to calculate
+it directly or indirectly.
+To the best of the knowledge of the author there has been no studies on how to approximate it on dynamic
+sets and structures of sensed variables and a strong assumption has always been used about the factor being 
+constant through all possible scenarios.
 
-This assumption was considered questionable on whether it holds on a realistic scenario,
+It is questionable whether this assumption holds in realistic scenarios.
+\textbf{[Read the section from here on.]}
 and for that a sampling scheme able to comply with it is now presented as well an unbiased sampling
 scheme. A method to generate samples that match this \emph{criterium} of having a constant $P(novel)$ can be:
 
