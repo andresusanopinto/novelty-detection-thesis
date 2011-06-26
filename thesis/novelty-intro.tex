@@ -265,9 +265,8 @@ sets and structures of sensed variables and a strong assumption has always been 
 constant through all possible scenarios.
 
 It is questionable whether this assumption holds in realistic scenarios.
-\textbf{[Read the section from here on.]}
-and for that a sampling scheme able to comply with it is now presented as well an unbiased sampling
-scheme. A method to generate samples that match this \emph{criterium} of having a constant $P(novel)$ can be:
+Note that in order to match this \emph{criterium} of having a constant $P(novel)$ samples needs to be
+drawn with a method like:
 
 \begin{algorithm}[Draw samples with equal $P(novel)$]
 \begin{enumerate}
@@ -277,14 +276,8 @@ scheme. A method to generate samples that match this \emph{criterium} of having 
 \end{enumerate}
 \end{algorithm}
 
-According to this sampling algorithm, given any structure the probability of
-variable $a$ being novel is constant. This is somehow unexpected as it means
-the sampling method is biased to adjust the real distribution $G$ such that
-exactly a constant percentage of drawn samples are novel.
-
-Alternative, the sampling method described below is considered more correct as
-it introduces no bias on the distribution $G$ describing the real distribution
-and classes of $a$:
+Alternative, it is expected that in a realistic scenario, samples are drawn with the following
+unbiased method:
 \begin{algorithm}[Draw samples with equal $P(novel)$]
 \begin{enumerate}
 \item Sample a graph structure $G$ (where variable $a$ can be any of the known or unknown classes)
@@ -292,8 +285,11 @@ and classes of $a$:
 \end{enumerate}
 \end{algorithm}
 
-Due to the highly bias needed to drawn a constant amount of novel sampes from any structure, the
-author defends this assumption to be very strong and points that future work should avoid.
+If in reality samples are drawn according to this unbiased method, assuming a constant $P(novel)$
+will negatively impact the exactness of the detector. For that reason the author defends this assumption
+to be very strong and points that future work should try to develop methods to include structure information
+on the probabilistic model to allow the system to deal with certain structures being more prone to produce
+novel samples.
 
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
