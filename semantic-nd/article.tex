@@ -95,23 +95,23 @@ and reliable behavior. In order to be robust, the robot must identify
 novel concepts and instead of making a costly error, refrain from the decision
 and initiate learning. In particular, we address the problem of novelty detection for
 room categorization i.e. detecting whether the area in the environment identified as a
-separate room can be assigned one of the semantic labels that the robot knows (e.g. as \emph{a kitchen} 
-or \emph{an office}) or belongs to a yet unknown semantic category.
+separate room can be assigned to one of the semantic labels that the robot knows (e.g. \emph{a kitchen} 
+or \emph{an office}) or belongs to an unknown semantic category.
 
 
-The novelty detection algorithm is implemented within a cognitive robot Dora the Explorer,
-which already possesses a developed architecture based on probabilistic graphical models 
-oriented towards dealing with uncertain semantic information and reasoning about it~\cite{ijcai}.
-One of the major problems in using the probabilistic models of the environments for novelty
+The novelty detection algorithm is implemented on a cognitive robot Dora the Explorer,
+which already uses a developed architecture based on probabilistic graphical models 
+oriented towards dealing with and reasoning about uncertain semantic information~\cite{ijcai}.
+One of the major problems with using the probabilistic models of the environments for novelty
 detection is selecting the optimal threshold above which the test sample is considered
 novel. This problem becomes more difficult when, as in case of Dora, the representation
 grows as the robot explores the environment. Methods are required to find
-optimal parameters given the current structure of the model. To this end, this work 
+optimal parameters given the current structure of the model which constantly changes. To this end, this work 
 studies methods for novelty threshold selection using probabilistic graphical models.
 
-The rest of this paper is structured as follows. First, we briefly review the related work on
+The rest of this paper is structured as follows. First, we briefly review the related work related to
 room categorization and novelty detection (Section~\ref{sec:related}). Then, we give an outline of the 
-architecture of Dora and the structure of the conceptual map representing the semantic information
+architecture of the Dora system and the structure of the conceptual map representing the semantic information
 (Section~\ref{sec:overview}). Next, we discuss the methods for novelty detection (Section~\ref{sec:novelty-detection}) 
 and present results of our preliminary experiments (Section~\ref{sec:results}). This paper concludes with a 
 summary in Section \ref{sec:conclusion}.
@@ -122,7 +122,7 @@ summary in Section \ref{sec:conclusion}.
 \label{sec:related}
 % TODO(pronobis): general comment about many .... approches to place categorization.
 The problem of room categorization based on visual information was first addressed
-in the computer vision community. In this case, the research focused mainly on the
+in the computer vision community. The research focused mainly on the
 problem of classifying single images captured in indoor or outdoor environments
 (scene classification)~\cite{oliva2006building,torralba2003contextual}.
 At the same time, robotics researchers initially employed
@@ -171,8 +171,8 @@ novelty detection using graphs that are dynamically generated.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/processes.pdf}
-\caption{\label{fig:conceptual-layer}Interaction of the sub-systems
-         in Dora with special focus on the conceptual layer.}
+\caption{\label{fig:conceptual-layer}Interaction between the sub-systems
+         of Dora with special focus on the conceptual layer.}
 \end{figure}
 
 The Dora system~\cite{ijcai} consists of several co-operating sub-systems,
@@ -182,13 +182,13 @@ Only the \emph{conceptual layer} of the representation is of interest to this ar
 Its role is to aggregate the following semantic information coming from other sub-systems:
 \begin{description}
  \item[Doorway detection] is used to segment the continuous space into rooms and map connectivity between them.
- \item[Room size and shape] are classified by using 2D laser scans data from laser range finder mounted on the robot and are used as properties of a given room. The system utilizes pre-trained set of classifiers to extract rooms sizes (either large, medium or small) and shapes (rectangular or elongated).
- \item[Object detection] is performed in the images acquired by the robot through its camera. The system keeps track of the number of objects of each type in each room. Objects are detected by running a pre-trained set of detectors for the following object types: book, cereal box, computer, robot, stapler, toilet paper.
+ \item[Room size and shape] are obtained by classifying 2D laser scans from laser range finder mounted on the robot and are used as properties of a room. The system utilizes pre-trained set of classifiers to extract rooms sizes (either large, medium or small) and shapes (rectangular or elongated).
+ \item[Object detection] is performed in images acquired by the robot through its camera. The system keeps track of the number of objects of each type in each room. Objects are detected by running a pre-trained set of detectors for the following object types: book, cereal box, computer, robot, stapler, toilet paper.
  \item[Room appearance] is categorized from the visual input by using global visual features and a pre-trained set of 7 different models.
 \end{description}
 
 As Dora moves through the environment its \emph{conceptual layer} builds a structural and
-probabilistic representation of the space instantiated as a \emph{graphical model}.
+probabilistic representation of space instantiated as a \emph{graphical model}.
 It includes taxonomy of human-compatible spatial concepts which are linked to the sensed 
 instances of these concepts drawn from lower layers. It is the conceptual layer which 
 contains the information that kitchens commonly contain cereal boxes and have certain 
@@ -209,7 +209,7 @@ probabilistic modeling and reasoning about conceptual knowledge.
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.80\textwidth]{figures/chaingraph.pdf}
-\caption{\label{fig:chain-graph}Example chain-graph produced by the \emph{conceptual layer}.}
+\caption{\label{fig:chain-graph}Example of a chain-graph produced by the \emph{conceptual layer}.}
 \end{figure}
 
 %The conceptual layer structures the sensed environment together with the conceptual knowledge
@@ -240,15 +240,15 @@ information is missing.
 Although the conceptual layer works with \emph{chain graphs}, those can be converted
 into \emph{factor graphs}~\cite{kschischang2001factor}. Factor graphs are used throughout this paper as they provide an
 easier manipulation due to factorization.
-Moreover, there exists efficient implementation of inference engines operating on factor graph
+Moreover, there exist efficient implementations of inference engines operating on factor graph
 representations~\cite{Mooij_libDAI_10}.
 Describing the distribution function in terms of graphs allows to use those engines to
-efficiently calculate marginals on any given subset of variables by exploiting conditional
+efficiently calculate marginals over any given subset of variables by exploiting conditional
 independence between variables.
 
 A \emph{factor graph} is a bipartite graph connecting two sets of nodes $X_G$ and $F_G$
 representing random variables and factors.
-Each factor is described by function $\phi$ dependent only on the variables $x_\phi$
+Each factor is described by a function $\phi$ dependent only on the variables $x_\phi$
 to which the factor is connected.
 Thus, a factor graph can be seen as a description of probability density function obtained
 by a product of all the factors. In order to represent the probability,
