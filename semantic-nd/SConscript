@@ -10,6 +10,8 @@ SVGS = """
 figures/independent-prob-graph.svg
 figures/simple-unconditional-prob-graph.svg
 figures/conditional-prob-graph.svg
+figures/unconditional-prob-graph.svg
+figures/single-unconditional-prob-graph.svg
 figures/simple-conditional-prob-graph.svg
 figures/uniform-prob-graph.svg
 figures/simple-cond-graph.svg
