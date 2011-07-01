@@ -41,7 +41,7 @@
 % NB: Chinese authors should write their first names(s) in front of
 % their surnames. This ensures that the names appear correctly in
 % the running heads and the author index.
-\author{André Susano Pinto\inst{1}\thanks{Corresponding author: \email{andresusanopinto@gmail.com}} \and Andrzej Pronobis\inst{2} \and Luis Paulo Reis\inst{1}}
+\author{André Susano Pinto\inst{1}\thanks{Email: \email{andresusanopinto@gmail.com}} \and Andrzej Pronobis\inst{2} \and Luis Paulo Reis\inst{1}}
 %
 %\authorrunning{Lecture Notes in Computer Science: Authors' Instructions}
 % (feature abused for this document to repeat the title also on left hand pages)
@@ -106,7 +106,8 @@ One of the major problems with using the probabilistic models of the environment
 detection is selecting the optimal threshold above which the test sample is considered
 novel. This problem becomes more difficult when, as in case of Dora, the representation
 grows as the robot explores the environment. Methods are required to find
-optimal parameters given the current structure of the model which constantly changes. To this end, this work 
+the right threshold given the current structure of the model which constantly changes.
+To this end, this work 
 studies methods for novelty threshold selection using probabilistic graphical models.
 
 The rest of this paper is structured as follows. First, we briefly review the related work related to
@@ -319,7 +320,7 @@ This relation between $a$ and $b$ can further be simplified into:
 P(\overline{novel}|b) < P(\overline{novel}|a)
 \end{equation}
 
-Based on this, it can be said that an optimal novelty detection system is aims at 
+Based on this, it can be said that a novelty detection system aims at 
 defining an order relation on all the possible inputs equivalent
 to the order defined by the function: $P(\overline{novel}|x)$.
 Then, the detector can be described by the largest $P(\overline{novel}|x)$ accepted which is the principle of thresholding.
@@ -344,12 +345,11 @@ be used as prior information when calculating $P(novel)$.
 % Explain approach of using conditional probability
 \subsection{Conditional Probability}
 \label{sec:conditional-prob}
-The conditional probability models the distribution of variables given that the sample
-is not novel for the agent.
-This is: it should model the distribution of the sensed features considering that the
-knowledge the agent possesses holds true. Under that its natural to model it with a graphical
-model that combines the information acquired with the relations that the describe the
-relations learned by the agent between the variables.
+The conditional probability models the distribution of variables given that the agent
+knowledge holds true and can be used to describe the generating classes of the sensed
+sample.
+Under that its natural to model it with a graphical model that combines the learned
+variables and categories as well with the relations between them.
 
 In Dora case, this is equivalent to use the graphical model used by it to describe its
 current believes on the variables modelled by the system.
@@ -373,7 +373,7 @@ room.
 
 The factors connecting the variables are trained by the system by searching databases of
 common knowledge to build potentials describing how likely it is that a specific set of
-values for a set of variables is likely to occur.
+values of certain variable types is likely to occur.
 For instance: it is very likely to find a cereal box in a kitchen; and it is unlikely to find
 bathroom connected to another bathroom.
 We propose using such a graph $G$ built by the conceptual layer for modelling $P_G(x)$
@@ -386,7 +386,7 @@ that $P(x)$ is constant through all the samples.
 
 Its important to notice that in several cases assuming it to be constant leads to
 discarding the factor.
-Nonetheless, here the distributions are dynamically changing as the system learns
+Nonetheless, here the distributions are dynamically growing as the system learns
 more on the environment.
 So the normalizing argument $P(x)$ has to be evaluated for each new subset of $x$.
 
@@ -410,7 +410,7 @@ Here $P_{U}(x)$ can be seen as a normalizing factor to lever all the $P_G(x)$ on
 variables $x$ into the same measure units (error rate), such that a static threshold can be implemented.
 For example the conditional probability would yield very small values on large sets of variables
 $x$ than in small sets due to the spreading over the dimensions of the sample space.
-As so a novelty measure is seen as a ratio on how much introducing the known concepts helps to
+A novelty measure is seen as a ratio on how much introducing the known concepts helps to
 understand the observed result.
 
 
@@ -420,7 +420,7 @@ obtain a better approximation to the unconditional probability than the uniform 
 In specific, all the knowledge of the agent can be considered to hold true apart from
 complete knowledge on the categories of a room.
 In that case a single big factor can be used to model all the variables directly
-dependent on the room which the category cannot be assumed to be known as illustrated in
+dependent on the possibly novel room as illustrated in
 \autoref{fig:unconditional-prob-graph}.
 
 \begin{figure}
@@ -431,12 +431,12 @@ all the variables directly dependent on it become dependent between each other i
 a single big factor.}
 \end{figure}
 
-For practical reasons it is impossible to train such a factor, and simplifications need
-to be performed. And here, it was assumed that it can be approximated by factorizing
+For practical reasons, it is impossible to train such a factor, and simplifications need
+to be performed. Here, it was assumed that it can be approximated by factorizing
 it in several single factors such that all variables become independent.
-Additionally those single factors can easily be trained by using unlabelled data,
-obtaining this way a graphical model $I$,
-as illustrated in \autoref{fig:single-unconditional-prob-graph},
+Additionally those single factors can easily be trained by using unlabelled data.
+Obtaining this way a graphical model $I$,
+illustrated in \autoref{fig:single-unconditional-prob-graph},
 to be used as approximation for the unconditional probability.
 
 \begin{figure}[h]
@@ -458,7 +458,7 @@ for implementing a novelty threshold.
 \section{Results}
 \label{sec:results}
 
-In order to verify the performance of the proposed threshold functions a synthetic dataset
+In order to verify the performance of the proposed threshold functions, a synthetic dataset
 was generated. As the point on this initial work was only to test the correctness of
 the presented threshold function and approximation capabilities by using a uniform or
 an independent model, only information regarding direct features of a room were
@@ -472,11 +472,11 @@ types. The number of sensed features is dynamic and mimic the type of informatio
 extracted when running on the robot. Due to that it is possible that on a given sample
 a certain feature type can be present more than once or not be present at all
 (e.g.: room shape is extracted from 2D laser scans in more than one position in the room,
-information about detected objects is only present when the robot previously tried to
+and information about detected objects is only present when the robot previously tried to
 detect objects on a given room).
 
 The sensed properties and room categories were chosen to mimic as close as possible
-the reality and they are based on a previously build ontology from web data.
+the reality and they are based on a previously built ontology from web data.
 There is in total 11 different room categories ranging from: corridor, hallway,
 1 person office, 2 person office, bathroom, conference hall, etc\dots, and there is
 9 different extracted features: room size, room shape, room appearance and 6 different objects
@@ -603,7 +603,7 @@ top of \emph{probabilistic graphical models} instantiated dynamically from sense
 semantic data.
 The presented technique is based on the ratio between a conditional and
 unconditional probability and when perfect information exists it performs an optimal
-novelty detection threshold under the assumption that $P(novel)$ is constant across
+novelty detection under the assumption that $P(novel)$ is constant across
 all the graph structures.
 
 It was also shown that a correct estimation of unconditional probability plays an
