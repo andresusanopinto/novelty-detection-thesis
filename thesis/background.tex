@@ -156,7 +156,7 @@ on strange data structures such as trees, strings or graphs.
 
 For example \glspl{SVM}, in their basic form, are only able to handle linear spaces.
 But the classes are most of the time not linearly separable in the input
-space. Although there might exists a transformation $\phi$ from the original
+space. Although there might exist a transformation $\phi$ from the original
 space into a space $H$ where the input becomes linearly separable.
 
 The Kernel trick allows to extend the \gls{SVM} definition to work on such space
@@ -221,9 +221,9 @@ the base of several computer vision problems solution. It allows to perform
 point matching which can be used in several areas from image stitching,
 3D reconstruction, video tracking, object detection, etc\dots
 
-The most used method was presented by \cite{lowe1999object}. And its based on
+The most used method was presented by \cite{lowe1999object} and its based on
 building a feature vector for each image. Each of those features is based on
-\emph{interesting points} detected by detecting maxima and minima of a
+\emph{interesting points} detected by the presence of maxima and minima of
 difference of Gaussian functions applied in a scale-space.
 The scale space is used to provide scale invariant detection. Gaussian functions
 are used as they are the only way to model a linear scale-space.
@@ -251,7 +251,7 @@ distribution of textures findable in the image.
 
 \subsubsection*{Gist of a Scene}
 \label{sec:gist}
-\cite{oliva2006building} argue that fast scene recognition does not need to be
+Oliva and Torralba~\cite{oliva2006building} argue that fast scene recognition does not need to be
 built on top of object recognition but can be analyzed by scene-centered
 mechanisms.
 They defend that position by pointing out behaviours on human vision:
@@ -431,7 +431,7 @@ Each factor is described by function $\phi$ dependent only on the variables $x_\
 to which the factor is connected.
 Thus, a factor graph can be seen as a description of probability density function obtained
 by a product of all the factors. In order to represent the probability,
-a normalization factor needs to be introduced, resulting in the following equation:
+a normalization factor $Z$ needs to be introduced, resulting in the following equation:
 
 \begin{equation}
 P_G(x) = \frac{1}{Z}\prod_{\phi \in F_G}{\phi(x_{\phi})},\qquad
