@@ -1,6 +1,39 @@
-==About==
-This repository will be used to share the documentation and work developed during my thesis.
+About This Repository
+=====================
 
-==Author==
+This repository will be used to share the documentation and work developed during my
+thesis.
+
+Having in mind the objective that all developed work of mine is reproducible, all
+the produced documentation, code and results used for my thesis and my continuous
+research on the topic are contained on this repository.
+
+At the moment the build system is based on "scons" [1]. By running it, you can
+expected the same documents that were delivered to be reproduced on your machine.
+
+A list of contents on this repository follows and inside each of the repositories
+you can find a README file with extra details where applicable.
+
+/thesis/:
+  Master Thesis: Novelty Detection for Semantic Place Categorization
+
+  Targets:
+    build/thesis/thesis.pdf
+    build/thesis/summary-en.pdf
+    build/thesis/summary-pt.pdf
+
+/pdis/:
+  `Preparation for Disseration' Documents
+
+  Targets:
+    build/pdis/presentation1/presentation.pdf
+    build/pdis/presentation2/presentation.pdf
+    build/pdis/techreport/techreport.pdf
+
+
+Author
+------
 André Susano Pinto <andresusanopinto@gmail.com>
 
+
+[1] - http://www.scons.org/
