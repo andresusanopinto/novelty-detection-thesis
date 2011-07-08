@@ -1,5 +1,3 @@
-SConscript('synthetic/SConscript')
-
 summary = PDF('summary-en.pdf', 'summary-en.tex')
 Depends(summary, ['results/synthetic-all.pdf', 'macros.tex'])
 summary_pt = PDF('summary-pt.pdf', 'summary-pt.tex')
