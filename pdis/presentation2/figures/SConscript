@@ -1,4 +1,0 @@
-Command('classification.pdf', 'classification.svg', 'convert $SOURCE $TARGET')
-Command('gantt.pdf', 'gantt.svg', 'convert $SOURCE $TARGET')
-#Command('laser_and_depth_input.pdf', 'laser_and_depth_input.svg', 'convert $SOURCE $TARGET')
-Command('novelty.pdf', 'novelty.svg', 'convert $SOURCE $TARGET')

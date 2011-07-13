@@ -1,3 +1,0 @@
-Command('BayesNet.pdf', 'BayesNet.svg', 'convert $SOURCE $TARGET')
-Command('FactorGraph.pdf', 'FactorGraph.svg', 'convert $SOURCE $TARGET')
-Command('MarkovRandomField.pdf', 'MarkovRandomField.svg', 'convert $SOURCE $TARGET')

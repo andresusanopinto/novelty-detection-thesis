@@ -1,2 +1,26 @@
-PDF(target = 'presentation.pdf',
-    source = 'presentation.tex')
+presentation = PDF(target = 'presentation.pdf',
+                   source = 'presentation.tex')
+
+OTHER = [
+  ('figures/graphical-models/MarkovRandomField.pdf', '../techreport/figures/graphical-models/MarkovRandomField.pdf'),
+  ('figures/graphical-models/FactorGraph.pdf', '../techreport/figures/graphical-models/FactorGraph.pdf'),
+  ('figures/graphical-models/BayesNet.pdf', '../techreport/figures/graphical-models/BayesNet.pdf'),
+  ('figures/crfh_model.jpg', '../techreport/figures/crfh_model.jpg'),
+  ('figures/laser_and_depth_input.pdf', '../techreport/figures/laser_and_depth_input.pdf'),
+  ('figures/classification.pdf', '../techreport/figures/classification.pdf'),
+  ('figures/gantt.pdf', '../techreport/figures/gantt.pdf'),
+  ('figures/gantt.pdf', '../techreport/figures/gantt.pdf'),
+  ('figures/sift/sift.pdf', '../techreport/figures/sift/sift.pdf'),
+  ('figures/feup-logo.pdf', '../techreport/figures/feup-logo.pdf'),
+  ('figures/novelty.pdf', '../techreport/figures/novelty.pdf'),
+  ('figures/novelty_detection.png', '../techreport/figures/novelty_detection.png'),
+  ('figures/place_classification.png', '../techreport/figures/place_classification.png'),
+  ('figures/ringlinesquare_kpca.jpg', '../techreport/figures/ringlinesquare_kpca.jpg'),
+  ('figures/labelme_kitchen_sample.png', '../techreport/figures/labelme_kitchen_sample.png'),
+  ('figures/Svm_max_sep_hyperplane_with_margin.png', '../techreport/figures/Svm_max_sep_hyperplane_with_margin.png'),
+  ('figures/system-representation/layers.pdf', '../techreport/figures/system-representation/layers.pdf'),
+  ('figures/system-representation/graph.pdf', '../techreport/figures/system-representation/graph.pdf'),
+  ('figures/system-representation/novelty-detection.pdf', '../techreport/figures/system-representation/novelty-detection.pdf')]
+
+for dst, src in OTHER:
+  Command(dst, src, 'cp $SOURCE $TARGET')

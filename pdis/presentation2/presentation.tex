@@ -5,7 +5,6 @@
 \useinnertheme{rounded}
 \usecolortheme{whale}
 \useoutertheme[subsection=false]{miniframes}
-\graphicspath{{figures/}}
 
 \setbeamertemplate{footline}[frame number]
 \beamertemplatenavigationsymbolsempty
@@ -40,7 +39,7 @@
 \subsection{Place Classification}
 \begin{frame}{Place Classification}
 \begin{figure}
-\includegraphics[width=0.75\textwidth]{place_classification}
+\includegraphics[width=0.75\textwidth]{figures/place_classification.png}
 \end{figure}
 Mapping of robot location to concepts:
 \begin{itemize}
@@ -54,7 +53,7 @@ Mapping of robot location to concepts:
 \subsection{Novelty Detection}
 \begin{frame}{Novelty Detection}
 \begin{figure}
-\includegraphics[width=0.75\textwidth]{novelty_detection}
+\includegraphics[width=0.75\textwidth]{figures/novelty_detection.png}
 \end{figure}
 
 \begin{quotation}
@@ -92,7 +91,7 @@ Novelty detection is the identification of new or unknown data or signal that a 
 \begin{columns}[t]
     \column{.5\textwidth}
     \begin{figure}
-        \includegraphics[width=.9\textwidth]{classification.pdf}
+        \includegraphics[width=.9\textwidth]{figures/classification.pdf}
     \end{figure}
     \begin{quote}This is harder than the classification problem\cite{cortes1995support}\end{quote}.
     \column{.5\textwidth}
@@ -111,7 +110,7 @@ Novelty detection is the identification of new or unknown data or signal that a 
     \begin{columns}[t]
     \column{.5\textwidth}
     \begin{figure}
-        \includegraphics[width=.75\textwidth]{Svm_max_sep_hyperplane_with_margin}
+        \includegraphics[width=.75\textwidth]{figures/Svm_max_sep_hyperplane_with_margin.png}
     \end{figure}
         SVM uses a max-margin hyperplane to separate two classes.
     \column{.5\textwidth}
@@ -149,12 +148,12 @@ Novelty detection is the identification of new or unknown data or signal that a 
 
     \column{.5\textwidth}
     \begin{figure}
-        \includegraphics[width=\textwidth]{sift/sift}
+        \includegraphics[width=\textwidth]{figures/sift/sift.pdf}
         \caption{SIFT and other local features have been proven useful in object detection.}
     \end{figure}
     \column{.5\textwidth}
     \begin{figure}
-    \includegraphics[width=\textwidth]{crfh_model}
+    \includegraphics[width=\textwidth]{figures/crfh_model.jpg}
     \caption{Composed Receptive Field Histograms can be used to extract appearance.}
     \end{figure}
     \end{columns}
@@ -163,7 +162,7 @@ Novelty detection is the identification of new or unknown data or signal that a 
 \begin{frame}{Features}
 \framesubtitle{Others\dots}
     \begin{figure}
-    \includegraphics[width=0.60\textwidth]{laser_and_depth_input}
+    \includegraphics[width=0.60\textwidth]{figures/laser_and_depth_input.pdf}
     \caption{Lasers can be used to extract useful features.}
     \end{figure}
 \end{frame}
@@ -173,7 +172,7 @@ Novelty detection is the identification of new or unknown data or signal that a 
 \begin{frame}{Novelty Detection}
 \framesubtitle{Probability}
     \begin{figure}
-        \includegraphics[width=0.75\textwidth]{novelty.pdf}
+        \includegraphics[width=0.75\textwidth]{figures/novelty.pdf}
     \end{figure}
     Novelty detection can be modeled by calculating the probability of a given input being generated and triggering on that value\cite{bishop1994novelty}.
 \end{frame}
@@ -191,7 +190,7 @@ Novelty detection is the identification of new or unknown data or signal that a 
         \end{itemize}
     \column{.5\textwidth}
     \begin{figure}
-        \includegraphics[width=0.9\textwidth]{ringlinesquare_kpca}
+        \includegraphics[width=0.9\textwidth]{figures/ringlinesquare_kpca.jpg}
     \end{figure}
         Kernel PCA used on a strange shaped class\cite{Hoffmann2007863}.
     \end{columns}
@@ -210,17 +209,17 @@ Novelty detection is the identification of new or unknown data or signal that a 
     \begin{columns}[t]
     \column{0.3\textwidth}
         \begin{figure}
-            \includegraphics[width=0.5\textwidth]{graphical-models/BayesNet.pdf}
+            \includegraphics[width=0.5\textwidth]{figures/graphical-models/BayesNet.pdf}
             \caption{Bayes Networks}
         \end{figure}
     \column{0.3\textwidth}
         \begin{figure}
-            \includegraphics[width=0.5\textwidth]{graphical-models/MarkovRandomField}
+            \includegraphics[width=0.5\textwidth]{figures/graphical-models/MarkovRandomField}
             \caption{Markov Random Field}
         \end{figure}
     \column{0.3\textwidth}
         \begin{figure}
-            \includegraphics[width=0.60\textwidth]{graphical-models/FactorGraph.pdf}
+            \includegraphics[width=0.60\textwidth]{figures/graphical-models/FactorGraph.pdf}
             \caption{Factor Graph}
         \end{figure}
     \end{columns}
@@ -242,21 +241,21 @@ Novelty detection is the identification of new or unknown data or signal that a 
 \subsection{Layers}
 \begin{frame}{Layers}
     \begin{figure}
-        \includegraphics[width=0.65\textwidth]{system-representation/layers.pdf}
+        \includegraphics[width=0.65\textwidth]{figures/system-representation/layers.pdf}
     \end{figure}
 \end{frame}
 
 \begin{frame}{Layers}
 \framesubtitle{Conceptual Graph}
     \begin{figure}
-        \includegraphics[width=\textwidth]{system-representation/graph.pdf}
+        \includegraphics[width=\textwidth]{figures/system-representation/graph.pdf}
     \end{figure}
 \end{frame}
 
 \begin{frame}{Layers}
 \framesubtitle{Novelty Detection}
     \begin{figure}
-        \includegraphics[width=\textwidth]{system-representation/novelty-detection.pdf}
+        \includegraphics[width=\textwidth]{figures/system-representation/novelty-detection.pdf}
     \end{figure}
 \end{frame}
 
@@ -270,7 +269,7 @@ Novelty detection is the identification of new or unknown data or signal that a 
 \section{Work Plan}
 \begin{frame}{Work Plan}
 \begin{figure}
-\includegraphics[width=\textwidth]{gantt.pdf}
+\includegraphics[width=\textwidth]{figures/gantt.pdf}
 \end{figure}
 
 %    \begin{itemize}
