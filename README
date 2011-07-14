@@ -21,15 +21,24 @@ you can find a README file with extra details where applicable.
     build/thesis/thesis.pdf
     build/thesis/summary-en.pdf
     build/thesis/summary-pt.pdf
+    build/thesis/presentation.pdf
 
 /pdis/:
-  `Preparation for Disseration' Documents
+  `Preparation for Dissertation' Documents
 
   Targets:
     build/pdis/presentation1/presentation.pdf
     build/pdis/presentation2/presentation.pdf
     build/pdis/techreport/techreport.pdf
 
+/semantic-nd/:
+  Article accept at EPIA 2011 [2]
+
+  Title: Novelty Detection Using Graphical Models for Semantic Room Classification
+  Authors: André Susano Pinto, Andrzej Pronobis, Luis Paulo Reis
+
+  Targets:
+    build/semantic-nd/article.pdf
 
 Author
 ------
@@ -37,3 +46,4 @@ André Susano Pinto <andresusanopinto@gmail.com>
 
 
 [1] - http://www.scons.org/
+[2] - http://epia2011.appia.pt/
