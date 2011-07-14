@@ -1,4 +1,5 @@
 \documentclass[compress]{beamer}
+\usepackage[utf8x]{inputenc}
 \usepackage{default}
 \usepackage{graphics}
 \usepackage{ulem}
@@ -7,6 +8,8 @@
 \useinnertheme{rounded}
 \usecolortheme{whale}
 \useoutertheme[subsection=false]{miniframes}
+\setbeamertemplate{footline}[frame number]
+\beamertemplatenavigationsymbolsempty
 
 %%%%%%%% begin tikz %%%%%%
 \usepackage{tikz}
@@ -200,8 +203,9 @@ knowledge that is given a-priori.
 Detection of situations where the agent knowledge does not suffices.
 \end{block}
 
-\begin{block}{Focus on Detection of Novel Semantic Categories of Places}
-
+\begin{block}{Focus on Semantic Categories of Places}
+Humans attribute meaning to the areas that describe the expected properties,
+objects and actions of them. E.g.\ cups are found in kitchens. 
 \end{block}
 \note{
 - It is unrealistic to believe on the possibility to describe all the required knowledge
@@ -254,7 +258,7 @@ But being such a large problem, this thesis focus then specifically on detecting
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Semantic Mapping}
 
-\subsection{Semantic Mapping}
+\subsection{Mapping}
 \begin{frame}{Mapping - Machine Friendly}
 \begin{columns}[c]
 \column{0.5\textwidth}
@@ -292,6 +296,7 @@ But being such a large problem, this thesis focus then specifically on detecting
 \end{columns}
 \end{frame}
 
+\subsection{Semantic Mapping}
 \begin{frame}{Semantic Mapping}
 \begin{columns}[c]
 
@@ -413,7 +418,7 @@ Bayes Networks, Random Markov Fields, Chain Graphs, Factor Graphs
   \end{block}
 \end{frame}
 
-\subsection{Novelty Detection as Thresholding}
+\subsection{Thresholding}
 \begin{frame}{Novelty Detection via Thresholding}
 
 \begin{block}{Threshold on Probability Density}
@@ -440,6 +445,7 @@ relation order defined by $P(\overline{novel}|x)$.
 
 \begin{block}{Conditional and Unconditional Probability Ratio}
 \[P(\overline{novel}|x) = \frac{P(x|\overline{novel})P(\overline{novel})}{P(x)} \propto \frac{P(x|\overline{novel})}{P(x)}\]
+\uncover<2>{\alert{Simplified with an assumption on constant $P(novel)$}}
 \end{block}
 \note{
 Going back to a definition of a novelty detector, it can be shown that any optimal
@@ -491,6 +497,10 @@ can be set over the order relation defined by the probability of a sample being 
 
 
 \subsection{Results}
+\begin{frame}{Synthetic Dataset}
+
+\end{frame}
+
 \begin{frame}{Results}
   \begin{figure}
     \includegraphics[width=0.7\textwidth]{results/synthetic-all.pdf}
@@ -498,41 +508,62 @@ can be set over the order relation defined by the probability of a sample being 
 \end{frame}
 
 \section{Conclusion}
-\begin{frame}{Conclusion}
+
+\subsection{Summary}
+\begin{frame}{Summary}
+\begin{itemize}
+\item Studies a semantic mapping process
+\item Studies novelty detection
+\item Proposes a method to perform detection of novel categories
+      of a variable type of a graphical model when the graph structure
+      is dynamic.
+\end{itemize}
 \end{frame}
-
-
-
 
 \subsection{Limitations}
 \begin{frame}{Limitations}
-\begin{itemize}
-\item Incorporate structural information (non const P(novel))
-\item Incorporate uncertain sensing
-\end{itemize}
+\begin{block}{Assumption on constant $P(novel)$}
+Graph structure plays a role on the likelihood a sample with a novel
+category is drawn. Assuming it to be constant is a very strong assumption
+that is not expected to hold in all scenarios.
+\end{block}
+%\begin{block}{Uncertain Sensing}
+%The presented methods require calculation of normalized probabilities turning it impossible
+%to handle implicit factors.
+%\end{block}
 \end{frame}
 
 \subsection{Future Work}
 \begin{frame}{Future Work}
-\begin{itemize}
-\item Generalize the Framework
-\item Exploiting Generative Models
-\item Learning Graph Structures
-\item After Detection of Knowledge Gaps
-\end{itemize}
+  \begin{block}{Generalize the Framework}
+  Handle novelty on any and more than one variable of the graph and fusing
+  all novelty information in a single method in a probabilistic fashion (e.g.\ MAP operation).
+  \end{block}
+  \begin{block}{Exploit Generative Models}
+  Develop methods to be able to explain what the system considers to be known or novel.
+  Such that the reason causing novelty can be interpreted.
+  \end{block}
+\end{frame}
+\begin{frame}{Future Work}
+  \begin{block}{Learning Graph Structures}
+  Graph structure should be considered probabilistic. Methods to handle and probabilistic
+  represent knowledge on how the agent detect structures must be develop.
+  \end{block}
+  \begin{block}{After Detection of Knowledge Gaps}
+  What can be done with the detection of novel situations? Can the system be adapted
+  to learn and group novel situations? How to perform self-extension?
+  \end{block}
 \end{frame}
 
 \subsection{Extra Information}
 \begin{frame}{Extra}
 \begin{block}{Reproducible Research}
-All produced results reproducible from online repository:
+All reports and results reproducible from online repository:
 \url{https://github.com/andresusanopinto/novelty-detection-thesis}
 \end{block}
 
 \begin{block}{Article on EPIA 2011}
-Part of this thesis work will be presented in EPIA 2011 (October)
-\emph{Novelty Detection Using Graphical Models for
-Semantic Room Classification}
+\textit{Novelty Detection Using Graphical Models for Semantic Room Classification}
 \end{block}
 \end{frame}
 
