@@ -22,6 +22,8 @@ figures/sift/sift.svg
 figures/graphical-models/BayesNet.svg
 figures/graphical-models/FactorGraph.svg
 figures/graphical-models/MarkovRandomField.svg
+figures/extra/RFID.svg
+figures/extra/bart.svg
 """.split() 
 
 
@@ -45,4 +47,4 @@ Command('results/synthetic-50features.pdf', '../semantic-nd/results/synthetic-50
 Command('figures/processes.pdf', '../semantic-nd/figures/processes.pdf', 'cp $SOURCE $TARGET')
 Command('figures/chaingraph.pdf', '../semantic-nd/figures/chaingraph.pdf', 'cp $SOURCE $TARGET')
 Command('figures/spatial-knowledge-representation.pdf', '../pdis/techreport/figures/system-representation/structure.pdf', 'cp $SOURCE $TARGET')
-
+Command('figures/robot.png', '../pdis/techreport/figures/system-representation/dumbo2.png', 'cp $SOURCE $TARGET')

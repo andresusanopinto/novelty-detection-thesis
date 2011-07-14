@@ -1,0 +1,32 @@
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=15pt, row sep=10pt,ampersand replacement=\&] {
+    \& \& \node (room3) [latent] {}; \& \\
+    \& \& \& \\
+    \&
+    \node (room1) [latent] {$a$}; \& \&
+    \node (room2) [latent] {}; \\
+    \& \& \& \\
+    \node (shape1f) [factor] {}; \&
+    \node (appearance1f) [factor] {}; \&
+    \node (object1f) [factor] {}; \&
+    \node (factor2) [factor] {}; \\
+    \node (shape1l) [obs] {$S_p$}; \&
+    \node (appearance1l) [obs] {$A_p$}; \&
+    \node (object1l) [obs] {$O_p$}; \&
+    \node (prop2) [obs] {$X_p$}; \\
+  };
+
+  \draw [-] (room1) -- (shape1f) -- (shape1l);
+  \draw [-] (room1) -- (appearance1f) -- (appearance1l);
+  \draw [-] (room1) -- (object1f) -- (object1l);
+  \draw [-] (room2) -- (factor2) -- (prop2);
+
+  \draw [-] (room1) -- (room2) node (r12f) [midway,factor] {};
+  \draw [-] (room1) -- (room3) node (r13f) [midway,factor] {};
+  \draw [-] (room2) -- (room3) node (r23f) [midway,factor] {};
+
+  \begin{pgfonlayer}{background}
+    \plate{places1}{(shape1f)(shape1l)(object1l)}{$\forall p \in places(room1)$}{};
+    \plate{places2}{(factor2)(prop2)}{$\dots$}{};
+  \end{pgfonlayer}
+\end{tikzpicture}

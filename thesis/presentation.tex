@@ -1,10 +1,79 @@
 \documentclass[compress]{beamer}
-\usepackage[utf8x]{inputenc}
 \usepackage{default}
 \usepackage{graphics}
+\usepackage{ulem}
+\usepackage{multicol}
+
 \useinnertheme{rounded}
 \usecolortheme{whale}
 \useoutertheme[subsection=false]{miniframes}
+
+%%%%%%%% begin tikz %%%%%%
+\usepackage{tikz}
+\usetikzlibrary{shapes.callouts,decorations.pathmorphing}
+\usetikzlibrary{shapes,decorations,shadows}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.shapes}
+\usetikzlibrary{fadings}
+\usetikzlibrary{patterns}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.text}
+\usetikzlibrary{decorations.footprints}
+\usetikzlibrary{decorations.fractals}
+\usetikzlibrary{shapes.gates.logic.IEC}
+\usetikzlibrary{shapes.gates.logic.US}
+\usetikzlibrary{fit,chains}
+\usetikzlibrary{positioning}
+\usepgflibrary{shapes}
+\usetikzlibrary{scopes}
+\usetikzlibrary{arrows}
+\usetikzlibrary{backgrounds}
+
+
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+\tikzset{latent/.style={circle,fill=white,draw=red,thick,inner sep=1pt, 
+minimum size=20pt, font=\fontsize{10}{10}\selectfont},
+obs/.style={latent,fill=gray!25},
+const/.style={rectangle, inner sep=0pt},
+factor/.style={rectangle, fill=red,minimum size=7pt, inner sep=0pt},
+yellow/.style={latent,minimum size=15pt,fill=yellow!75},
+blue/.style={latent,minimum size=15pt,fill=blue!75},
+-/.style={color=red, thick},
+>={triangle 45}}
+
+
+
+
+% shapename, fitlist, caption, pos
+\newcommand{\plate}[4]{
+\node (invis#1) [draw, transparent, inner sep=1pt,rectangle,fit=#2] {};
+\node (capt#1) [ below left=0 pt of invis#1.south east, xshift=0pt,yshift=-9pt] {\raisebox{0pt}[0pt]{\footnotesize{#3}}};
+\node (#1) [draw=black!50,thick,inner sep=3pt,rectangle,rounded corners,fit=(invis#1) (capt#1),#4] {};
+}
+
+
+\newcommand{\shiftedplate}[5]{
+\node (invis#1) [draw, transparent, inner sep=0 pt,rectangle,fit=#2] {};
+\node (capt#1) [#5, xshift=2pt] {\footnotesize{#3}};
+\node (#1) [draw,inner sep=2pt, rectangle,fit=(invis#1) (capt#1),#4] {};
+}
+%shapename, pos, caption, in, out, captpos
+\newcommand{\factor}[6]{
+\node (#1) [factor] at #2 {};
+\node (capt#1) [#6 of #1]{\footnotesize{#3}};
+\draw [-] (#4) -- (#1) ;
+\draw [->,thick] (#1) -- (#5);
+}
+
+% name, --, caption, pos
+\newcommand{\nofactor}[4]{
+\node (#1) [factor, #2]  {};
+\node (capt#1) [#4 of #1]{\footnotesize{#3}};
+}
+
 
 \title{Novelty Detection for Semantic Place Categorization}
 \author{André Susano Pinto\inst{1,2}}
@@ -18,35 +87,456 @@
 }
 
 \begin{document}
-
 \begin{frame}
  \titlepage
 \end{frame}
 
 \begin{frame}{Outline}
- \tableofcontents
-\end{frame}
-
-\section{Motivation}
-\begin{frame}
-\cite{pronobis2011phd}
+  \begin{multicols}{2}
+    \tableofcontents
+  \end{multicols}
 \end{frame}
 
 
+
+\section{Introduction}
+\subsection{Motivation}
+\begin{frame}{Motivation}
+
+\begin{columns}[t]
+  \column{0.3\textwidth}
+  \includegraphics[width=\textwidth]{figures/extra/PR2.jpg}
+
+  \centering
+  PR2
+
+  \column{0.3\textwidth}
+  \includegraphics[width=\textwidth]{figures/extra/servingbot.jpg}
+  
+  \centering
+  Serving Robot
+
+  \column{0.3\textwidth}
+  \includegraphics[width=\textwidth]{figures/extra/wakamaru.jpg}
+  
+  \centering
+  Wakamaru
+\end{columns}
+\vfill
+
+\begin{itemize}
+  \item Robots are useful: can make our lives easier
+  \item Robots are entering our Houses and Offices
+  \item They need to understand our world and communicate with us.
+\end{itemize}
+\note{
+1 - Humans dream on creating robots. 
+Both by the challenge on creating intelligent systems on itself but also to make our life easier.
+% I should have an example list on how they could be useful
+
+2 - It is becoming a reality and robots will enter our houses and offices.
+The question is no longer if we will have a robot at home/office, but how many.
+
+3 - They will need to understand and communicate with us and our human worlds.
+The need of semantic information!
+}
+\end{frame}
+
+
+\subsection{Problem}
+\begin{frame}{Problem}
+
+  Enhance world with semantic information is \alert{not a scalable solution}.
+
+  \begin{block}{}
+  \begin{columns}
+  \column{0.3\textwidth}
+    \begin{figure}
+      \includegraphics[width=\textwidth]{figures/extra/RFID.pdf} \\
+      RFID for object tagging
+    \end{figure}
+  \column{0.3\textwidth}
+    \begin{figure}
+      \includegraphics[width=\textwidth]{figures/extra/floorplan.jpg} \\
+      Maps extended with semantic information
+    \end{figure}
+  \end{columns}
+  \end{block}
+
+\note{
+1 - A solution could pass by tagging our world with extra information, such as maps, rfids, but such a solution
+is not practical and scalable.
+}
+\end{frame}
+
+\begin{frame}{Problem}
+\begin{block}{Machine Learning}
+Give us methods to solve this problem in reverse by providing robots with knowledge
+on how to detect and classify concepts and categories from the underlying sensed world.
+\end{block}
+
+\begin{block}{Unreliable on Dynamic and Unknown Environments}
+It is unrealistic to believe on the possibility to fully describe the required knowledge
+for the agent in all situations.
+\end{block}
+
+\note{
+Machine Learning tries to solve the reverse semantic mapping problem.
+
+It endows robots with knowledge that allows them to map what they sense to human concepts
+and categories.
+
+Leading to the need of methods that are able to inspect and smartly identifying information directly
+from low-level sensors.
+
+For that several machine learning techniques have been developed, but all of those require and represent
+knowledge that is given a-priori.
+}
+\end{frame}
+
+\begin{frame}{Problem}
+
+\begin{block}{Detection of Knowledge-Gaps}
+Detection of situations where the agent knowledge does not suffices.
+\end{block}
+
+\begin{block}{Focus on Detection of Novel Semantic Categories of Places}
+
+\end{block}
+\note{
+- It is unrealistic to believe on the possibility to describe all the required knowledge
+
+- When dealing with novel and unknown scenarios an agent has to be able to detect something
+is not conforming to what it has learn.
+
+In order to be reliable agents need to detect situations where their knowledge
+And agents be reliable even when situations
+- Scalability
+- Dynamic Aspects
+- Long Term
+- Life Long
+
+
+It is unrealistic to believe on the possibility to describe knowledge that holds to all the possible
+scenarios, and when dealing with long-term and life-long agents
+
+- Variability, dynamic aspects of environment, 
+- Should be able to deal with novel cases
+- 1st step is to detect them
+}
+\end{frame}
+
+\subsection{Goals}
+\begin{frame}{Goals}
+  \begin{itemize}
+    \item Study a semantic mapping process in the context of mobile robots \cite{pronobis2011phd}.
+    \item Propose a method based on the studied system to detect novel semantic categories of places.
+  \end{itemize}
+
+\note{
+This thesis goes on the direction of detecting knowledge gaps on mobile robots.
+
+It studies a process of semantic mapping introduced by Pronobis
+and studies how to detect those situations where the existent knowledge does not describes
+the reality.
+But being such a large problem, this thesis focus then specifically on detecting novel room categories.
+}
+\end{frame}
+
+\subsection{Outline}
+\begin{frame}{Outline}
+  \begin{multicols}{2}
+    \tableofcontents
+  \end{multicols}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Semantic Mapping}
-\subsection{Spatial Knowledge}
-\subsection{Conceptual Map}
 
+\subsection{Semantic Mapping}
+\begin{frame}{Mapping - Machine Friendly}
+\begin{columns}[c]
+\column{0.5\textwidth}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/machinefriendly.jpg}
+  \end{figure}
+
+\column{0.5\textwidth}
+  \only<1>{
+  \begin{itemize}
+    \item World Representation
+    \item Bypass Sensory Horizon
+    \item Planning Tool
+  \end{itemize}
+  }
+
+  \only<2>{
+  \begin{figure}
+  \begin{tikzpicture}
+    % \draw [help lines] grid(3,2);
+
+    \node (human) at (0,0) {\reflectbox{\includegraphics[width=0.4\textwidth]{figures/extra/bart.pdf}}};
+    \node (robot) at (3,0) {\reflectbox{\includegraphics[width=0.2\textwidth]{figures/robot.png}}};
+
+    \node[ellipse callout, draw, callout absolute pointer={(human.70)}]
+          (humanvoice) at (1,3) {Where is Wally?};
+
+    \node[ellipse callout, draw, callout absolute pointer={(robot.north)},
+          text width=0.2\textwidth]
+          (robotvoice) at (3,2) {X=32, Y=17};
+
+  \end{tikzpicture}
+  \end{figure}
+  }
+\end{columns}
+\end{frame}
+
+\begin{frame}{Semantic Mapping}
+\begin{columns}[c]
+
+\column{0.5\textwidth}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figures/semanticfriendly.jpg}
+  \end{figure}
+
+\column{0.5\textwidth}
+  \only<1>{
+  \begin{figure}
+  \begin{tikzpicture}
+    \node (human) at (0,0) {\reflectbox{\includegraphics[width=0.4\textwidth]{figures/extra/bart.pdf}}};
+    \node (robot) at (3,0) {\reflectbox{\includegraphics[width=0.2\textwidth]{figures/robot.png}}};
+
+    \node[ellipse callout, draw, callout absolute pointer={(human.70)}]
+          (humanvoice) at (1,3) {Where is Wally?};
+
+    \node[ellipse callout, draw, callout absolute pointer={(robot.north)},
+          text width=0.2\textwidth]
+          (robotvoice) at (3,2) {In the kitchen};
+
+  \end{tikzpicture}
+  \end{figure}
+  }
+
+  \only<2>{
+  \begin{itemize}
+    \item High Level Reasoning
+    \item Easier Planning \cite{hanheide2011ijcai}
+    \item Closer to Human Semantic
+  \end{itemize}
+  }
+
+\end{columns}
+\end{frame}
+
+\subsection{Spatial Knowledge}
+\begin{frame}{Spatial Knowledge}
+  \begin{columns}[c]
+  \column{0.5\textwidth}
+    \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figures/spatial-knowledge-representation.pdf}
+    \end{figure}
+
+  \column{0.5\textwidth}
+    \begin{block}{Layered Spatial Knowledge Representation~\cite{pronobis2010ias}}
+    \begin{itemize}
+      \item Sensory Layer
+      \item Place Layer
+      \item Categorical Layer
+      \item Conceptual Layer
+    \end{itemize}
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\subsection{Process}
+\begin{frame}{A Semantic Mapping Process}
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figures/dora-architecture.pdf}
+  \end{figure}
+  \cite{pronobis2011semmap} presents a process that uses the spatial knowledge
+  to perform probabilistic and multi-modal semantic mapping of the environment
+  using graphical models.
+\end{frame}
+
+\subsection{Conceptual Map}
+\begin{frame}{Conceptual Map}
+  \begin{columns}[c]
+  \column{0.5\textwidth}
+    \begin{figure}
+      \includegraphics[width=\textwidth]{figures/chaingraph.pdf}
+    \end{figure}
+  \column{0.5\textwidth}
+    \begin{itemize}
+      \item Uncertain Ontology
+      \item Probabilistic Inference
+      \item Use of Graphical Models
+    \end{itemize}
+  \end{columns}
+
+  \note{
+    The semantic mapping process proposed by Pronobis uses the previously presented spatial knowledge
+    to produce a conceptual map that relates all the identified concepts and relates them ...
+
+
+    This tool allows to perform semantic mapping of the environment, but is not able to handle gaps
+    on the agent knowledge.
+  }
+\end{frame}
+
+\begin{frame}{Probabilistic Graphical Models}
+Provides us methods to relate and combine the several information,
+Can be approximated, handle uncertainties, etc\dots
+
+\begin{block}{Several Methods}
+Bayes Networks, Random Markov Fields, Chain Graphs, Factor Graphs
+\end{block}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Novelty Detection}
+
+\subsection{Fast Review}
+\begin{frame}{Novelty Detection - Fast Review}
+  \begin{block}{Definition}
+    Detection of novel patterns or signals presents on the data that the system was not trained
+    to handle -- \cite{markou2003novelty}
+  \end{block}
+  \begin{block}{Single Class Classification}
+    Lack of negative samples makes them suitable for cases where it is not possible to
+    provide negative samples: anomaly detection, intrusion detection, etc\dots
+  \end{block}
+  \begin{block}{Several Methods}
+    K-PCA, One class SVM, Nearest Neighbours, etc\dots
+  \end{block}
+\end{frame}
+
 \subsection{Novelty Detection as Thresholding}
+\begin{frame}{Novelty Detection via Thresholding}
+
+\begin{block}{Threshold on Probability Density}
+For a fixed distribution and without any prior knowledge on the distribution,
+novelty can be detected by thresholding on the density of
+the training data as shown on \cite{bishop1994novelty}.
+\end{block}
+
+\begin{block}{Dynamic Sample-Space}
+As more information becomes available, the .
+
+The question is on how to define a threshold under this circumstances. 
+\end{block}
+\end{frame}
+
 \subsection{Conditional and Unconditional Ratio}
+\begin{frame}{Ordering the Sample Space}
+
+\begin{block}{Back to the Roots}
+An optimal detector can be implemented by defining a threshold over a
+relation order defined by $P(\overline{novel}|x)$.
+\end{block}
+\vfill
+
+\begin{block}{Conditional and Unconditional Probability Ratio}
+\[P(\overline{novel}|x) = \frac{P(x|\overline{novel})P(\overline{novel})}{P(x)} \propto \frac{P(x|\overline{novel})}{P(x)}\]
+\end{block}
+\note{
+Going back to a definition of a novelty detector, it can be shown that any optimal
+detector can be seen as a solving a continuous knapsack problem, and that a threshold
+can be set over the order relation defined by the probability of a sample being novel.
+}
+\end{frame}
+
+\subsection{Models}
+\begin{frame}{Conditional Probability}
+\begin{columns}[c]
+  \column{0.5\textwidth}
+    \input{conditional_model.tikz}
+  \column{0.5\textwidth}
+    \begin{block}{$P(x|\overline{novel})$}
+      The graphical model used by the conceptual map represents the distribution of the
+      variables given that the agent knowledge holds true.
+
+%      The conditional probability is then the probability of the sensed features being
+%      generated by a distribution modelled according to the agent knowledge.
+    \end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Unconditional Probability Model}
+\only<1>{
+\begin{columns}[c]
+  \column{0.5\textwidth}
+  \input{uniform-distribution.tikz}
+  \column{0.5\textwidth}
+  \input{bigfactor-distribution.tikz}
+\end{columns}
+}
+\only<2>{
+\begin{columns}[c]
+ \column{0.5\textwidth}
+  \input{uniformfac-distribution.tikz}
+
+  \centering
+  Uniform Model
+ \column{0.5\textwidth}
+  \input{independent-distribution.tikz}
+  
+  \centering
+  Independent Model
+\end{columns}
+}
+\end{frame}
+
+
+\subsection{Results}
+\begin{frame}{Results}
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{results/synthetic-all.pdf}
+  \end{figure}
+\end{frame}
 
 \section{Conclusion}
+\begin{frame}{Conclusion}
+\end{frame}
+
+
+
+
 \subsection{Limitations}
+\begin{frame}{Limitations}
+\begin{itemize}
+\item Incorporate structural information (non const P(novel))
+\item Incorporate uncertain sensing
+\end{itemize}
+\end{frame}
+
 \subsection{Future Work}
+\begin{frame}{Future Work}
+\begin{itemize}
+\item Generalize the Framework
+\item Exploiting Generative Models
+\item Learning Graph Structures
+\item After Detection of Knowledge Gaps
+\end{itemize}
+\end{frame}
+
+\subsection{Extra Information}
+\begin{frame}{Extra}
+\begin{block}{Reproducible Research}
+All produced results reproducible from online repository:
+\url{https://github.com/andresusanopinto/novelty-detection-thesis}
+\end{block}
+
+\begin{block}{Article on EPIA 2011}
+Part of this thesis work will be presented in EPIA 2011 (October)
+\emph{Novelty Detection Using Graphical Models for
+Semantic Room Classification}
+\end{block}
+\end{frame}
 
 \appendix
-
 \begin{frame}[allowframebreaks]{Bibliography}
 \bibliographystyle{alpha}
 \bibliography{refs}
