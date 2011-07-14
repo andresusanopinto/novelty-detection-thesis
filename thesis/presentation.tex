@@ -371,11 +371,10 @@ But being such a large problem, this thesis focus then specifically on detecting
       \includegraphics[width=\textwidth]{figures/chaingraph.pdf}
     \end{figure}
   \column{0.5\textwidth}
-    \begin{itemize}
-      \item Uncertain Ontology
-      \item Probabilistic Inference
-      \item Use of Graphical Models
-    \end{itemize}
+    \begin{block}{Conceptual Map}
+      The ontology is used to identify instances of the concepts and categories
+      And perform probabilistic semantic mapping using graphical models.
+    \end{block}
   \end{columns}
 
   \note{
@@ -389,8 +388,10 @@ But being such a large problem, this thesis focus then specifically on detecting
 \end{frame}
 
 \begin{frame}{Probabilistic Graphical Models}
-Provides us methods to relate and combine the several information,
-Can be approximated, handle uncertainties, etc\dots
+Provides us methods to relate and combine the several variables in a probabilistic way.
+Allowing to deal with uncertain information and infer variable states.
+
+\vfill
 
 \begin{block}{Several Methods}
 Bayes Networks, Random Markov Fields, Chain Graphs, Factor Graphs
@@ -631,6 +632,26 @@ for the generating class was hidden.
   \end{figure}
 \end{frame}
 
+\begin{frame}{Results - Variable Graph Size}
+
+\begin{columns}[c]
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=0.8\textwidth]{results/synthetic-3features.pdf} \\ 3 sensed features
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=0.8\textwidth]{results/synthetic-5features.pdf} \\ 5 sensed features
+\end{columns}
+\begin{columns}[c]
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=0.8\textwidth]{results/synthetic-10features.pdf} \\ 10 sensed features
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=0.8\textwidth]{results/synthetic-50features.pdf} \\ 50 sensed features
+\end{columns}
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
@@ -642,6 +663,7 @@ for the generating class was hidden.
 \item Studies novelty detection
 \item Proposes a method to perform detection of novel categories
       of a variable when the graph structure is dynamic.
+\item Shows access to unlabelled data can greatly increase performance.
 \end{itemize}
 \end{frame}
 
