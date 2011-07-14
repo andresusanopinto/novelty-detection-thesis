@@ -260,10 +260,11 @@ But being such a large problem, this thesis focus then specifically on detecting
 
 \subsection{Mapping}
 \begin{frame}{Mapping - Machine Friendly}
-\begin{columns}[c]
+\begin{columns}[tc]
 \column{0.5\textwidth}
   \begin{figure}
-    \includegraphics[width=\textwidth]{figures/machinefriendly.jpg}
+    \only<1>{\includegraphics[width=\textwidth]{figures/extra/pointcloud.jpg}}
+    \only<2>{\includegraphics[width=\textwidth]{figures/machinefriendly.pdf}}
   \end{figure}
 
 \column{0.5\textwidth}
@@ -276,7 +277,6 @@ But being such a large problem, this thesis focus then specifically on detecting
   }
 
   \only<2>{
-  \begin{figure}
   \begin{tikzpicture}
     % \draw [help lines] grid(3,2);
 
@@ -291,18 +291,17 @@ But being such a large problem, this thesis focus then specifically on detecting
           (robotvoice) at (3,2) {X=32, Y=17};
 
   \end{tikzpicture}
-  \end{figure}
   }
 \end{columns}
 \end{frame}
 
 \subsection{Semantic Mapping}
 \begin{frame}{Semantic Mapping}
-\begin{columns}[c]
+\begin{columns}[tt]
 
 \column{0.5\textwidth}
   \begin{figure}
-    \includegraphics[width=\textwidth]{figures/semanticfriendly.jpg}
+    \includegraphics[width=\textwidth]{figures/semanticfriendly.pdf}
   \end{figure}
 
 \column{0.5\textwidth}
@@ -317,7 +316,7 @@ But being such a large problem, this thesis focus then specifically on detecting
 
     \node[ellipse callout, draw, callout absolute pointer={(robot.north)},
           text width=0.2\textwidth]
-          (robotvoice) at (3,2) {In the kitchen};
+          (robotvoice) at (3,2) {In the office};
 
   \end{tikzpicture}
   \end{figure}
@@ -427,16 +426,15 @@ novelty can be detected by thresholding on the density of
 the training data as shown on \cite{bishop1994novelty}.
 \end{block}
 
-\begin{block}{Dynamic Sample-Space}
-As more information becomes available, the .
-
-The question is on how to define a threshold under this circumstances. 
+\begin{block}{Dynamic Sample Space}
+As more information becomes available the probability mass spreads around and
+the threshold for novelty detection needs to be adjusted.
+\alert<2->{How to do it?}
 \end{block}
 \end{frame}
 
 \subsection{Conditional and Unconditional Ratio}
 \begin{frame}{Ordering the Sample Space}
-
 \begin{block}{Back to the Roots}
 An optimal detector can be implemented by defining a threshold over a
 relation order defined by $P(\overline{novel}|x)$.
@@ -472,11 +470,19 @@ can be set over the order relation defined by the probability of a sample being 
 
 \begin{frame}{Unconditional Probability Model}
 \only<1>{
-\begin{columns}[c]
+\begin{columns}[t]
   \column{0.5\textwidth}
   \input{uniform-distribution.tikz}
-  \column{0.5\textwidth}
+  
+  \centering
+  No prior knowledge on $P(x)$. \\
+  Uniform distribution~\cite{shore1980axiomatic}
+
+\column{0.5\textwidth}
   \input{bigfactor-distribution.tikz}
+
+  \centering
+  Assume structure and knowledge on other variables still hold true on $P(x)$
 \end{columns}
 }
 \only<2>{
@@ -499,6 +505,124 @@ can be set over the order relation defined by the probability of a sample being 
 \subsection{Results}
 \begin{frame}{Synthetic Dataset}
 
+\begin{columns}[c]
+\column{0.5\textwidth}
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=10pt, row sep=10pt,ampersand replacement=\&] {
+    \& \& \node (room) [latent] {$r$}; \& \& \\
+    \& \& \& \& \\
+    \node (f1) [factor] {}; \&
+    \node (f2) [factor] {}; \&
+    \node (f3) [factor] {}; \&
+    \node (fi) [] {\dots}; \&
+    \node (fn) [factor] {}; \\
+    \node (x1) [obs] {$x_1$}; \&
+    \node (x2) [obs] {$x_2$}; \&
+    \node (x3) [obs] {$x_3$}; \&
+    \node (xi) [] {\dots}; \&
+    \node (xn) [obs] {$x_n$}; \\
+  };
+  \draw [-] (room) -- (f1) -- (x1);
+  \draw [-] (room) -- (f2) -- (x2);
+  \draw [-] (room) -- (f3) -- (x3);
+  \draw [-] (room) -- (fi);
+  \draw [-] (room) -- (fn) -- (xn);
+
+  \node (captf1) [right=2pt of f1] {\footnotesize{$\phi_{X_1}$}};
+  \node (captf2) [right=2pt of f2] {\footnotesize{$\phi_{X_2}$}};
+  \node (captf3) [right=2pt of f3] {\footnotesize{$\phi_{X_3}$}};
+  \node (captfn) [right=2pt of fn] {\footnotesize{$\phi_{X_n}$}};
+\end{tikzpicture}
+\column{0.5\textwidth}
+
+\begin{block}{Room class generator of features}
+\begin{itemize}
+  \item 11 - Room Categories
+  \item 2 - Room Shapes (laser)
+  \item 3 - Room Size (laser)
+  \item 10 - Room Appearance (CRFH)
+  \item 7 - Object Detectors (SIFT)
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Synthetic Dataset - Conditional Model}
+\begin{block}{Conditional Model}
+\centering
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=10pt, row sep=10pt,ampersand replacement=\&] {
+    \& \& \node (room) [latent] {$r$}; \& \& \\
+    \& \& \& \& \\
+    \node (f1) [factor] {}; \&
+    \node (f2) [factor] {}; \&
+    \node (f3) [factor] {}; \&
+    \node (fi) [] {\dots}; \&
+    \node (fn) [factor] {}; \\
+    \node (x1) [obs] {$x_1$}; \&
+    \node (x2) [obs] {$x_2$}; \&
+    \node (x3) [obs] {$x_3$}; \&
+    \node (xi) [] {\dots}; \&
+    \node (xn) [obs] {$x_n$}; \\
+  };
+  \draw [-] (room) -- (f1) -- (x1);
+  \draw [-] (room) -- (f2) -- (x2);
+  \draw [-] (room) -- (f3) -- (x3);
+  \draw [-] (room) -- (fi);
+  \draw [-] (room) -- (fn) -- (xn);
+
+  \node (captf1) [right=2pt of f1] {\footnotesize{$\phi_{X_1}$}};
+  \node (captf2) [right=2pt of f2] {\footnotesize{$\phi_{X_2}$}};
+  \node (captf3) [right=2pt of f3] {\footnotesize{$\phi_{X_3}$}};
+  \node (captfn) [right=2pt of fn] {\footnotesize{$\phi_{X_n}$}};
+\end{tikzpicture}
+
+Trained from data sampled from 5 of the 11 room categories.
+\end{block}
+\end{frame}
+
+\begin{frame}{Synthetic Dataset - Unconditional Models}
+
+\begin{block}{Uniform Model}
+\centering
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=10pt, row sep=10pt,ampersand replacement=\&] {
+    \node (x1) [obs] {$x_1$}; \&
+    \node (x2) [obs] {$x_2$}; \&
+    \node (x3) [obs] {$x_3$}; \&
+    \node (xi) [] {\dots}; \&
+    \node (xn) [obs] {$x_n$}; \\
+  };
+\end{tikzpicture}
+\end{block}
+
+\begin{block}{Independent Model}
+\centering
+\begin{tikzpicture}
+  \node [matrix,matrix anchor=mid, column sep=20pt, row sep=10pt,ampersand replacement=\&] {
+    \& \& \& \& \\
+    \node (f1) [factor] {}; \&
+    \node (f2) [factor] {}; \&
+    \node (f3) [factor] {}; \&
+    \node (fi) [] {\dots}; \&
+    \node (fn) [factor] {}; \\
+    \node (x1) [obs] {$x_1$}; \&
+    \node (x2) [obs] {$x_2$}; \&
+    \node (x3) [obs] {$x_3$}; \&
+    \node (xi) [] {\dots}; \&
+    \node (xn) [obs] {$x_n$}; \\
+  };
+  \draw [-] (f1) -- (x1);
+  \draw [-] (f2) -- (x2);
+  \draw [-] (f3) -- (x3);
+  \draw [-] (fi);
+  \draw [-] (fn) -- (xn);
+\end{tikzpicture}
+
+Factors were trained using samples drawn from the synthetic distribution where the label
+for the generating class was hidden.
+\end{block}
 \end{frame}
 
 \begin{frame}{Results}
@@ -507,6 +631,8 @@ can be set over the order relation defined by the probability of a sample being 
   \end{figure}
 \end{frame}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
 
 \subsection{Summary}
@@ -515,8 +641,7 @@ can be set over the order relation defined by the probability of a sample being 
 \item Studies a semantic mapping process
 \item Studies novelty detection
 \item Proposes a method to perform detection of novel categories
-      of a variable type of a graphical model when the graph structure
-      is dynamic.
+      of a variable when the graph structure is dynamic.
 \end{itemize}
 \end{frame}
 

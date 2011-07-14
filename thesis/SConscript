@@ -24,12 +24,17 @@ figures/graphical-models/FactorGraph.svg
 figures/graphical-models/MarkovRandomField.svg
 figures/extra/RFID.svg
 figures/extra/bart.svg
+figures/semanticfriendly.svg
+figures/machinefriendly.svg
 """.split() 
 
 
 for SVG in SVGS:
   base = SVG[0:-4]
   x = Command(base + '.pdf', base +'.svg', 'inkscape `basename ' +base+'.svg` --export-pdf=`basename ' + base + '.pdf`', chdir=1)
+  if SVG == 'figures/semanticfriendly.svg' or SVG == 'figures/machinefriendly.svg':
+    Depends(x, """figures/extra/wally.png
+                  figures/extra/pointcloud.jpg""".split())
   if SVG == 'figures/sift/sift.svg':
     Depends(x, """figures/sift/truck.jpg
                   figures/sift/train.jpg
