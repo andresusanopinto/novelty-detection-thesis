@@ -1,5 +1,7 @@
 SConscript('results/SConscript')
 
+presentation = PDF('presentation.pdf', 'presentation.tex')
+
 abstract_submission = PDF('abstract.pdf', 'abstract.tex')
 Depends(abstract_submission, ['llncs.cls', 'refs.bib'])
 
@@ -22,4 +24,9 @@ figures/simple-independent-graph.svg
 for SVG in SVGS:
   base = SVG[0:-4]
   x = Command(base + '.pdf', base +'.svg', 'inkscape `basename ' +base+'.svg` --export-pdf=`basename ' + base + '.pdf`', chdir=1)
+
+Command('figures/semanticfriendly.pdf', '../thesis/figures/semanticfriendly.pdf', 'cp $SOURCE $TARGET')
+Command('figures/dora-architecture.pdf', '../thesis/figures/dora-architecture.pdf', 'cp $SOURCE $TARGET')
+Command('figures/extra/bart.pdf', '../thesis/figures/extra/bart.pdf', 'cp $SOURCE $TARGET')
+Command('figures/robot.png', '../thesis/figures/robot.png', 'cp $SOURCE $TARGET')
 
