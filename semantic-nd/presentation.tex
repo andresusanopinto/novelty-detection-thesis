@@ -4,6 +4,7 @@
 \usepackage{graphics}
 \usepackage{ulem}
 \usepackage{multicol}
+\usepackage{subfig}
 
 \useinnertheme{rounded}
 \usecolortheme{whale}
@@ -94,25 +95,26 @@ blue/.style={latent,minimum size=15pt,fill=blue!75},
 \end{frame}
 
 \section{Summary}
-\begin{frame}{Summary - Plan}
-    \begin{block}{Semantic mapping of indoor enviroments}
-        \begin{itemize}
-            \item What is it? What for?
-            \item How to, using graphical models
-            \item Limited on the agent knowledge of variable categories
-        \end{itemize}
-    \end{block}
-    \begin{block}{Novelty Detection}
-        \begin{itemize}
-            \item Trigger on $P(x|known)$
-            \item Dynamic graphs
-            \item $P(x|known)/P(x)$
-            \item Approximating $P(x)$
-        \end{itemize}
-    \end{block}
-\end{frame}
+%\begin{frame}{Summary - Plan}
+%    \begin{block}{Semantic mapping of indoor enviroments}
+%        \begin{itemize}
+%            \item What is it? What for?
+%            \item How to, using graphical models
+%            \item Limited on the agent knowledge of variable categories
+%        \end{itemize}
+%    \end{block}
+%    \begin{block}{Novelty Detection}
+%        \begin{itemize}
+%            \item Trigger on $P(x|known)$
+%            \item Dynamic graphs
+%            \item $P(x|known)/P(x)$
+%            \item Approximating $P(x)$
+%        \end{itemize}
+%    \end{block}
+%\end{frame}
 
-\begin{frame}{Goals}
+\subsection{Context}
+\begin{frame}{Context}
   Brief introduction
   \begin{itemize}
     \item Study a semantic mapping process in the context of mobile robots.
@@ -120,6 +122,7 @@ blue/.style={latent,minimum size=15pt,fill=blue!75},
   \end{itemize}
 \end{frame}
 
+\subsection{Outline}
 \begin{frame}{Outline}
   \begin{multicols}{2}
     \tableofcontents
@@ -170,7 +173,7 @@ blue/.style={latent,minimum size=15pt,fill=blue!75},
         Combining semantic data extracted from diferent sources is expected to yield better performance.
     \end{block}
     \begin{block}{Probabilistic approach}
-        TODO: Need to defend use of probabilistic approach and graphical models.
+        Uses probabilistic approach in classification in order to handle uncertainty.
     \end{block}
 \end{frame}
 
@@ -182,32 +185,12 @@ blue/.style={latent,minimum size=15pt,fill=blue!75},
 
 \subsection{Spatial Knowledge and Conceptual Map}
 \begin{frame}{Spatial Knowledge and Conceptual Map}
-  \begin{columns}[c]
-  \column{0.5\textwidth}
+    Using the spatial knowledge the agent instatiates a conceptual map, here represented as a chain-graph:
     \begin{figure}
-      \includegraphics[width=\textwidth]{figures/chaingraph.pdf}
+      \includegraphics[width=0.5\textwidth]{figures/chaingraph.pdf}
     \end{figure}
-  \column{0.5\textwidth}
-    \begin{block}{Conceptual Map}
-      The ontology is used to identify instances of the concepts and categories
-      and perform probabilistic semantic mapping using graphical models.
-    \end{block}
-  \end{columns}
 \end{frame}
 
-\subsection{Graphical Models}
-\begin{frame}{Graphical models}
-    Multi-modal probabilistic semantic mapping using graphical models.
-    Uncertain semantic information
-    Conceptual map
-    Probabilistic inference on variables
-
-            $\text{known} = \{\text{corridor}, \text{office}, \cdots\}$
-            $R_i \in \text{known}$
-
-    TODO: picture explaining that maybe roomA is not known and showing X (observed features) and introduced novel and not novel, and showing graph structure.
-
-\end{frame}
 
 \section{Novelty Detection}
 \subsection{Introduction}
@@ -238,58 +221,165 @@ blue/.style={latent,minimum size=15pt,fill=blue!75},
 
 
 \subsection{Novelty Detection via Thresholding}
-\begin{frame}
-    $\frac{P(x|\overline{novel})P(\overline{novel})}{P(x)} \propto \frac{P(x|\overline{novel})}{P(x)} \propto P(x|\overline{novel})$
-    \begin{block}{$P(novel)$ constant}
-        Warning: assuming any graph structure has the same probability of generating
-        novel classes.
+\begin{frame}{Thresholding}
+    \begin{block}
+        {Optimal detector}
+        \begin{itemize}
+            \item Threshold on $P(R_i \in \text{known}|x) = P(\overline{novel}|x)$
+            \item Optimizes true-positives given a fixed false-positive ratio.
+        \end{itemize}
     \end{block}
     \begin{block}
-        Assumption on uniform $P(x)$.
+        {Usually aproximated by $P(x|\overline{novel})$}
+        \begin{itemize}
+            \item Bayes rule
+            \item Assumption on constant $P(\overline{novel})$
+            \item Assumption on constant $P(x)$
+        \end{itemize}
+
+        \begin{equation*}
+            \frac{P(x|\overline{novel})P(\overline{novel})}{P(x)} \propto \frac{P(x|\overline{novel})}{P(x)} \propto P(x|\overline{novel})
+        \end{equation*}
     \end{block}
 \end{frame}
 
+\begin{frame}{Dynamic distributions}
+    \begin{columns}[c]
+        \column{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/conditional-prob-graph.pdf}
 
-\subsection{Dynamic distributions}
-\begin{frame}
-    The set of observed features and graph structure is always changing.
-    Threshold on $P(x|known)$ \cite{bishop1994novelty}
-    Dynamic graphs
+        \column{0.6\textwidth}
+        \begin{itemize}
+            \item Distribution changes with graph structure and sensed features.
+            \item A threshold trained on $P(x|\overline{novel})$ is only valid for a specific
+                graph.
+        \end{itemize}
+    \end{columns}
+    \begin{center}
+        \uncover<2>{\alert{$P(x)$ is not constant - needs to be approximated.}}
+    \end{center}
 \end{frame}
 
-\subsection{Semi-supervised}
+\subsection{Unconditional Probability}
+\begin{frame}{Unconditional Probability}
+    Assume $P(x)$ to be uniform:
+    \vfill
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.50\textwidth]{figures/uniform-prob-graph.pdf}
+    \end{figure}
+    \vfill
+    Expected to approximate poorly as it discards knowledge on the graph structure and other variables.
+\end{frame}
+
+\begin{frame}{Unconditional Probability}
+    \only<1>{
+    Unability to model $R_1$ leads to all factors dependent on it become between themselves:
+    \vfill
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.50\textwidth]{figures/unconditional-prob-graph.pdf}
+    \end{figure}
+    }
+    \only<2>{
+    Approach the unknown factor with independent single factors that can easily be trained from unlabelled data:
+    \vfill
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.50\textwidth]{figures/single-unconditional-prob-graph.pdf}
+    \end{figure}
+    }
+\end{frame}
+
+\subsection{Synthetic Distribution}
 \begin{frame}
-    
+    {Results}
+    \begin{itemize}
+        \item Synthetic distribution.
+        \item 11 diferent room categories and 9 types of room properties.
+        \item Database of properties build from web data.
+        \item A variable number of independent features is generated from a given room category.
+        \item Only 5 room categories are given on labelled data.
+    \end{itemize}
+    \only<1>{
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.40\textwidth]{figures/simple-cond-graph.pdf}
+        \end{figure}
+    }
+    \only<2>{
+        \begin{figure}[h]
+            \centering
+            \subfloat[Uniform approach]{\includegraphics[width=0.30\textwidth]{figures/simple-uniform-graph.pdf}}
+            \qquad \qquad
+            \subfloat[Independent approach]{\includegraphics[width=0.30\textwidth]{figures/simple-independent-graph.pdf}}
+        \end{figure}
+    }
 \end{frame}
 
 \subsection{Results}
-\begin{frame}
-    Synthetic dataset where 1 room category is responsible for generating a variable set of observed features.
+\begin{frame}{Results}
+    \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.60\textwidth]{results/synthetic-all.pdf}
+
+    \caption{\label{fig:synthetic-roc}ROC curve comparing novelty detection performance
+             under samples with variable size of sensed properties.}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}{Results}
+    \begin{figure}[h]
+        \centering
+
+        \subfloat[3 sensed features]{\includegraphics[width=0.35\textwidth]{results/synthetic-3features.pdf}}
+        \qquad
+        \subfloat[5 sensed features]{\includegraphics[width=0.35\textwidth]{results/synthetic-5features.pdf}}
+
+        \subfloat[10 sensed features]{\includegraphics[width=0.35\textwidth]{results/synthetic-10features.pdf}}
+        \qquad
+        \subfloat[50 sensed features]{\includegraphics[width=0.35\textwidth]{results/synthetic-50features.pdf}}
+
+%        \caption{\label{fig:synthetic-roc-breakdown}ROC curves plotted showing performance of the
+%        presented novelty detection method for graphs generated for different amount of
+%        sensed features.}
+    \end{figure}
 \end{frame}
 
 \section{Conclusion}
-\subsection{Conclusion}
-\begin{frame}
-    \begin{block}
-        {Semantic Mapping Process}
-        A multi-modal semantic mapping process based on \emph{probabilistic graphical models}.
+\subsection{Summary}
+\begin{frame}{Summary}
+    \begin{itemize}
+        \item Studies a semantic mapping process
+        \item Studies novelty detection
+        \item Proposes a method to perform detection of novel categories
+              of a variable when the graph structure is dynamic.
+        \item Shows access to unlabelled data can greatly increase performance.
+    \end{itemize}
+\end{frame}
+
+\subsection{Limitations}
+\begin{frame}{Limitations and Future Work}
+    \begin{block}{Assumption on constant $P(novel)$}
+        Graph structure plays a role on the likelihood a sample with a novel
+        category is drawn. Assuming it to be constant is a very strong assumption
+        that is not expected to hold in all scenarios.
     \end{block}
     \begin{block}
-        {Novelty detection via thresholding}
-        Presented a method to detect novel classes on a variable of \emph{probabilistic graphical models}
-        dinamicaly instatiated from sensed semantic data.
+        {Generalize the framework}
+        Handle probabilistic classification from low-level classifiers and incorporate novelty signals from them.
     \end{block}
 \end{frame}
 
-\subsection{Future Work}
-\begin{frame}{Future Work}
-    \begin{block}
-        {Incorporate novelty signals}
+\subsection{Extra Information}
+\begin{frame}{Extra}
+    \begin{block}{Reproducible Research}
+        All reports and results reproducible from online repository:
+        \url{https://github.com/andresusanopinto/novelty-detection-thesis}
     \end{block}
 \end{frame}
-
-
-
 
 \appendix
 % \begin{frame}[allowframebreaks]{Bibliography}
