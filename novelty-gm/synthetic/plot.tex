@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{plotmarks}
+\usepackage{pgfplots}
+
+\begin{document}
+
+\section{Optimal Decision: $P(\overline{novel}|x)$}
+\begin{tikzpicture}[only marks,mark size=1.2pt]
+\begin{axis}[
+ xlabel={Graph Size},
+ ylabel={Threshold},
+ width=\textwidth,
+ height=1.5\textwidth]
+\addplot[mark=+,mark options={fill=white}] file {result_opt_threshold_known.data};
+\addplot[mark=-,mark options={fill=black}] file {result_opt_threshold_novel.data};
+\end{axis}
+\end{tikzpicture}
+
+\section{Constant $P(novel)$: $P_C(x)/P_U(x)$}
+\begin{tikzpicture}[only marks,mark size=1pt]
+\begin{axis}[
+ xlabel={Graph Size},
+ ylabel={Threshold},
+ width=\textwidth,
+ height=1.5\textwidth]
+\addplot[mark=+,mark options={fill=white}] file {result_fix_threshold_known.data};
+\addplot[mark=-,mark options={fill=black}] file {result_fix_threshold_novel.data};
+\end{axis}
+\end{tikzpicture}
+
+\section{Dynamic $P(novel)$}
+\begin{tikzpicture}[only marks,mark size=1pt]
+\begin{axis}[
+ xlabel={Graph Size},
+ ylabel={Threshold},
+ width=\textwidth,
+ height=1.5\textwidth]
+\addplot[mark=+,mark options={fill=white}] file {result_dyn_threshold_known.data};
+\addplot[mark=-,mark options={fill=black}] file {result_dyn_threshold_novel.data};
+\end{axis}
+\end{tikzpicture}
+
+\end{document}
